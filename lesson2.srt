@@ -1,0 +1,3255 @@
+1
+00:00:00,000 --> 00:00:01,200
+Welcome everyone.
+
+2
+00:00:01,520 --> 00:00:04,320
+It's great to have you here in ***.
+
+3
+00:00:04,320 --> 00:00:09,200
+It's really a great privilege to be able to deliver this program to you.
+
+4
+00:00:09,200 --> 00:00:22,320
+We are really happy that all of the hard work that we put can be now uh seen by you and basically we uh will explain a lot um about what's happening in *** during the uh course of this meeting.
+
+5
+00:00:22,560 --> 00:01:15,840
+I will have a short part after um our authors presentations to tell you a bit more about how *** is organized, what we have inside and how it works so everyone, including our students, you can get to know how to use the HQ, how to uh how this is all uh happening and um the next uh 90 minutes will go um like this we'll have some presentations from um from *** and uh *** that uh we have prepared for you so those will be pre-recorded and then we'll talk about uh each week of *** and um how it's prepared and how we're gonna lead it and then um i will uh do the walkthrough um about a few minutes uh to show you where you can um uh join and how it looks, how the HQ uh looks and uh how you can participate in ***.
+
+6
+00:01:15,840 --> 00:01:19,600
+And then we'll have Q&A fun parts with all of our authors.
+
+7
+00:01:19,600 --> 00:01:25,680
+So I hope that you'll spend this uh evening um uh in a really uh good and meaningful way.
+
+8
+00:01:25,680 --> 00:01:36,080
+We're really super happy to have you all here and we're gonna start with the first pre-recorded uh section of uh *** and then and then ***.
+
+9
+00:01:36,080 --> 00:01:39,760
+So enjoy.
+
+10
+00:01:39,760 --> 00:01:43,360
+Let's get this project on autopilot.
+
+11
+00:01:43,680 --> 00:01:59,520
+And so now my agent is going to run the *** skills autopilot skill or command, and this is going to tell the agent how to get this repository, my Media RSS open source project onto autopilot.
+
+12
+00:01:59,520 --> 00:02:04,800
+And these are the things that you are going to learn during my week of ***.
+
+13
+00:02:04,800 --> 00:02:31,200
+We're going to talk about how to not only get your repository set up for agents to work really efficiently, but also how to make the right product decisions so that once you have this wonderful software factory that is churning out your product and any decisions and inputs and everything, but uh like once that's all working, how you can make the right product decisions so that what you get is something that's actually valuable.
+
+14
+00:02:31,200 --> 00:02:33,680
+So right now it's just auditing the code base.
+
+15
+00:02:33,680 --> 00:02:44,240
+It's not looking for bugs or anything, it's looking for gaps that would stop an agent from shipping changes in this project safely without me having to read every single line of code.
+
+16
+00:02:44,240 --> 00:02:46,880
+So can an agent verify its own work?
+
+17
+00:02:46,880 --> 00:02:50,560
+Is there one command that runs the same checks locally as in CI?
+
+18
+00:02:50,560 --> 00:02:52,160
+Are decisions written down?
+
+19
+00:02:52,160 --> 00:02:54,480
+Or are they all just in my head?
+
+20
+00:02:54,480 --> 00:02:57,280
+Is there a safe way to roll something back?
+
+21
+00:02:57,280 --> 00:03:01,280
+Every single gap is written down with evidence, and nothing actually gets changed.
+
+22
+00:03:01,280 --> 00:03:02,560
+It's just reading things.
+
+23
+00:03:02,560 --> 00:03:05,680
+And while it's running that, let me just show you what Media RSS is.
+
+24
+00:03:05,680 --> 00:03:31,200
+So it is a simple application for taking a bunch of uh mp3 or or media files and turning it into a RSS feed and so I've just got a silly amount of media files these are books and podcasts and other things that are not available in like a regular podcast form and I want to be able to consume them in my podcast application.
+
+25
+00:03:31,200 --> 00:03:33,760
+And so I put them on my NAS in my closet.
+
+26
+00:03:33,760 --> 00:03:43,120
+I've got this server running in there and then I can create podcast RSS feeds and subscribe in my podcast player.
+
+27
+00:03:43,120 --> 00:03:50,800
+And so I've got one for my kids, I've got one for like all of our family library, like audiobook library, all of that stuff.
+
+28
+00:03:50,800 --> 00:03:57,280
+But I made this project before agents and autopilot was really a thing and so we're going to turn autopilot on this project.
+
+29
+00:03:57,280 --> 00:03:58,320
+Alright and it's finished.
+
+30
+00:03:58,320 --> 00:04:04,000
+So it just ran through and audited the entire code base and now it's asking questions.
+
+31
+00:04:04,000 --> 00:04:34,000
+So we're going to go through these really quickly um and we're gonna go in depth during my week of *** so use cody to ship the PR loop i'm gonna be using cody you don't have to use cody um but uh cody makes a lot of this much easier and more portable so I'm gonna say yes and now it's asking me things the agent must not do and I'm not gonna go through all of these in this video we don't have time for that so I'm just gonna check all of these and we're gonna go next uh which risk tiers may an agent like Codybot merge without you?
+
+32
+00:04:34,000 --> 00:04:36,240
+Today, Codybot merges every PR.
+
+33
+00:04:36,400 --> 00:04:43,040
+And for me, I'm gonna say low and medium are the ones I want it to merge without me.
+
+34
+00:04:43,040 --> 00:04:46,080
+And now it's asking what changes always need my approval?
+
+35
+00:04:46,080 --> 00:04:50,320
+And now how does the NAS pick up a new image after publish pushes?
+
+36
+00:04:50,320 --> 00:04:58,560
+And so this is like what is really cool about this is it understands my code base and it's applying these principles to my specific code base.
+
+37
+00:04:58,560 --> 00:05:00,960
+And so for my code base, we're going to say it's not reachable.
+
+38
+00:05:00,960 --> 00:05:02,960
+And it's asking me about backups.
+
+39
+00:05:02,960 --> 00:05:08,800
+So in my case, the, I'll just say the NASA's backed up separate from the app.
+
+40
+00:05:08,800 --> 00:05:10,160
+So we don't need to worry about that.
+
+41
+00:05:10,160 --> 00:05:12,320
+Okay, feature flags for a single user.
+
+42
+00:05:12,320 --> 00:05:14,160
+This is like a single user thing.
+
+43
+00:05:14,160 --> 00:05:16,320
+It like nobody else is using this.
+
+44
+00:05:16,320 --> 00:05:18,960
+So uh no flag system, that's fine.
+
+45
+00:05:18,960 --> 00:05:30,400
+And here now it actually found the code-based cleanup job that I have in my Cody and it's just asking if I want to add Media RSS to that for docs freshmen and keeping test tight and legacy reaper all that.
+
+46
+00:05:30,640 --> 00:05:51,120
+So yeah I'm gonna add those uh to cody so I get this on autopilot that's pretty cool and here we've got agent filed issues how are what those prioritized yeah let's add some labels that's cool two playwright specs run nowhere today what should happen to them um that is cool yeah so I didn't even realize that I had some playwright specs that aren't actually running in CI.
+
+47
+00:05:51,120 --> 00:05:55,280
+So we'll run those in CI and we'll continue.
+
+48
+00:05:55,280 --> 00:06:03,680
+Alright, so going through all those questions helps the agent understand how to apply the autopilot to my level of comfort for this particular project.
+
+49
+00:06:03,680 --> 00:06:09,920
+And that's the point, is that it's not guessing what it I want, it interviews me and asks me the things that I want.
+
+50
+00:06:09,920 --> 00:06:14,160
+Autopilot looks different for every team and every code base.
+
+51
+00:06:14,160 --> 00:06:30,160
+So uh depending on like what it is that you're actually building, if you're building a heart monitor or like a pacemaker or something, I hope that you have a even more strict uh process for what ends up in Maine than I do for my side project here.
+
+52
+00:06:30,160 --> 00:06:38,240
+And so I'm keeping all of this, like the details for all of these things really light on purpose because there's a lot of nuance to these answers.
+
+53
+00:06:38,240 --> 00:06:42,720
+And that nuance is the skill that you're actually going to be developing during ***.
+
+54
+00:06:42,720 --> 00:06:46,480
+So now it's put together a plan based off of my own preferences here.
+
+55
+00:06:46,480 --> 00:06:49,440
+And I'm not gonna take you through all the elements of this plan.
+
+56
+00:06:49,440 --> 00:06:51,040
+That's kind of what my week is about.
+
+57
+00:06:51,040 --> 00:06:55,440
+And now for rung 13 it's asking, yep, let's go ahead and do that.
+
+58
+00:06:55,440 --> 00:06:56,320
+Okay, great.
+
+59
+00:06:56,320 --> 00:07:00,800
+We'll go into detail on what all of this is, and now it's going to create a PR for us.
+
+60
+00:07:00,800 --> 00:07:01,840
+So let's wait for that.
+
+61
+00:07:01,840 --> 00:07:03,920
+And here's what comes out on the other side.
+
+62
+00:07:03,920 --> 00:07:05,840
+We've got 35 files changed.
+
+63
+00:07:05,840 --> 00:07:11,440
+Here's what we're trying to accomplish, here's why, here's what changed, here's how it was tested, all all of this stuff.
+
+64
+00:07:11,680 --> 00:07:13,920
+and there's a human checklist, all all that.
+
+65
+00:07:13,920 --> 00:07:22,400
+So I'm not going to go into detail today on what all of this is, but this is the sort of thing that we're going to talk about during my week.
+
+66
+00:07:22,400 --> 00:07:34,320
+Now, not just how to set your repo up on autopilot, but also once it's set up on autopilot, how to take uh get the most leverage out of those agents in the product decisions that you're making.
+
+67
+00:07:34,320 --> 00:07:40,000
+So anyway, we've got the CLI and different ways for the agents to check their work.
+
+68
+00:07:40,000 --> 00:07:42,000
+So we've got a couple skills in here.
+
+69
+00:07:42,000 --> 00:07:47,440
+We've got git hooks to make sure that the verification is happening automatically for the agents.
+
+70
+00:07:47,440 --> 00:07:52,480
+Issue templates for cleanup types of things and friction issues.
+
+71
+00:07:52,480 --> 00:07:56,880
+And we've got workflows for CI and our pull request template.
+
+72
+00:07:56,880 --> 00:07:58,640
+We also talk about this.
+
+73
+00:07:58,640 --> 00:08:09,840
+And we have our decision records or the ADR's architectural decision records and how we do rollbacks and contributing and the primitives documentation, also super critical.
+
+74
+00:08:09,840 --> 00:08:24,000
+And we've got our testing all set up and improved here, along with some tools like our feature map and the control media RSS CLI that we're going to use so that Agent can verify its work better.
+
+75
+00:08:24,080 --> 00:08:29,440
+So we're going to talk a lot about verification and we've improved some of our testing and everything here as well.
+
+76
+00:08:29,440 --> 00:08:32,720
+So I'm not going to walk through every file or justify every decision.
+
+77
+00:08:32,720 --> 00:08:35,360
+That's what my week on *** is for.
+
+78
+00:08:35,360 --> 00:08:41,440
+So I'm just going to squash merge, put media RSS on autopilot, boom.
+
+79
+00:08:41,440 --> 00:08:44,480
+Now this repository is on autopilot.
+
+80
+00:08:44,480 --> 00:08:45,280
+Awesome.
+
+81
+00:08:45,280 --> 00:08:48,240
+So here's the thing, setting that up was actually pretty easy.
+
+82
+00:08:48,240 --> 00:08:49,440
+You watched me do the whole process.
+
+83
+00:08:49,440 --> 00:08:54,240
+You could definitely do this yourself in a matter of a few minutes, maybe an hour.
+
+84
+00:08:54,240 --> 00:08:57,520
+Kind of depends on how good your testing setup is and everything.
+
+85
+00:08:57,520 --> 00:09:01,520
+And most of you watching this, you probably have a good testing setup.
+
+86
+00:09:01,520 --> 00:09:07,280
+So the hard part though, like the actual skill, is all of the questions that I rushed through.
+
+87
+00:09:07,280 --> 00:09:09,360
+How much do you let agents do on their own?
+
+88
+00:09:09,360 --> 00:09:10,400
+What do they do?
+
+89
+00:09:10,400 --> 00:09:13,200
+Or like are they able to merge without you?
+
+90
+00:09:13,200 --> 00:09:15,200
+Where do you insist on having a human?
+
+91
+00:09:15,200 --> 00:09:18,000
+And some of these things are not going to just be your decision.
+
+92
+00:09:18,000 --> 00:09:21,040
+Some of these are going to be conversations with a team.
+
+93
+00:09:21,040 --> 00:09:23,840
+And so there's no universal right answer here.
+
+94
+00:09:23,840 --> 00:09:29,840
+Typically you're going to err on the side of being more protective and then you build up trust eventually.
+
+95
+00:09:29,840 --> 00:09:42,800
+But the the skill is matching the level of autonomy that you give to your agents to what you're actually comfortable with and then raising that comfort level on purpose as you build trust and better guard rails.
+
+96
+00:09:42,800 --> 00:09:45,200
+So that's what my week of *** is all about.
+
+97
+00:09:45,200 --> 00:09:51,040
+*** is a four-week program for developers who are already building with agents and my week is product week.
+
+98
+00:09:51,040 --> 00:09:53,200
+That's November 9 through the 13th.
+
+99
+00:09:53,200 --> 00:10:08,400
+So we're going to go deep on turning intent into agent work, verifying what ships uh and that what ships actually works, and building products that keep improving even after they're released and you get this flywheel.
+
+100
+00:10:08,400 --> 00:10:09,680
+It's very exciting.
+
+101
+00:10:09,680 --> 00:10:14,960
+So if you watched this and thought, I want that on my code base, then that's awesome.
+
+102
+00:10:14,960 --> 00:10:18,880
+You can run the command right now and you'll get a long way through it.
+
+103
+00:10:18,880 --> 00:10:33,680
+But if you want to really understand why it's all working then and and how to tune it for your specific team and your comfort levels and how to trust what your agents ship without reading every single line, then I need you to come to ***.
+
+104
+00:10:33,680 --> 00:10:38,320
+I need you to come to my week and I'll show you how it all works and how to set it up yourself.
+
+105
+00:10:38,320 --> 00:10:41,840
+*** kicks off today, so I hope you have your boss on speed dial.
+
+106
+00:10:41,840 --> 00:10:44,800
+Go to *** and sign up right now.
+
+107
+00:10:44,800 --> 00:10:57,360
+Uh We only have one more pre-recorded uh section from um *** and this is because basically we don't want to wait for the inference, uh, but otherwise we will just have a conversation with our authors.
+
+108
+00:10:57,360 --> 00:11:10,880
+So I will pass uh to *** and uh *** that will talk about um about uh ***'s week um so that you have uh a bit more information about that and also you can ask questions.
+
+109
+00:11:10,880 --> 00:11:13,920
+We will be answering on uh on the chat.
+
+110
+00:11:13,920 --> 00:11:14,560
+Thanks, ***.
+
+111
+00:11:14,560 --> 00:11:15,920
+I'm excited to chat.
+
+112
+00:11:16,480 --> 00:11:18,080
+***, are you there?
+
+113
+00:11:18,160 --> 00:11:19,120
+I am here.
+
+114
+00:11:19,120 --> 00:11:20,720
+How you doing, ***?
+
+115
+00:11:20,720 --> 00:11:21,200
+Super.
+
+116
+00:11:21,200 --> 00:11:22,400
+Yeah, I'm so excited.
+
+117
+00:11:22,400 --> 00:11:25,200
+This is launch day is always exciting.
+
+118
+00:11:25,920 --> 00:11:28,160
+what what does product even mean?
+
+119
+00:11:28,320 --> 00:11:31,120
+What does that mean to you in in the age of AI?
+
+120
+00:11:31,440 --> 00:11:54,000
+like what you know like when you say that and I and I think about it like because we we're we've been developers and we've worked together for a long time and i know like your focus has kind of gone away from from syntax right like we've moved uh i think we've moved the world has moved on not just us but like it feels to me like in a lot of ways the world has have moved on from syntax and now you're telling us product, product engineering.
+
+121
+00:11:54,000 --> 00:11:55,680
+And I'm curious, like what does that mean?
+
+122
+00:11:55,680 --> 00:11:58,160
+And what does that mean for somebody that has spent
+
+123
+00:11:59,120 --> 00:12:11,680
+a year, five years, 10 years, 20 years in some of our cases, you know, like like bunkered in, learning syntax, like really like absorbed in and even like at an identity level, we're developers, right?
+
+124
+00:12:11,680 --> 00:12:18,000
+Like, so what does that mean now to you in terms of of product and and the shift.
+
+125
+00:12:18,000 --> 00:12:26,240
+Yeah, well product was really the only thing that ever actually mattered and everything else was just the supporting characters in the the product journey.
+
+126
+00:12:26,800 --> 00:12:33,600
+But like the the basic definition of a product is the thing that people are paying for or the thing that solves the problem.
+
+127
+00:12:33,600 --> 00:12:35,040
+It's the outcome.
+
+128
+00:12:35,040 --> 00:12:42,080
+And for decades we were all concerned about the output for like we're writing this code, we're writing this syntax.
+
+129
+00:12:42,080 --> 00:12:44,320
+Um, do we use semicolons?
+
+130
+00:12:44,320 --> 00:12:46,000
+Uh is it tabs or spaces?
+
+131
+00:12:46,000 --> 00:12:47,360
+Like what font is that?
+
+132
+00:12:47,360 --> 00:13:12,160
+You know, like all of these things that are just kind of uh and and some of them really did matter um with regard to uh the performance and and the way that semicolon specifically and the answer is no that's right yeah anything else looks ugly but uh but yes uh 100% it it's um the stuff that actually solves the the problem for the user.
+
+133
+00:13:12,160 --> 00:13:34,640
+And how that impacts software developers is we now have more time to focus on what we should have been focusing on uh the entire time, which is building a system that um satisfies the requirements of today uh and also keeps in mind the um the goals and the vision of the like long-term vision for the product.
+
+134
+00:13:35,040 --> 00:13:40,560
+And so like one of the the most consistent things in software is change.
+
+135
+00:13:40,560 --> 00:13:46,000
+And so building a system that can adapt to that change is is still a challenge.
+
+136
+00:13:46,320 --> 00:13:48,640
+Agents are not there quite yet.
+
+137
+00:13:48,640 --> 00:13:50,080
+Maybe eventually they'll get there.
+
+138
+00:13:50,080 --> 00:14:03,600
+But as um as for today, one of the most critical things that you need to learn is how to design a system in which agents can deliver on the product and where you're focused on the outcome and less on the output.
+
+139
+00:14:03,600 --> 00:14:05,120
+Do you think we're still developers?
+
+140
+00:14:05,120 --> 00:14:08,720
+Like at this point, like is is that like like a a term that that still holds up?
+
+141
+00:14:08,720 --> 00:14:18,080
+Are we still developing software even though we're we're doing it with with um an agent or uh I guess these days swarms of agents.
+
+142
+00:14:18,080 --> 00:14:24,320
+Yeah, well, I mean, I always called myself an engineer because the research says you get paid more that way.
+
+143
+00:14:24,320 --> 00:14:24,720
+Yeah.
+
+144
+00:14:24,960 --> 00:14:26,960
+So that's why like product engineer, right?
+
+145
+00:14:26,960 --> 00:14:43,840
+Like so you you are an engineer and and it's just kind of changing the focus of of what what that is and and kind of moving it forward is is how that's how I'm like personally absorbing the change is like I'm I'm still I still feel like fundamentally doing the same job.
+
+146
+00:14:43,840 --> 00:14:45,760
+It's just doing it, doing it differently.
+
+147
+00:14:45,760 --> 00:14:47,280
+Um yeah, yeah, precisely.
+
+148
+00:14:47,280 --> 00:15:03,600
+And um people who had the right um the right mindset for the work that they were doing um not a whole lot has actually changed um maybe the the specifics of the day-to-day tasks or what you're typing on your keyboard that absolutely changes.
+
+149
+00:15:03,600 --> 00:15:13,920
+But what you're thinking about and the meetings that you go to, even if you don't like meetings and like the discussions that you have and the things that you think about, that actually doesn't change at all.
+
+150
+00:15:13,920 --> 00:15:14,240
+And
+
+151
+00:15:15,200 --> 00:15:16,800
+so are we still developers?
+
+152
+00:15:16,800 --> 00:15:20,160
+I guess it depends on on how you define what a developer is.
+
+153
+00:15:20,880 --> 00:15:26,880
+I think that there is kind of this interesting kind of combination of skills.
+
+154
+00:15:27,200 --> 00:15:35,200
+And I'm starting to just call us builders or or problem solvers in general, that we use software to solve problems.
+
+155
+00:15:35,200 --> 00:16:03,040
+What I think is really interesting is observing that the harness is the software or the assistant is the software and so all of our users are using their assistant and that is how what communicates with us and the services that we offer and so um the the ultimate goal the the outcome that we're looking for is solving human issues, but the the mechanism by which we do that is by targeting the human age the agents that the humans are using.
+
+156
+00:16:03,280 --> 00:16:10,880
+And so yeah it's a it's an interesting time and the future is uh exciting to think about.
+
+157
+00:16:10,880 --> 00:16:21,760
+So uh and to kind of uh circle into your your week and and what you're going to teach and and I think you're you're not specifically teaching us about about Cody and and I know that's something that you're you're excited about.
+
+158
+00:16:21,760 --> 00:16:28,960
+And I, but I'm curious how it relates and like what you've learned from building Cody and and your agent ecosystem.
+
+159
+00:16:29,360 --> 00:16:33,760
+And then like thinking about that from a product perspective, I think is is also kind of cool.
+
+160
+00:16:34,160 --> 00:16:34,480
+yeah.
+
+161
+00:16:34,480 --> 00:16:39,920
+So that my week is not, I'm not going to teach you about Cody, but I will reference Cody and let me explain why.
+
+162
+00:16:39,920 --> 00:16:41,280
+So the um
+
+163
+00:16:42,240 --> 00:16:51,920
+the entire time that I've been teaching, over a decade now, the way that I do this is I go and do something real in the real world and then I teach people how I did that.
+
+164
+00:16:51,920 --> 00:17:01,600
+So rebuilt my website with ridiculous requirements that like emulated the sorts of things that I did when I was at PayPal.
+
+165
+00:17:01,920 --> 00:17:09,840
+And actually when I was at PayPal, figured out the right way to build out testing infrastructure and and the patterns and practices.
+
+166
+00:17:09,840 --> 00:17:11,440
+And that became testing JavaScript.
+
+167
+00:17:11,440 --> 00:17:19,200
+And so it's always just been a like, let me apply the things that I think are the very best way to build software and deliver excellent user experiences.
+
+168
+00:17:19,200 --> 00:17:22,480
+And that takes a long time, like takes months, maybe years even.
+
+169
+00:17:22,480 --> 00:17:28,800
+And then you package that up into um a a kind of simulated practice so that people can learn that.
+
+170
+00:17:28,800 --> 00:17:42,640
+And so when I decided earlier this year that I'm going to be doing product engineering, um, then it became, okay, well, I guess I I better build a product so that I make sure that I am teaching people something based off of my own experience and as well as the experience of others.
+
+171
+00:17:42,640 --> 00:17:46,080
+And so that's also why I started the Become an Epic Product Engineer podcast.
+
+172
+00:17:46,080 --> 00:17:48,400
+So to fill the gaps that I didn't even know I had.
+
+173
+00:17:48,400 --> 00:17:52,240
+And so now with the months of experience in in building that, now I have paying users.
+
+174
+00:17:52,240 --> 00:17:56,480
+We're actually cash flow positive as far as unit economics per user.
+
+175
+00:17:56,480 --> 00:18:05,760
+Um, I I feel like I've got a lot of experience that I can share on what it takes to build a product with the latest and greatest uh tools that we have our at our disposal.
+
+176
+00:18:05,760 --> 00:18:08,080
+So that's what my week is going to be all about.
+
+177
+00:18:08,080 --> 00:18:13,920
+It's the the lessons that I've learned about AI native product development.
+
+178
+00:18:13,920 --> 00:18:20,560
+So what's the what's your favorite or most important lesson that you've learned about AI native product development?
+
+179
+00:18:21,920 --> 00:18:24,560
+That outcomes matter a lot more than output.
+
+180
+00:18:24,560 --> 00:18:30,320
+And so figuring out ways that you can be reviewing um or um
+
+181
+00:18:32,160 --> 00:18:37,520
+finding ways that you can leverage agents to do the parts of the job that don't need a human.
+
+182
+00:18:38,160 --> 00:18:44,400
+I guess that's kind of related but separate separate uh skill, but that like that matters a a lot.
+
+183
+00:18:44,400 --> 00:19:01,920
+You can get a just a ton of leverage when you put your uh your code base on autopilot like I showed in that that demo video, which by the way, you can all run that script right now and it will do an audit on your code base and tell you where your gaps are and get you to a whatever comfort level you are with autopilot.
+
+184
+00:19:01,920 --> 00:19:11,680
+And my week is going to be explaining all the decisions that go into getting more leverage out of your agents so that you can focus on the product side of things.
+
+185
+00:19:11,680 --> 00:19:13,920
+So yeah, getting leverage out of agents.
+
+186
+00:19:13,920 --> 00:19:15,760
+That's what my week is all about.
+
+187
+00:19:15,760 --> 00:19:18,400
+And just so we have to jump in, that's all quickly.
+
+188
+00:19:18,640 --> 00:19:23,680
+Nc dots, *** skills, um, is where the autopilot skill is, so people can find it there.
+
+189
+00:19:23,680 --> 00:19:25,520
+Somebody paste that a link and do that.
+
+190
+00:19:25,520 --> 00:19:25,920
+Cool.
+
+191
+00:19:25,920 --> 00:19:48,880
+Uh guys, because we have to uh move to *** um uh and uh because some of uh the participants uh joined a bit later um so i i will just quickly um recap what we are doing here so we're trying to introduce every hour and every week so that we discuss the weeks that um are um ahead on ***.
+
+192
+00:19:49,120 --> 00:19:50,960
+Love your comments by the way.
+
+193
+00:19:50,960 --> 00:20:05,440
+And we will um uh now um air another pre-recorded uh section of uh *** he will show you some of uh his harness and basically uh later talk about his week uh a bit more as well.
+
+194
+00:20:05,440 --> 00:20:17,040
+Then we'll have uh *** and *** and then we'll we'll have um a short uh segment will that will I I will show you how *** works and we'll have Q&A with all the authors.
+
+195
+00:20:17,040 --> 00:20:24,240
+So let's now switch to ***'s um pre-recorded section.
+
+196
+00:20:24,240 --> 00:20:45,040
+So here I am working on a store and I see that one of my tests is failing, so I'll just drop in a prompt like I notice the cart total test is failing again, so please just update the expected value to and I'll drop in the value, hit enter, and I'll just wait for it to finish and fix it because you know agents fix everything.
+
+197
+00:20:45,040 --> 00:20:47,680
+And then wait a second, what is this?
+
+198
+00:20:47,680 --> 00:20:56,160
+Let me escape this and turn my attention over here, changing only the expected value would weaken a money and cents invariant.
+
+199
+00:20:56,160 --> 00:20:59,600
+And we already have a test that exposes the same bug.
+
+200
+00:20:59,600 --> 00:21:10,880
+Well that was actually super helpful and it stopped me from blowing a bunch of tokens on this conversation and I can just focus on answering this question without polluting anything in this conversation.
+
+201
+00:21:10,880 --> 00:21:16,080
+So I have this mini agent on the side which saves me from being an idiot in the main conversation.
+
+202
+00:21:16,080 --> 00:21:20,000
+And also what if I'm in the middle of my session and a new issue comes in?
+
+203
+00:21:20,000 --> 00:21:26,320
+Currently I don't have any issues open, but something critical pops up that requires my immediate attention.
+
+204
+00:21:26,320 --> 00:21:32,640
+And even though I'm busy in the middle of something, an issue can arrive and I can immediately go to investigate it.
+
+205
+00:21:32,640 --> 00:21:41,520
+So after clicking that, a new session opens, it starts doing a bit of investigation for me, so I can see if that's something I need to act on right now or not.
+
+206
+00:21:41,520 --> 00:21:48,480
+And I can check on what it finds, or I can just navigate into the issue itself, go to the actions, and send the reference over to Pi.
+
+207
+00:21:48,480 --> 00:22:04,880
+So obviously I have a bunch of custom tooling over here that is mostly dedicated to keeping my main agent conversation clean and focused so that it always has the context it needs so that it can be extremely token efficient and save me both time and money and just work better overall.
+
+208
+00:22:04,880 --> 00:22:14,960
+And then you'll see these other panes, they're also agents and they're agents I customize to run tools inspired by what's going on in the main conversation.
+
+209
+00:22:14,960 --> 00:22:23,760
+Different than a subagent because their purpose is to display visual information back to me for the things that I might want to take action on.
+
+210
+00:22:23,760 --> 00:22:29,360
+It's almost reminiscent of using an IDE and having a squiggly line underneath something.
+
+211
+00:22:29,360 --> 00:22:32,480
+When was the last time you thought about a squiggly line?
+
+212
+00:22:32,880 --> 00:22:39,680
+Now let's rewind a bit and take a step back because you probably recognize that I'm using a terminal, I'm using Pi, I'm using Herder.
+
+213
+00:22:39,680 --> 00:22:46,720
+I'm essentially using this antiquated technology in this modern era of amazing harnesses and incredible designs and experiences.
+
+214
+00:22:46,880 --> 00:22:48,400
+So let's talk about why.
+
+215
+00:22:48,400 --> 00:23:06,480
+To me the key piece here is right now I'm inside of a Pi session and if I ask Pi, please use the Herder CLI to open a pane to the right and I let this run, you'll see that it can figure out from the herder CLI how to visually modify the UI that the agent is running in.
+
+216
+00:23:06,480 --> 00:23:20,560
+And if I say something like, please run the following command in that pane and I drop in my customized Py shortcut with a bunch of my extensions and everything called pit, then it can send that command over there and start up another agentic session.
+
+217
+00:23:20,560 --> 00:23:58,800
+And now if I ask, please ask that pane to use the herder CLI to ask this pane to summarize itself and then send a summary back to it and explain what's going on inside of the pane, then you'll see I actually have this whole system where an agent has complete control over the UI, has complete control over building other agents, and can build up an entire system of communication back and forth with these primitives of terminals, panes, pie sessions with essentially zero configuration and I can do everything just by asking through dictation and it just works and shows up.
+
+218
+00:23:58,800 --> 00:24:15,360
+So my standard for any agent that I personally use is can the agent improve itself and improve its own experience so that what I want to happen can happen, so that I can take the ideas in my head, just yell them at my computer, and then let them come to life.
+
+219
+00:24:15,360 --> 00:24:18,800
+So what we need is a place to chat with our agents so we'll use Pi.
+
+220
+00:24:18,800 --> 00:24:29,200
+We'll need a place to manage focus and workspaces and where our agents can live and that's Herder, and then essentially a renderer behind it all, which can be the terminal ghosty.
+
+221
+00:24:29,200 --> 00:24:31,760
+Am I madly in love with any of these?
+
+222
+00:24:31,760 --> 00:24:32,720
+Not at all.
+
+223
+00:24:32,720 --> 00:24:36,560
+Would I switch to something better immediately if I found something?
+
+224
+00:24:36,560 --> 00:24:37,440
+Absolutely.
+
+225
+00:24:37,440 --> 00:24:43,760
+So during my week in ***, I'm not focusing on Pi or Herder or a specific solution to a problem.
+
+226
+00:24:43,760 --> 00:24:47,040
+I'm going to focus on the principles behind the problem.
+
+227
+00:24:47,040 --> 00:24:58,800
+My absolute favorite quote in the entire community of agentic developers and products is the Pi.dev landing page where the tagline is, there are many agent harnesses, but this one is yours.
+
+228
+00:24:58,800 --> 00:25:02,400
+And here is a tool to adapt to your workflows.
+
+229
+00:25:02,400 --> 00:25:04,400
+Here's Pi and Pi durable.
+
+230
+00:25:04,400 --> 00:25:05,760
+Go make them yours.
+
+231
+00:25:05,760 --> 00:25:11,520
+And the term yours doesn't just mean for you, it also means for your agents.
+
+232
+00:25:11,520 --> 00:25:19,040
+And when it comes to building software factories and any sort of repeatable agentic workflow, the key is that it is your workflow.
+
+233
+00:25:19,040 --> 00:25:20,800
+It is your team's workflow.
+
+234
+00:25:20,800 --> 00:25:22,720
+It is your product's workflow.
+
+235
+00:25:22,720 --> 00:25:28,800
+You take ownership, you build something beautiful, you provide that thing to your teams, and you provide the result to your customers.
+
+236
+00:25:28,800 --> 00:25:38,480
+And the final piece, and then I'll stop yapping, is after you build that thing, is it portable and configurable enough to ship it somewhere else?
+
+237
+00:25:38,480 --> 00:26:00,320
+Because the beauty of Pi is that you can strip it down to its bare needs, put it on any device, and have it run headlessly, you can toss it into a sandbox and tell your agents to hammer against it until it's a polished diamond, and any of the extensions you build you can share with your team or the community, but I absolutely also recognize there's sacrifices and user experience
+
+238
+00:26:01,440 --> 00:26:06,720
+and ecosystem, and the terminal and terminal shortcuts can just be scary sometimes.
+
+239
+00:26:06,720 --> 00:26:08,160
+I get it.
+
+240
+00:26:08,160 --> 00:26:10,320
+Alright, so let's get shameless.
+
+241
+00:26:10,320 --> 00:26:14,400
+You've probably heard of the project called Reverse Engineer anything.
+
+242
+00:26:14,400 --> 00:26:16,400
+Just search for it on GitHub, you'll find it.
+
+243
+00:26:16,400 --> 00:26:26,960
+And you probably run it against a product or a game or a competitor or something you're interested in to see how it was built because they did something better than you or you're just curious about how they pulled something off.
+
+244
+00:26:26,960 --> 00:26:40,560
+One of the projects I ran this against was Raycast, which is a universally loved launcher, which I personally think is having a bit of a difficult time finding its footing in a new agentic era where you can just dictate workflows and shortcuts.
+
+245
+00:26:40,560 --> 00:26:55,680
+And so I started some explorations around Raycast Universal Search, which has a fantastic user experience around recency and freesency and adding actions and the way that it sorts things and just really does a great job of surfacing the things you like up to the top.
+
+246
+00:26:55,680 --> 00:27:01,440
+Now I don't have an answer to this question, but what does that product look like in the era of agents?
+
+247
+00:27:01,440 --> 00:27:08,960
+If we all just spend our time typing into a single input box, isn't there some sort of scenario where the launcher is your input box?
+
+248
+00:27:08,960 --> 00:27:12,640
+And the things in your launcher are your conversations, your agents or something?
+
+249
+00:27:12,640 --> 00:27:13,680
+I don't know.
+
+250
+00:27:13,680 --> 00:27:28,400
+But I was super curious to deep dive into the experience of their universal search, as well as things like how they handle permissions on Mac, which has always been an extremely poorly documented thing on Macs and an absolute nightmare to debug and test against.
+
+251
+00:27:28,400 --> 00:27:32,160
+So I fired off this massive reverse engineering conversation.
+
+252
+00:27:32,160 --> 00:27:34,400
+I didn't really have a particular goal in mind.
+
+253
+00:27:34,400 --> 00:27:37,120
+I just wanted to talk and see what popped up.
+
+254
+00:27:37,120 --> 00:27:42,560
+And I think we all kind of do that where you just kind of step into a project and let's see what's up.
+
+255
+00:27:42,560 --> 00:27:52,320
+But then after the conversation has been compacted a couple dozen times, and maybe you've been in this conversation for days, if not weeks, you know who you are, you ask yourself, what do I do with this mess?
+
+256
+00:27:52,320 --> 00:27:55,680
+I know it's an absolute gold mine, so how do I get that value out?
+
+257
+00:27:55,840 --> 00:27:58,240
+Now there are dozens of ways of doing this, and I'll show you one.
+
+258
+00:27:58,400 --> 00:28:01,600
+Through an extension I built for pi called pine.
+
+259
+00:28:01,600 --> 00:28:07,680
+It's a play on words with pi and panes for py and herder, and a command in there called brainstorm.
+
+260
+00:28:07,680 --> 00:28:14,880
+You can see that brainstorm is going to read the whole conversation and map its topics and suggest agents to build.
+
+261
+00:28:14,880 --> 00:28:21,200
+So I'll let this run and then once this comes back it's going to say here's a bunch of ideas of agents you can extract.
+
+262
+00:28:21,200 --> 00:28:23,120
+Nothing is built until you say so.
+
+263
+00:28:23,120 --> 00:28:26,480
+Build one with this and tosses out some ideas for you.
+
+264
+00:28:26,480 --> 00:28:42,640
+So it says your topics were investigated searching, indexing and ranking, what sort of rust crates it might have, universal search again, comparing searching in Raycast to spotlight search, and their file navigation and actions.
+
+265
+00:28:42,640 --> 00:28:58,000
+So from those topics that it found, and remember, this is reading the session log, like the JSONL file that's created from a session, not the current context window, and it's pulling out these ideas of agents that it's suggesting you build and take away from this conversation.
+
+266
+00:28:58,000 --> 00:29:01,200
+It's saying, do you want me to build a universal search architect?
+
+267
+00:29:01,200 --> 00:29:03,840
+Do you want me to build a file navigation auditor?
+
+268
+00:29:03,840 --> 00:29:07,040
+Do you want me to build a file search researcher?
+
+269
+00:29:07,040 --> 00:29:10,000
+And these were the main things that went into this.
+
+270
+00:29:10,000 --> 00:29:12,640
+And what these do once you decide to build one.
+
+271
+00:29:12,640 --> 00:29:15,440
+So let's go through universal search architect.
+
+272
+00:29:15,440 --> 00:29:24,000
+So I'm going to say pine build b2 and this will take a while to build and it's going to spin it up in its own workspace.
+
+273
+00:29:24,000 --> 00:29:26,080
+So workspace is our concept in Herder.
+
+274
+00:29:26,160 --> 00:29:30,560
+If I navigate over to the workspace, you'll see that it's building over here.
+
+275
+00:29:30,560 --> 00:29:43,200
+And this workspace navigator is a custom extension I built into Herder where I just tap a shortcut and I can fuzzy search between workspaces and jump between panes and everything and I can share that as well.
+
+276
+00:29:43,200 --> 00:29:49,440
+And don't worry, everything I show here or everything that I talk about during my week will be shared with everyone who attends.
+
+277
+00:29:49,440 --> 00:30:05,920
+And you'll see it spun up this Pi session where it forked the past conversation and now it's searching through all of the past session and building out a customized agent with all the context relevant to this universal search architecture.
+
+278
+00:30:05,920 --> 00:30:14,960
+Alright, so this agent is done and built and it's spun up in this current session, but just to show you in a new session, it dropped it in the agents folder.
+
+279
+00:30:14,960 --> 00:30:17,280
+It called it universal search architect.
+
+280
+00:30:17,280 --> 00:30:21,600
+And if I say please tell me how recency works in Raycast
+
+281
+00:30:22,640 --> 00:30:39,120
+you now have a hyper optimized agent specific to that task which will find everything from your past session, all the research you've already done, know all the proper file references, and just be very specific and custom for anything you need to do.
+
+282
+00:30:39,120 --> 00:30:46,160
+And it's just super dialed in for the exact sort of things you need to work on that flavor of task.
+
+283
+00:30:46,160 --> 00:31:11,760
+So scrolling up you can see it mentions selecting an item records a visit, the score decays over time, recency doesn't overwrite every match, and breaks that down for me and I actually have it set up so that when it builds these custom agents I'll often downgrade them to like a Luna level agent or a haiku level agent because they're hyper-optimized based on those past sessions.
+
+284
+00:31:11,760 --> 00:31:30,800
+And that brings up the difference between this approach and a subagent approach, which you might be familiar with from Cloud Code and Codex and all the others, where I can run this agent, I can change its model, I can change all of its settings and configurations and treat it as essentially a top level agent with a role.
+
+285
+00:31:30,800 --> 00:31:36,240
+Now these could also be used as subagents, you can have other agents call these agents, no problem.
+
+286
+00:31:36,240 --> 00:31:40,880
+And I don't want to start some semantic battle over the definition of a sub-agent.
+
+287
+00:31:40,880 --> 00:31:43,760
+I'm not here to fight, I'm just here to build cool stuff.
+
+288
+00:31:43,760 --> 00:32:04,880
+But a fun thing you can do with this if you ever run into a mistake in here is that because this was built using the Pine agent builder, it has a built-in fix command and if you look at fix, you give it a way to improve this agent so the agent can improve itself, run its evaluations, and you force it to behave better.
+
+289
+00:32:04,880 --> 00:32:14,960
+And when we talk about running its evaluations, most of the tools I build use a concept called black box testing, which I'll talk about a lot in my *** week.
+
+290
+00:32:14,960 --> 00:32:28,640
+The concept is essentially hand your agent over to another agent, tell that second agent what that agent should be able to do and have it fabricate like 50 scenarios of things it would expect to be able to do with it.
+
+291
+00:32:28,640 --> 00:32:35,200
+And this falls back to one of the principles of you're building agents for yourself and you're building agents for agents.
+
+292
+00:32:35,200 --> 00:32:38,720
+So you need to set up systems around both of those directions.
+
+293
+00:32:38,720 --> 00:32:41,200
+Again, we'll talk more about that during my week.
+
+294
+00:32:41,200 --> 00:33:06,560
+But if I try to say fix, never respond with pros, only respond with tables and bulleted lists and other ways of displaying data and let this run, we'll give that a second to finish, hop back over to our main session, and we can tell this we also wanted to build a new terminal widget or a new web page which syncs up with your terminal sessions and shows dashboards and whatnot.
+
+295
+00:33:06,560 --> 00:33:12,320
+A new agent would be just like we did but without the brainstorming an agent that you'd give instructions to.
+
+296
+00:33:12,320 --> 00:33:13,680
+Let's go ahead with a widget.
+
+297
+00:33:13,680 --> 00:33:21,360
+So we'll run this and tell it please have this widget show all of the URLs that have been listed in the session.
+
+298
+00:33:21,360 --> 00:33:33,680
+And if I select one of the URLs, it will open that URL in my browser and have it automatically update as URLs come in in either the user prompts or in the assistant responses.
+
+299
+00:33:33,680 --> 00:33:36,160
+And this will go and build this widget for me.
+
+300
+00:33:36,160 --> 00:33:40,560
+So it opened up a new pane, it's going to start building that view.
+
+301
+00:33:40,560 --> 00:33:53,040
+And thanks to a system called, let me pull this open here, OpenUI, which is a new standard for generative UI, which has a spec that can be rendered in all of these different languages.
+
+302
+00:33:53,040 --> 00:34:04,640
+So for us, we're using the PyHarness one for the rendering things over in the web page, but for Pine, I also used it to render things in the terminal.
+
+303
+00:34:04,640 --> 00:34:07,120
+So we have a bunch of pre-built components and such.
+
+304
+00:34:07,120 --> 00:34:13,760
+So I can trust that the resulting widget of this should look decent at least, and I can iterate on it in the future.
+
+305
+00:34:13,760 --> 00:34:22,080
+But the options for this are pretty unlimited, so you could ask it to bring in recent messages from Slack or whatever sort of integrations you could possibly imagine up.
+
+306
+00:34:22,080 --> 00:34:24,880
+It's just up to you and whatever permissions you want to grant it.
+
+307
+00:34:24,880 --> 00:34:46,960
+For example, if you think of all of the things that like an open claw can do or whatever your preferred personal agent is and those sorts of integrations and you want those kind of hooked up to widgets alongside your development systems and they're customized widgets with interactivity that can be pushed into your other sessions and that's that's what this is all about.
+
+308
+00:34:46,960 --> 00:34:56,000
+So you can see it popped open new pane down here which has our links widget and then it automatically closed the pane that was building this widget.
+
+309
+00:34:56,000 --> 00:34:59,280
+So now this widget just lives next to our main widget.
+
+310
+00:34:59,280 --> 00:35:04,720
+So I can go back and forth and what I'm in the widget, I can check on some of the actions that it gives me.
+
+311
+00:35:04,720 --> 00:35:12,720
+I can send this back over to Pi as a reference to it, or it gave me the options of like open or run selected action.
+
+312
+00:35:12,720 --> 00:35:20,640
+So let's go ahead and open it and then it opened this URL in my browser, which is that reverse engineering URL we were talking about.
+
+313
+00:35:20,640 --> 00:35:36,240
+And anytime if I accidentally close it, I can type in Pine, I can type in open and session links and open it again and if you were eagle-eyed you may have noticed there's also a pine open and I'll say session links web
+
+314
+00:35:37,200 --> 00:35:50,400
+and this opened in my browser which I'll drag over and you can see we have all of the session links from this current session in a browser running on a dev server and you have all of your default widgets built in as well.
+
+315
+00:35:50,400 --> 00:36:00,880
+If we look at git you can see recent commits and all this sort of stuff super duper fun and just to prove that our widget system is working we'll try please explain what
+
+316
+00:36:02,160 --> 00:36:07,440
+drop in our *** is about.
+
+317
+00:36:07,440 --> 00:36:08,560
+Hit enter.
+
+318
+00:36:08,560 --> 00:36:12,320
+And you can see it automatically showed up over here in our links.
+
+319
+00:36:12,320 --> 00:36:17,520
+And if we go back in our custom widgets in our browser, we have *** in there as well.
+
+320
+00:36:17,520 --> 00:36:20,960
+And a great explanation of what's going on with ***.
+
+321
+00:36:20,960 --> 00:36:22,400
+The shift happened.
+
+322
+00:36:22,400 --> 00:36:25,760
+The only question is how deep you go.
+
+323
+00:36:25,760 --> 00:36:28,560
+Which is obviously where you should go to learn more about this.
+
+324
+00:36:28,560 --> 00:36:32,080
+Now let's go check in on our evolved agent here.
+
+325
+00:36:32,080 --> 00:36:35,920
+If I ask it, please explain how recency works.
+
+326
+00:36:35,920 --> 00:36:37,920
+Drop that in there this time.
+
+327
+00:36:37,920 --> 00:36:42,400
+It should be low on pros, high on bullets, and high on tables.
+
+328
+00:36:42,400 --> 00:36:43,440
+We'll see how it goes.
+
+329
+00:36:43,440 --> 00:36:44,560
+Alright, so here we go.
+
+330
+00:36:44,560 --> 00:36:53,680
+We got some bullets, we got some tables, we got some more bullets and bullets and tables, and pretty much just what we asked for.
+
+331
+00:36:53,680 --> 00:36:55,760
+Alright, so that's all the time I have.
+
+332
+00:36:55,760 --> 00:36:57,040
+My name is *** Lindquist.
+
+333
+00:36:57,360 --> 00:37:00,160
+I hope to see you at *** during week four.
+
+334
+00:37:00,160 --> 00:37:05,200
+My goal is to help you build that software factory and that you can make it yours.
+
+335
+00:37:05,200 --> 00:37:19,120
+That you can build these agentic systems that are great for users, that are great for agents, that have all these useful UIs hooked into them and that you can help them evolve into something that you can host online that you can hook into all sorts of integrations.
+
+336
+00:37:19,120 --> 00:37:34,240
+I'll be taking a lot of things I showed today much further and also breaking it down into much smaller bits so that no matter what the future holds you walk away with the tools and skills, both literally and figuratively, to build the things you need to succeed.
+
+337
+00:37:34,240 --> 00:37:48,240
+And as always, I'm just going to overwhelm you with examples and prompts and skills and all these take-home things you can play with so you can build on top of my projects, make them your own, make them better, and be prepared for whatever comes next.
+
+338
+00:37:48,240 --> 00:37:49,040
+All right.
+
+339
+00:37:49,040 --> 00:37:50,080
+That was awesome.
+
+340
+00:37:50,080 --> 00:37:51,520
+Uh thanks so much, ***.
+
+341
+00:37:51,520 --> 00:37:59,680
+I will pass to um *** and *** because maybe you have one or two questions about um ***'s week.
+
+342
+00:37:59,920 --> 00:38:04,560
+That was amazing and I I think that you understand now why it was pre-recorded.
+
+343
+00:38:04,560 --> 00:38:06,160
+Uh quite a lot going on.
+
+344
+00:38:06,160 --> 00:38:26,160
+But yeah, just to give you idea, because I'm looking at the chat, this is the idea for the four weeks and we'll have *** next uh with a short recording, but before that um *** are you here to maybe ask *** um questions about his week maybe you picked something up from the chat you said one or two i have um maybe 30 or 40 is that gonna be okay ***?
+
+345
+00:38:26,640 --> 00:38:27,840
+no, no, it's not okay.
+
+346
+00:38:27,840 --> 00:38:28,000
+No.
+
+347
+00:38:28,560 --> 00:38:29,440
+Like I I have a bunch.
+
+348
+00:38:29,440 --> 00:38:31,840
+Like we're gonna make this a whole whole episode.
+
+349
+00:38:31,840 --> 00:38:36,160
+No, um, ***, I'm I'm curious and and I'm wondering what you think too.
+
+350
+00:38:36,160 --> 00:38:42,800
+And I I I I know I was watching the chat when it was going by and and like setups like this are hyper customized, right?
+
+351
+00:38:42,800 --> 00:38:49,600
+Like you're sitting down and you're thinking, like when you open Pi and you're opening just a raw Pi out of the box, it's nothing, right?
+
+352
+00:38:49,600 --> 00:38:52,800
+Like it gives you like four tools, a few more now, maybe six.
+
+353
+00:38:52,800 --> 00:38:54,720
+Um, but how do you think about that?
+
+354
+00:38:54,720 --> 00:38:57,360
+Like when you're you're thinking like, well, okay, well, I need more.
+
+355
+00:38:57,360 --> 00:38:58,480
+I need more to this.
+
+356
+00:38:58,480 --> 00:39:03,360
+Um, I'm gonna have to build a tool that does everything you just showed us, right?
+
+357
+00:39:03,360 --> 00:39:10,720
+Like you spent, you know, that was what, 10 minutes of of just like the fire hose like fully blasting us in the face with your custom setup.
+
+358
+00:39:11,120 --> 00:39:12,720
+like what's the like thought process?
+
+359
+00:39:12,720 --> 00:39:19,360
+Like how do you you even start to think about what it is you might need to build for yourself.
+
+360
+00:39:19,360 --> 00:39:27,120
+I have always been someone with a script-first mindset where I find the friction and I automate it away.
+
+361
+00:39:27,120 --> 00:39:45,120
+And I've taken a lot of that with me into agentic land where even if something on a page or on a product or something I'm using doesn't meet the way that my eye is guided from one part to the other, like I feel uncomfortable looking from the left to the right in the position of that thing.
+
+362
+00:39:45,120 --> 00:39:46,640
+I'm like, I don't like this thing.
+
+363
+00:39:46,640 --> 00:39:50,960
+I'm going to customize it because it's causing my eyes friction from going over here to over there.
+
+364
+00:39:50,960 --> 00:40:01,200
+Like it's my tolerance for any sort of uh product inefficient inefficiency or product um friction
+
+365
+00:40:02,160 --> 00:40:04,480
+is in negative numbers now.
+
+366
+00:40:04,480 --> 00:40:08,800
+Like I just cannot stand uh products getting in my way.
+
+367
+00:40:08,800 --> 00:40:14,720
+And I think people in general and like people in the world, like people have stopped using Google to search.
+
+368
+00:40:14,720 --> 00:40:19,920
+Like they just dictate something into Chat GPT and they want the answer.
+
+369
+00:40:19,920 --> 00:40:25,200
+And I think we should feel similarly towards a lot of software development practices.
+
+370
+00:40:25,520 --> 00:40:31,280
+If people aren't using Google anymore, then why why are we using a lot of the tools that that are out there?
+
+371
+00:40:32,240 --> 00:40:35,920
+But I I will definitely phrase this uh
+
+372
+00:40:36,960 --> 00:40:40,160
+I want to be careful with how far I push that because
+
+373
+00:40:41,440 --> 00:40:48,880
+this is for your personal software or your personal or uh business projects, right?
+
+374
+00:40:48,880 --> 00:40:52,080
+This is the friction you find in your projects.
+
+375
+00:40:52,080 --> 00:40:58,480
+So whatever it is that you feel like is slowing you down that you've always complained about, like just tackle those things right away.
+
+376
+00:40:58,480 --> 00:41:05,120
+Those are if you're going to start building a quote unquote software factory, um find the stuff you've always hated.
+
+377
+00:41:05,120 --> 00:41:08,800
+Like what what do you what do you hate about software and just fix it.
+
+378
+00:41:08,800 --> 00:41:13,760
+And Opus 5.5 will one-shot a lot of those things.
+
+379
+00:41:13,760 --> 00:41:17,760
+And when it comes to choosing a Pi and
+
+380
+00:41:19,040 --> 00:41:40,640
+yeah, mostly Pi, Pi with its extensions and its entire ecosystem and community, there's so many examples for it to pull up on if you just use like a simple GitHub CLI search and there's so many references and there's great community and just point at all those references and say spin up 10 examples, let me preview some of them, make a video of them if I'm lazy and I'll watch the video on my phone later.
+
+381
+00:41:40,960 --> 00:41:41,920
+Like there's just
+
+382
+00:41:43,200 --> 00:41:50,000
+yeah just having that mindset of not tolerating those frictions or inefficiencies anymore.
+
+383
+00:41:52,720 --> 00:42:21,760
+is pretty much I think a I don't know if that's a superpower like it's a uh it's it's a blessing and a curse at the same time so what do what do you think the danger is like in terms of so i i think so a commonality in all of the folks presenting here today is that um maybe we're people that aren't satisfied with the tooling and from your hyper customized setup and *** has Cody and and *** uh basically has everything.
+
+384
+00:42:21,760 --> 00:42:26,240
+I think he's he's developing every single um point of the stack uh at this point.
+
+385
+00:42:26,240 --> 00:42:43,280
+Like where is the danger where you just fall too deep into like the setup, the meta, like building the thing that builds the thing versus, you know, like like what Ken talked about where we're we're, you know, like shipping products to end users or or maybe sometimes that is the the product that you ship in in some cases.
+
+386
+00:42:43,280 --> 00:42:52,000
+But yeah, and that's the the weird part is drawing the line between which thing is for me, which thing is for my team, which thing is for my users.
+
+387
+00:42:52,000 --> 00:42:57,760
+And the way that typically people build things is you build something for yourself first.
+
+388
+00:42:58,160 --> 00:43:06,160
+If you feel like it can be evolved and escalated in something for your team, then help it like put it online, get it hosted.
+
+389
+00:43:06,160 --> 00:43:17,200
+And that's where a lot of things like Pi and Py durable and just having modular style agents, if you can keep them as small and customizable as possible too, so they can evolve into workflows.
+
+390
+00:43:17,600 --> 00:43:27,520
+And that's a lot of what my course is about, is having that mindset of when I mentioned a lot of people get stuck in one conversation and they just like stick to that one over weeks of time.
+
+391
+00:43:27,520 --> 00:43:36,160
+Um, the more you can think of agents and their roles as things you can refactor out into refactor is the wrong word.
+
+392
+00:43:36,160 --> 00:43:36,880
+I don't know.
+
+393
+00:43:37,600 --> 00:43:40,720
+Let's see, agents having babies, spawning siblings.
+
+394
+00:43:40,960 --> 00:43:43,280
+What's the terminology there?
+
+395
+00:43:43,280 --> 00:43:51,040
+But the the more they can be split into their individual expertises, expertise, what's the plural?
+
+396
+00:43:51,520 --> 00:43:53,840
+The more you can reuse them for
+
+397
+00:43:54,640 --> 00:43:57,600
+the, for your team or for your users.
+
+398
+00:43:57,600 --> 00:43:59,200
+And I think a lot of people recognize that.
+
+399
+00:43:59,200 --> 00:44:04,960
+That's why like dev tools are exploding as far as people investing in DevTools companies and everything.
+
+400
+00:44:04,960 --> 00:44:14,800
+Like everyone finds a solution for themselves, like they find a friction that they are, them or their team gets frustrated with and then they go ship something better.
+
+401
+00:44:14,960 --> 00:44:18,240
+And then whether or not you want to um
+
+402
+00:44:19,520 --> 00:44:26,640
+I I I will freely admit there are a lot of extensions that I use that are published by the community and I'm like, this is good enough for me.
+
+403
+00:44:26,640 --> 00:44:28,000
+This is something that
+
+404
+00:44:28,880 --> 00:44:32,400
+I use, it falls into the background, and I don't have to think about it anymore.
+
+405
+00:44:32,400 --> 00:44:34,080
+I didn't have to spend tokens on it.
+
+406
+00:44:34,080 --> 00:44:39,760
+And that kind of that same mindset is, you know, people are going to ship products that are good enough for me and that I don't have to build.
+
+407
+00:44:39,760 --> 00:44:49,120
+But for the ones that are like touch all the the the points of my software development cycle, those are the ones where I need the most control over.
+
+408
+00:44:49,120 --> 00:44:59,840
+And it's just kind of you know building up your teams of agents, building up communities of agents, and having having that mindset of agents with with expertise.
+
+409
+00:44:59,840 --> 00:45:18,800
+And I'm not even talking about sub-agents, more the uh, um I don't know how how much time we have, but like if you see how much Grokbot has um impacted the scene by having many top level agents with names and roles and a single conversation that um
+
+410
+00:45:19,760 --> 00:45:22,000
+kind of inverted the
+
+411
+00:45:22,960 --> 00:45:32,080
+or kind of escalated or pulled subagents from being nested inside of one agent out to a layer of I know this agent has a specific role.
+
+412
+00:45:32,000 --> 00:45:33,920
+I know it has this one conversation.
+
+413
+00:45:33,920 --> 00:45:37,920
+Whenever I talk to this agent, I know I'm going to be talking about that thing.
+
+414
+00:45:38,480 --> 00:45:41,200
+Typically we've been thinking about that on a project level.
+
+415
+00:45:41,200 --> 00:45:46,320
+Now we can think about it more at what what is this agent the best at?
+
+416
+00:45:46,320 --> 00:47:17,440
+Um and I could keep on yapping for my lord I could sorry to interrupt so long I could go down on that that I'm looking forward I'm looking forward to your week I know we're like we're so we're so aligned in terms of yeah *** and I are and yeah it's great sorry to interrupt guys but we need to switch to *** uh right now uh because we want to hear from him but we we won't uh we won't put any more recordings uh we'll just talk about the weeks um i think it's uh it's um uh it's way better and also um uh after *** I will I will I will show you just um what *** is about and how we build it, how we build the lessons, so that I I can address some of the questions from the chat because there's uh uh a lot to it and uh today we just want to meet the authors and their weeks and uh and you have like all the lessons and the content explained a lot more uh uh detailed on the platform so i i will just show it briefly and then we'll proceed to qa *** are you there um howdy howdy hey man i oh yeah what are you guys doing today to question you about your week of course yeah i want to hear about i want to hear about your week *** but like you uh pejoratively um call us pie people and i want to know like why like before we jump into your week like why why shouldn't people like go into that particular funnel of activity like why should they stop doing that and and maybe move to something higher level?
+
+417
+00:47:17,440 --> 00:47:23,680
+The reason to go all in on pie, in my opinion, is because it's fun and you want to.
+
+418
+00:47:23,680 --> 00:47:28,080
+And the biggest thing we all need to be working on right now is not burning out.
+
+419
+00:47:28,080 --> 00:47:38,960
+Now that we have like the infinite work machine in all of our computers that is willing to just let us work 24 hours a day without question, we need to make sure we don't burn ourselves out in the process.
+
+420
+00:47:38,960 --> 00:47:45,280
+And if Pi is the thing that makes you love this more, absolutely you should do it.
+
+421
+00:47:45,280 --> 00:47:53,120
+But it's it to me, it's very much like you're doing it because you want to and for the love of the game.
+
+422
+00:47:53,120 --> 00:47:58,080
+I know for a fact that I am shipping more code than every Pi user that I know.
+
+423
+00:47:58,080 --> 00:47:59,840
+I think that's a, I mean, that's a great way to look at it.
+
+424
+00:47:59,840 --> 00:48:06,880
+And somebody I saw recently was like, oh, we were promised a four-hour work week, but we're actually getting a seven-day, four-hour work week, but we're getting a seven-day work week.
+
+425
+00:48:07,040 --> 00:48:09,360
+And I said we're actually working 16 hours a day now.
+
+426
+00:48:09,360 --> 00:48:13,280
+So it's more like a 14-day work week is what it it fundamentally feels like.
+
+427
+00:48:13,440 --> 00:48:15,920
+and like I use Pi because it's fun and I enjoy it.
+
+428
+00:48:15,920 --> 00:48:16,880
+Fully agree with that.
+
+429
+00:48:16,880 --> 00:48:19,280
+And I'm like most people should just use T3 code.
+
+430
+00:48:19,280 --> 00:48:32,080
+That is literally what i tell people constantly even though i'm doing the exact opposite of what i say and i think that's fine um what's your week like what are you what are you gonna dig into and and show us during your make a week.
+
+431
+00:48:32,000 --> 00:48:43,680
+my goal is to go really deep on the fundamentals so that the people who are taking the rest of the course feel like they have the the mental model ready to apply the learnings.
+
+432
+00:48:43,680 --> 00:48:52,560
+I find that a lot of people just like they understand roughly how agents work and that AI can write code in these certain ways.
+
+433
+00:48:52,560 --> 00:49:04,000
+And if they have these files in their code base, the AI will magically know what to do, but they don't really understand how the agent sees the world or really how the agent builds its own understanding of anything.
+
+434
+00:49:04,000 --> 00:49:05,360
+And I really wanted to lean into that.
+
+435
+00:49:05,360 --> 00:49:21,680
+So I actually start by going through the history of how LLMs started to function, how the, how they pick probabilities based on like what token they think should go next and then build up the pieces from there historically so that you get to like come with us through the whole history.
+
+436
+00:49:21,680 --> 00:49:33,680
+Because I honestly feel like part of why folks like us, the instructors, and some of the like more locked-in agentic devs that I know are able to understand it all is because they learned it over the years as the things changed.
+
+437
+00:49:33,680 --> 00:49:36,960
+Some people have some baggage from a specific era they haven't let go of.
+
+438
+00:49:37,200 --> 00:49:42,720
+Some people deeply built their understanding at one point in time and haven't adapted or adjusted since.
+
+439
+00:49:42,720 --> 00:49:55,520
+But if you follow the whole journey, I find it's a lot easier to understand how agents work and more importantly, how they see things because it's really hard to make the right glasses and build the right workspace for your agent if you don't know how their eyes work.
+
+440
+00:49:55,520 --> 00:49:58,800
+What's like the biggest that you've observed, right?
+
+441
+00:49:58,800 --> 00:50:05,760
+Like maybe not the biggest, but what's a a thing that people hold on from legacy software dev that really is like generally holding them back?
+
+442
+00:50:05,760 --> 00:50:09,440
+I I think the biggest one is this idea that
+
+443
+00:50:10,320 --> 00:50:15,040
+when they look at the code, that makes it correct somehow.
+
+444
+00:50:15,120 --> 00:50:29,840
+Like I have personally, like the code I have merged that caused outages on average is the code I reviewed more heavily, not less, because the most sensitive code got the most eyes and still was the most likely to have problems.
+
+445
+00:50:29,840 --> 00:50:34,640
+The power of agents isn't to write a bunch of slop that we all have to read.
+
+446
+00:50:34,640 --> 00:50:44,320
+It is to give us the ability to take any problem that is too tedious to be bothered with, make it more tedious and more valuable in the process.
+
+447
+00:50:44,320 --> 00:50:48,080
+Like we have spent our whole careers steering away from tedium.
+
+448
+00:50:48,080 --> 00:50:53,360
+The reason that we're engineers is because we hate tedious things so much that we go out of our way to automate everything.
+
+449
+00:50:53,360 --> 00:51:00,160
+That's how we got into software in the first place for everyone here, I'm almost certain, is you wanted to make something less tedious or annoying.
+
+450
+00:51:00,160 --> 00:51:03,840
+So you made a more tedious and annoying decision to learn how to code.
+
+451
+00:51:04,160 --> 00:51:11,840
+We don't like tedium and we steer away from it, agents flourish in tedium.
+
+452
+00:51:11,840 --> 00:51:17,680
+The more bullshit the task you can give an agent, the more likely it is to succeed to an extent.
+
+453
+00:51:17,680 --> 00:51:26,960
+So if you find ways to take work that previously we would have fully avoided because it's tedious, make it more tedious, and then hand it to an agent, you can do crazy things.
+
+454
+00:51:26,960 --> 00:51:36,720
+So this could be something silly like writing 10,000 lines of code for a 500 line change because you build a whole verification system to make sure it works how you want.
+
+455
+00:51:36,720 --> 00:51:58,320
+Or something I was just working on the last few days is I spent a lot of time and tokens making an eval set for the MCP built into T3 code, the one that lets you like choose like create one thread from another, spin up subagents in one harness from another, all that, because I wanted it to be simpler and have fewer random errors with the agents and also less context being used.
+
+456
+00:51:58,320 --> 00:52:15,040
+So I took every single time through my entire history for months where my agents did something I didn't like and tediously went through all of that with agents, created a subset of problems from my real-lived experience, then made a very detailed evaluation out of all that.
+
+457
+00:52:15,040 --> 00:52:16,560
+I could have done this by hand.
+
+458
+00:52:16,560 --> 00:52:25,040
+It would have taken weeks, if not months, of going through all of this data, combing through to find these specific things.
+
+459
+00:52:25,120 --> 00:52:27,600
+I now don't have to worry about any of that.
+
+460
+00:52:27,920 --> 00:52:57,680
+Is there something and I I I'm I think I recall correctly that testing wasn't your like unit tests and testing was something that you like maybe, maybe up to just TDD, but like I feel like you were, is it like one of those tedious things where previously was like, yeah, no thanks and and has has moved into like now it's like like a sure or or the other side of that is like they love the tedium so much that they will write 15,000 tests that mean nothing because they're just happy to sit there and toil all day long.
+
+461
+00:52:57,680 --> 00:53:03,600
+Like what's the like what's the balance there with with the tedious tasks that we allow them to run away with.
+
+462
+00:53:03,600 --> 00:53:07,680
+I find that both of those things are true and it makes things strange.
+
+463
+00:53:08,000 --> 00:53:09,920
+To an extent this is one of those like
+
+464
+00:53:10,720 --> 00:53:15,120
+uh you'll know it when you see it and like move things around until it feels right things.
+
+465
+00:53:15,120 --> 00:53:24,560
+Like we let the agents write tons of unit tests in T3 code for a while and eventually got to the point where we had more flakes than we had useful errors.
+
+466
+00:53:24,560 --> 00:53:33,120
+So I went through and I Thanos snapped over half the tests away and it has become easier for our agents to work and operate.
+
+467
+00:53:33,120 --> 00:53:42,240
+That's really how we've been thinking about things from day one is like how do we unblock the agents and make it easier to make the right change and harder to make the wrong one.
+
+468
+00:53:42,240 --> 00:53:45,520
+Sometimes that means some really heavy tasks up front.
+
+469
+00:53:45,520 --> 00:53:49,840
+Sometimes that means a crazy evaluation you're going to send your agents to hill climb.
+
+470
+00:53:49,840 --> 00:53:57,280
+Sometimes that means just like do the thing and have an agent go click some buttons and make sure it works.
+
+471
+00:53:57,280 --> 00:54:08,560
+Do you think like programming languages generally like right now are do you are we going to see like a Cambrian explosion of new programming languages or are we going to narrow down into some specific language.
+
+472
+00:54:08,560 --> 00:54:19,760
+Like I I've just been, I've been thinking about that a lot with TypeScript, which I love, and Rust and, and, you know, like are these the the final champions or is there going to be infinite languages, I guess?
+
+473
+00:54:19,760 --> 00:54:23,440
+I would be surprised if we didn't see an explosion.
+
+474
+00:54:23,920 --> 00:54:35,840
+the weird experiment I've been doing was it started with TypeScript Rust, which was my like white whale, the impossible AI task I've joked about for years of having an agent rewrite the TypeScript language in Rust.
+
+475
+00:54:36,080 --> 00:54:39,120
+It took a few days to get it working and it took
+
+476
+00:54:40,720 --> 00:54:44,640
+under two weeks to make it faster than the official Go rewrite.
+
+477
+00:54:44,640 --> 00:54:48,240
+That was unfathomable just a few weeks ago.
+
+478
+00:54:48,240 --> 00:54:49,600
+Like That's crazy though.
+
+479
+00:54:49,600 --> 00:54:53,600
+It took a couple of days to get it working is like a crazy thing to say for that
+
+480
+00:54:54,720 --> 00:54:55,600
+period.
+
+481
+00:54:55,680 --> 00:55:02,240
+And two times faster than the official version in a week and four plus times faster in two weeks.
+
+482
+00:55:02,240 --> 00:55:04,640
+It's just, it's crazy.
+
+483
+00:55:04,640 --> 00:55:19,520
+And part of what I experimented or experienced with this is like I most of the thread is I had one giant goal running, but then I spun up another thread next to it saying audit the history here every once in a while, identify bottlenecks, and come up with ways that we can resolve those bottlenecks.
+
+484
+00:55:19,520 --> 00:55:27,680
+The biggest bottleneck by far for TS Rust was actually the compute that I was running on, not the tokens I was getting from Anthropic.
+
+485
+00:55:27,680 --> 00:55:32,000
+It was $500 of subscription usage to do the whole rewrite, which is still crazy.
+
+486
+00:55:32,000 --> 00:55:38,880
+Like yeah, of course it's subsidized, but it's not like like the subsidies are going to be matched by like the prices going down very quickly.
+
+487
+00:55:38,880 --> 00:55:45,920
+So $500 of money spent on the tokens, 10 to 20K retail for the API prices.
+
+488
+00:55:46,240 --> 00:55:58,560
+I spent over two grand on CI and VPSs to run all of the compiler checks and everything for that project, that inspired me to go further.
+
+489
+00:55:58,560 --> 00:56:04,320
+And now I'm rewriting the Rust compiler, making a subset of Rust that compiles significantly faster.
+
+490
+00:56:04,320 --> 00:56:05,520
+And it works.
+
+491
+00:56:05,520 --> 00:56:15,680
+So I have made a bespoke language to compile my bespoke compiler to compile and type check my existing cut like code bases.
+
+492
+00:56:15,680 --> 00:56:20,560
+And I would be surprised if like I can do this goofing off for fun right now.
+
+493
+00:56:20,560 --> 00:56:23,280
+Why as an industry would we not do this in the future?
+
+494
+00:56:23,280 --> 00:56:29,200
+Like we've always had to rely on software having all of the core functionality we needed in order for us to consume it, including languages.
+
+495
+00:56:29,360 --> 00:56:34,560
+Like if the language you're using is missing features that you need for your project or your work, that's awful.
+
+496
+00:56:34,560 --> 00:56:36,880
+So every language has to have every feature.
+
+497
+00:56:36,880 --> 00:56:42,160
+What if you can trim and right size literally everything in your stack from top to bottom.
+
+498
+00:56:42,160 --> 00:56:49,360
+Not only do I think we're all going to be writing our own compilers for our bespoke applications, I think we could be writing our own languages.
+
+499
+00:56:49,360 --> 00:56:51,200
+I think we could be writing our own operating systems.
+
+500
+00:56:51,200 --> 00:57:00,880
+Like I would not be surprised if a meaningful portion of new apps were deployed on a custom distribution of Linux in the next year.
+
+501
+00:57:00,880 --> 00:57:01,440
+Yeah.
+
+502
+00:57:01,920 --> 00:57:05,440
+I've been writing like a custom Lisp for myself, which is silly.
+
+503
+00:57:05,680 --> 00:57:06,880
+and nobody else is going to use it.
+
+504
+00:57:06,880 --> 00:57:21,440
+But there's this also this notion that we're all going to be like we have access to unlimited intelligence everybody is going to be in a personal zone of discovery constantly and that means that we you know like what why would you pay attention to what anybody else is doing?
+
+505
+00:57:21,440 --> 00:57:23,040
+Because you are in your own zone of discovery.
+
+506
+00:57:23,040 --> 00:57:33,040
+And I think like from a philosophical standpoint, that's like a, it's, it's like mind blowing, but also like feels like it's going to maybe be at least partially true.
+
+507
+00:57:33,360 --> 00:57:41,840
+Yeah, I think that one of the like skills I had that helped me a lot throughout my career was knowing when and how to tap out on a thing.
+
+508
+00:57:41,840 --> 00:57:43,600
+The silly example I give is keyboards.
+
+509
+00:57:43,600 --> 00:57:49,440
+I used to be a huge keyboard nerd where I like would build my own mechanical keyboards at least like a few times a year.
+
+510
+00:57:49,440 --> 00:57:54,240
+I got the Poker 3 by Vortex, which was like a 60% with a decent like built-in layout.
+
+511
+00:57:54,240 --> 00:57:57,200
+And I was immediately just like, this is good enough.
+
+512
+00:57:57,200 --> 00:58:00,880
+I've lost all motivation to care further.
+
+513
+00:58:00,880 --> 00:58:02,560
+I am happy with this.
+
+514
+00:58:02,560 --> 00:58:08,320
+And I have not built or customized the keyboard in like 10 plus years now.
+
+515
+00:58:08,320 --> 00:58:23,680
+That's something that's allowed me to like not get nerd sniped to the point of self-harm historically where like I could get into the thing enough to be practical and useful with it, build something cool with it, and not just keep going down the rabbit hole.
+
+516
+00:58:23,680 --> 00:58:39,440
+Now I am letting myself go down the rabbit hole more where I go from trying to speed up the builds in T3 code to rewriting the language server that we use in it to rewriting the other languages compiler to rewriting the operating system this all runs on.
+
+517
+00:58:39,440 --> 00:58:49,280
+And all of this not only is like more like justifiable than ever, it's also just more fun and more successful than I ever could have imagined.
+
+518
+00:58:49,280 --> 00:58:57,520
+Like I'm genuinely annoyed and frustrated that T3OS has become as good as it is and I really need to just lock in and get it out because
+
+519
+00:58:58,480 --> 00:59:08,480
+it's so cool and it's just unbelievable that like you can be rewarded for going deeper like that, but also you can become addicted to just constantly finding another layer to go to.
+
+520
+00:59:08,480 --> 00:59:14,800
+And you need more discipline than ever to choose where to like draw the barriers and like where to focus on.
+
+521
+00:59:15,600 --> 00:59:34,800
+I think something that's interesting to me that that I think keeps coming back is the the idea of the bitter lesson or that the intelligence is going to get such that all of the complexity that we wrap around it in our harnesses and in our kind of our day-to-day and skills and all that stuff is is eventually going to be unnecessary whereas it isn't today.
+
+522
+00:59:34,800 --> 00:59:39,440
+And I'm wondering, you know, like we're not not predicting the future, but have you seen a lot of that in
+
+523
+00:59:40,400 --> 00:59:48,320
+as the models progress, we need less to, you know, like put around them or and will that trend continue?
+
+524
+00:59:48,800 --> 00:59:53,040
+I I I definitely think we need to put less around the models.
+
+525
+00:59:53,040 --> 01:00:01,040
+We, if anything, what we need is to give more to the models, like give them more tools to verify more things themselves.
+
+526
+01:00:01,040 --> 01:00:12,800
+Like I know I just mentioned T3OS, but the fact that I gave every thread on T3OS its own window on the desktop so that each one, it's not like a VM per thread.
+
+527
+01:00:12,800 --> 01:00:17,120
+It is a window manager per thread with access to like the shared application layer.
+
+528
+01:00:17,120 --> 01:00:30,160
+So once you sign in one place, it's signed in everywhere, giving my agents free reign to just do computer use however they want on a machine like that has allowed them to produce much better results.
+
+529
+01:00:30,160 --> 01:00:34,720
+And from there, as long as you can define a hill, the agents can climb it.
+
+530
+01:00:34,720 --> 01:00:48,960
+I have a couple videos coming out soon I'm really proud of in this regard and I set you up for this in the course as well, this idea that the the problem like the agents are trained to work with problems shaped a certain way.
+
+531
+01:00:48,960 --> 01:00:55,920
+And if you learn how to shape problems that same way, the agent will just do whatever it can to stay on that path.
+
+532
+01:00:55,920 --> 01:01:02,240
+So if you just provide enough tools and hints that it's going the right direction, you don't need to do too much else.
+
+533
+01:01:02,240 --> 01:01:11,360
+Like I had a UI overhaul run that I let go for 18 hours straight and I merged it and the complaints are it's slightly too dark.
+
+534
+01:01:11,360 --> 01:01:19,840
+Other than that, 18 hours later of just letting an agent run in a loop, polishing our UI, it succeeded.
+
+535
+01:01:20,160 --> 01:01:22,560
+Is the bottleneck, I guess, the ideas at that point?
+
+536
+01:01:22,560 --> 01:01:30,000
+Like thinking the chain of thought required from you like as the operator to go from this place of dissatisfaction.
+
+537
+01:01:30,000 --> 01:01:33,600
+I feel like you're an eternally dissatisfied type of person, um, maybe.
+
+538
+01:01:33,600 --> 01:01:41,440
+Uh, and you know, it's like you you have this list and it's not like previously you weren't technically capable of writing TypeScript in Rust.
+
+539
+01:01:41,440 --> 01:01:44,160
+It would have just taken you three years or whatever.
+
+540
+01:01:44,160 --> 01:01:47,360
+And so like that doesn't make sense, but now you can just do that.
+
+541
+01:01:47,360 --> 01:02:04,960
+So like where's the, where's the bottleneck um for the, for the person and and how i guess i don't know how do you people talk about taste all the time and i honestly i i get a little tired of the the taste commentary it's it it is part of that perhaps but like also like it's i feel like frustration almost that that drives some of it.
+
+542
+01:02:06,400 --> 01:02:08,160
+How would you think about that?
+
+543
+01:02:09,200 --> 01:02:17,200
+the biggest bottleneck I feel right now is I I always refer to what I call shelf space, like the amount of space you can take up in an area.
+
+544
+01:02:17,200 --> 01:02:18,800
+And like, yeah, I'm popular.
+
+545
+01:02:18,800 --> 01:02:20,240
+People see my tweets and things a lot.
+
+546
+01:02:20,240 --> 01:02:22,720
+I'm sure a lot of the audience here is here because of my tweets.
+
+547
+01:02:22,720 --> 01:02:23,920
+Thank you all for coming, by the way.
+
+548
+01:02:23,920 --> 01:02:25,280
+Super appreciate it.
+
+549
+01:02:25,280 --> 01:02:31,840
+The way I think of it is I effectively get like three slots a day that I can share things in.
+
+550
+01:02:31,840 --> 01:02:39,440
+And if I share more than three things a day, each additional one, I like gets exponentially less attention.
+
+551
+01:02:39,440 --> 01:02:54,080
+And I have to keep sharing the cool things we're doing in the products that exist, as well as the things I'm working on for other products, the more I release, the more confusing it gets, not just for the audience overseeing it, but for myself as well.
+
+552
+01:02:54,080 --> 01:02:54,880
+It's
+
+553
+01:02:56,240 --> 01:02:59,280
+too easy to end up with too much.
+
+554
+01:02:59,280 --> 01:03:11,120
+And that's the biggest issue I run into is pacing everything as it comes out and making sure I actually get the thing to the end, not because like the last 10% is the hardest.
+
+555
+01:03:11,120 --> 01:03:14,880
+Like it is, but the last 10% can be done with the agents now.
+
+556
+01:03:14,880 --> 01:03:17,360
+It's more because the last 10%
+
+557
+01:03:18,320 --> 01:03:21,040
+is a commitment and it's a scary commitment to make.
+
+558
+01:03:21,040 --> 01:03:22,640
+And once the thing's out, it's out.
+
+559
+01:03:22,640 --> 01:03:24,880
+You can't take it back the same way.
+
+560
+01:03:24,880 --> 01:03:30,480
+So that's for me the biggest ball neck is just not having enough room to put out all these cool things that we're doing and working on.
+
+561
+01:03:30,480 --> 01:03:32,400
+And I hope I can find ways to fix that.
+
+562
+01:03:32,400 --> 01:03:38,240
+I need to, I need to put a pause here because the kick off is to get to know all the authors and there is still ***.
+
+563
+01:03:38,240 --> 01:03:39,520
+Oh, thank you so much, ***.
+
+564
+01:03:39,520 --> 01:03:40,240
+Thanks so much.
+
+565
+01:03:40,560 --> 01:03:41,040
+Thanks, ***.
+
+566
+01:03:41,280 --> 01:03:42,080
+***, thanks.
+
+567
+01:03:42,240 --> 01:03:42,800
+That was great.
+
+568
+01:03:42,800 --> 01:03:44,160
+***, are you here?
+
+569
+01:03:45,040 --> 01:04:16,880
+Can we talk briefly about your week hi *** hey how are you I'm doing pretty good actually these are great conversations I'm so excited um I'm really stoked uh for your week and uh I'm gonna let you explain to us what what your your week will be about and and what information you're gonna gonna uh provide for us yeah so I'm week two I go after uh the amazing *** uh so I did get a sneak peek of ***'s content and it's it's outstanding.
+
+570
+01:04:16,880 --> 01:04:51,440
+Um and he'll go over a lot of you know how to effectively wield these agents uh as a software developer, you know, ***, I really have a strong belief that very, very soon software developers are going to have a mandate to also know how to build agentic systems, like whether that's standalone agents or, you know, just capabilities within applications, but understanding how to control like the agent loop and everything that goes inside of that.
+
+571
+01:04:51,760 --> 01:04:58,240
+So in my course, we're actually going to build an agent, not a coding agent.
+
+572
+01:04:58,240 --> 01:05:04,320
+It'll be like a real uh, you know, uh business type of agent.
+
+573
+01:05:04,720 --> 01:05:07,440
+And uh in that we we go through everything.
+
+574
+01:05:07,440 --> 01:05:15,440
+So we're learning, you know, how to manage context, how to set up memory in your agent and and what that looks like.
+
+575
+01:05:15,920 --> 01:05:19,120
+We're going through how to give your agents uh
+
+576
+01:05:20,080 --> 01:05:26,400
+tools to use, whether that's tools that we're building in the app itself or MCP.
+
+577
+01:05:26,400 --> 01:05:29,440
+And then we're gonna go really deep on MCP as well.
+
+578
+01:05:29,440 --> 01:05:39,520
+So showing like how to uh build MCP servers with like a lot of advanced features beyond just tools, but things like elicitation
+
+579
+01:05:40,720 --> 01:05:41,040
+and
+
+580
+01:05:42,400 --> 01:05:44,400
+task and all sorts of good things.
+
+581
+01:05:44,400 --> 01:05:49,120
+And then we get into some multi-agent collaboration as well.
+
+582
+01:05:49,120 --> 01:06:06,480
+So if I want to delegate tasks to a third party, not an agent that I have any control over whatsoever, but another business uh is providing an agent as a service, how do we communicate with that agent and delegate tasks to it and that sort of thing?
+
+583
+01:06:06,480 --> 01:06:28,560
+And then of course after we've built this beautiful agent we have to talk about how to ensure that it's actually reliable and so we'll get into uh some of the the important maybe not so glamorous but very important stuff like evals and observability and things like that.
+
+584
+01:06:28,560 --> 01:06:33,840
+Do you think I something I've been thinking about a lot lately and I'm wondering where you you you think about this too.
+
+585
+01:06:33,840 --> 01:06:44,400
+I I I feel like there's legacy software like pre-AI and then where we're we're headed in the future and you know like protocols like NCP are going to be be huge and important.
+
+586
+01:06:44,880 --> 01:07:07,120
+What does that mean for for people that were traditionally software developers developing legacy software compared to like the opportunities that they need to focus on to continue like they versus their career and then like what's what's going to be built like it feels like there's just a mound of opportunity and potential but it's going to require some some different thinking.
+
+587
+01:07:07,120 --> 01:07:12,160
+Yeah, a bit, but surprisingly, not as much as you think, right?
+
+588
+01:07:12,160 --> 01:08:16,480
+And I feel like that's why a lot of engineers feel like they they don't have that that sense of building and they're not as much in the flow state anymore is because they're just kind of prompting these agents to build stuff for them that doesn't work when you need to build like agentic systems themselves you have to jump back in so um you'll see a lot of code in in my course um where you're controlling everything kind of around the model right and so this just becomes a new entity in the software that we're already used to building where we have this non-deterministic uh actor that can do some pretty cool stuff um but we have to build around that as well and I think that developers will see ah this is where the flow state is right and so you start feeling a lot of what we felt before as builders there's some new interesting problems to solve but a lot of the skills that we already have as developers come into play
+
+589
+01:08:17,760 --> 01:08:26,640
+MCP is interesting because I feel like it was something that when it first came out, people kind of panned it a little bit and weren't weren't nice to it, but now like it feels like it's good.
+
+590
+01:08:26,640 --> 01:08:45,120
+And um and I and I honestly don't think it's changed it's changed some, like the protocol's changed, but I'm wondering what what that shift was in your mind and where how did MCP become something where people were kind of clowning on it a little bit and now like it feels like like people are really truly like embracing it and everything's getting some mcp love.
+
+591
+01:08:45,120 --> 01:08:45,600
+Yeah.
+
+592
+01:08:45,600 --> 01:08:58,880
+I think I think one thing was like it was very like kind of a a solo person sport before where um you know if you're only using it for your coding tests or something like that, you're like, what's the point of this?
+
+593
+01:08:58,880 --> 01:09:01,600
+I can use a CLI or something like that.
+
+594
+01:09:01,600 --> 01:09:29,680
+Um now we're starting to people are starting to use agents beyond just coding and now you can see the beauty of this when you need to connect to all of your various applications uh that's a totally different ball game right um i think also we must admit that the the spec itself did get a lot better and did uh add functionality for scaling, right, across um just like kind of one-to-one client-server relationships.
+
+595
+01:09:29,680 --> 01:09:33,040
+And so um I think that definitely helped as well.
+
+596
+01:09:33,040 --> 01:09:43,120
+And you're right, we're starting this is so I've I've traveled all across the globe um this year talking to companies that are using MCP.
+
+597
+01:09:43,120 --> 01:09:48,960
+Um, and it's a very different conversation than the one you'll see you'll see on Twitter.
+
+598
+01:09:48,960 --> 01:09:51,680
+Like in the business versus on the business.
+
+599
+01:09:52,640 --> 01:10:02,160
+Like people boots on the ground, developers, making software, shipping features, like there, there's a different, different vibe than what you would see on X.com, the Everything app.
+
+600
+01:10:02,160 --> 01:10:02,560
+Exactly.
+
+601
+01:10:02,640 --> 01:10:03,920
+That's exactly right.
+
+602
+01:10:04,160 --> 01:10:06,160
+Yeah, I mean that make that makes sense to me.
+
+603
+01:10:06,640 --> 01:10:12,240
+Another thing that I think is interesting and you talk about agentic applications and building, you know, like applications and doing this.
+
+604
+01:10:12,480 --> 01:10:26,000
+what, what does that mean is that Is that the chat box that that chase puts in when I log in I don't even think they do that they're pretty behind banks aren't a great example but like is that is that the is the chat box what we're talking about or what does that actually mean when we talk about atentic applications?
+
+605
+01:10:26,000 --> 01:10:27,600
+It could be a chat box.
+
+606
+01:10:27,600 --> 01:10:34,480
+It could be something that um is a service that other agents can can call, right?
+
+607
+01:10:34,800 --> 01:10:38,720
+It could be agentic capabilities that work in the background in your app.
+
+608
+01:10:38,720 --> 01:10:41,120
+So we're going to explore actually all of that.
+
+609
+01:10:41,120 --> 01:10:45,040
+I want, I want the learners to see each piece of that.
+
+610
+01:10:45,040 --> 01:10:50,960
+So we'll have a chatbot agent that works as like a customer service type of agent.
+
+611
+01:10:50,960 --> 01:11:07,120
+We'll see also why these things are so dumb um and why they answer the way that they do and do the goofy things that they do and we'll be able to tweak that stuff as developers I'll show you exactly what you need to do to make that better.
+
+612
+01:11:07,440 --> 01:11:16,240
+And then we'll also have like kind of standalone agents that, hey, anybody that needs me, here I am, call me when you do.
+
+613
+01:11:16,240 --> 01:11:24,800
+And these agents may not ever surface to an end user or a customer, but they're working with your agent in the background.
+
+614
+01:11:25,120 --> 01:11:26,560
+We'll see that as well.
+
+615
+01:11:26,560 --> 01:11:33,520
+And then we'll also see just like agenda capabilities built into uh the routing, the decisions.
+
+616
+01:11:33,520 --> 01:11:37,200
+Oh, we throw a little decision model in there too.
+
+617
+01:11:37,200 --> 01:11:54,880
+So we got a little jab in there to show in within your code itself, right uh you might need to go down various paths and you need a little bit of judgment or reasoning to decide which path to go through and and and decision models can help with that
+
+618
+01:11:56,720 --> 01:12:00,880
+So part one of the things that I think of when you say that is is people talk about loops.
+
+619
+01:12:00,880 --> 01:12:03,600
+Um, you know, for the last like that that came up this year, right?
+
+620
+01:12:03,600 --> 01:12:07,840
+Like we started talking about loops and we we had agents and if you're not looping, you're you're left behind.
+
+621
+01:12:08,000 --> 01:12:19,520
+and I think there, we've moved on to graphs and graphs of loops now, but but is that where you're too you know, is that part of part of this is is that that looping experience, the background, like agents working autonomously for us while we sleep?
+
+622
+01:12:19,520 --> 01:12:21,680
+Is that is that part of the discussion.
+
+623
+01:12:22,480 --> 01:12:22,800
+Um
+
+624
+01:12:23,760 --> 01:12:29,200
+So I I think the loop is core to understanding how all of this works.
+
+625
+01:12:29,200 --> 01:12:41,200
+I think what engineers are missing is that they look at this loop as something that just exists and they're trying to figure out like how do I be the human in this loop.
+
+626
+01:12:41,440 --> 01:12:43,760
+I think that's the the wrong mindset.
+
+627
+01:12:43,760 --> 01:12:47,440
+What I want to teach you is how do you control the loop, right?
+
+628
+01:12:47,680 --> 01:13:09,920
+And show you the various entry points where you get to determine what happens within this loop yeah it's more i mean not necessarily being the human in the loop, but having control over what occurs in the loop, which is two separate things, because you don't necessarily have to stop and intervene, but you need to be able to have visibility, understand what's going on.
+
+629
+01:13:09,920 --> 01:13:14,720
+And ultimately, I think we as the people that are that are deploying these things are are responsible, right?
+
+630
+01:13:14,720 --> 01:13:22,240
+Like we we are still responsible to our customers and our clients and and our our coworkers and our, you know, like the the stack, I think, at the end of the day.
+
+631
+01:13:22,400 --> 01:13:23,600
+and, you know, like what
+
+632
+01:13:24,560 --> 01:13:27,200
+I I would think about that too, like the level of responsibility.
+
+633
+01:13:27,200 --> 01:13:35,200
+And I'm wondering how we we like deal with that and and uh what that means as as the people that are deploying agents.
+
+634
+01:13:35,200 --> 01:13:41,120
+Yeah, and I think that's where you'll see a lot of the engineering work to be done.
+
+635
+01:13:41,280 --> 01:13:41,600
+Um
+
+636
+01:13:42,640 --> 01:13:48,720
+we act like, I don't know, like these models, oh, they're so non-deterministic and that means we have no control.
+
+637
+01:13:48,720 --> 01:13:50,080
+That's not true at all.
+
+638
+01:13:50,080 --> 01:13:51,600
+We have a lot of control.
+
+639
+01:13:51,920 --> 01:14:08,080
+When we build the system around them right if you're not in control of building it then of course you have no control but i want to peel back all of that and show folks how this all works um and how to build those controls around the model.
+
+640
+01:14:08,160 --> 01:14:19,440
+Which levers that we have as the people that are building the agents to control them over time and make sure that the results that they produce are the results that we expect the vast majority of the time.
+
+641
+01:14:19,440 --> 01:14:30,080
+I think, you know, at the end of the day, you're still, you know, like bugs happen, you're still going to get mistakes, stuff, stuff will go, go south, but we have to, you know, like take, take control of that and and be responsible for for the output.
+
+642
+01:14:30,080 --> 01:14:31,040
+Yep.
+
+643
+01:14:31,520 --> 01:14:34,400
+Okay guys, um thanks so much.
+
+644
+01:14:34,400 --> 01:14:35,520
+Thanks so much, ***.
+
+645
+01:14:35,600 --> 01:14:36,960
+Uh that was amazing.
+
+646
+01:14:37,280 --> 01:14:38,400
+thank you.
+
+647
+01:14:38,400 --> 01:14:55,680
+And um uh I would like to take these five minutes to just quickly show you and tell you uh the things and oh uh and answer some questions from the chat about *** and then we will try to bring uh all of our authors together for two or three questions that I picked up from the chat there.
+
+648
+01:14:55,920 --> 01:14:58,400
+There are some uh uh nice questions.
+
+649
+01:14:58,400 --> 01:15:09,200
+However, please take into consideration that this kickoff is just so that you can uh get to know the authors and their weeks and their mindset about the weeks.
+
+650
+01:15:09,040 --> 01:15:38,400
+and then each week you will have during ***, each week you will have um a separate session um with uh the authors and uh this Friday *** is starting with the Q&A session so you can you will then be able to ask uh him a lot of uh different question and uh questions and take his perspective and then every Wednesday we'll have a live session with one of the authors as well so there will be plenty of um uh time to uh ask them question more questions.
+
+651
+01:15:38,640 --> 01:15:49,920
+In the meantime I will share my screen uh just real quick and um I hope that you guys can see it you you should be able to see it because there is quite a few questions questions about ***.
+
+652
+01:15:49,920 --> 01:15:57,920
+So I try to just quickly go through how we built *** and how it is different from today's session and what you can count on.
+
+653
+01:15:57,920 --> 01:16:01,360
+So basically if you enter um ***'s HQ
+
+654
+01:16:02,160 --> 01:16:11,600
+there is a dashboard that you can access lessons from and you have today's lesson and also you have today's brief.
+
+655
+01:16:11,600 --> 01:16:27,360
+Together with the course we have a tool that enters your you can you give instruction uh to your agent to install the tool and then um from the console from the terminal you'll be able to in your agent uh use the course as well.
+
+656
+01:16:27,360 --> 01:16:34,240
+So there there will be assessments and there will be challenges coming to your harness and you can use your harness to
+
+657
+01:16:35,200 --> 01:16:36,800
+to do the assessments.
+
+658
+01:16:36,800 --> 01:16:38,080
+I'll explain that in a second.
+
+659
+01:16:38,080 --> 01:17:12,640
+But basically this is the dashboard and also from there you'll be able to join discord there is already a a great discussion on the discord uh about *** and how it's um uh progressing right now and basically we have also the um hands-on challenges that you will be able to uh open from here and then there is a storyline that we have in *** we created a storyline that travels with you within your harness and you'll be getting bits and pieces of the storyline throughout the course.
+
+660
+01:17:12,640 --> 01:17:21,520
+You can play the teaser and you can see how the story work uh works here, but this is fully optional and you don't have to get involved in all of that.
+
+661
+01:17:21,520 --> 01:17:27,280
+If you don't want to, it's just like a minute a day or two minutes a day and it's a
+
+662
+01:17:28,240 --> 01:17:35,200
+story that we build so that we can all learn to read a bit slower as developers.
+
+663
+01:17:35,200 --> 01:17:37,040
+And I think it's pretty interesting.
+
+664
+01:17:37,040 --> 01:17:43,360
+So those of you who will try it, I think they will be happy about how it goes.
+
+665
+01:17:43,360 --> 01:18:16,080
+You can see the story um in the separate tab as well but from the dashboard the most important thing is basically to go to the lesson and to watch the lesson and read the lesson so lessons basically in *** they have two parts there is a video and a text component to it and the video component is uh for example in week one there is to lessons they they are roughly like 20 30 minutes some lessons are longer and uh the way to use *** is basically to to uh watch the lesson and then read the text.
+
+666
+01:18:16,080 --> 01:18:32,400
+This is not the same text it's completely different from the lesson you can play this uh back um and um listen to it or you can read it and I recommend reading it because then you have the visualizations as well, the screenshots that you can click to enlarge.
+
+667
+01:18:32,400 --> 01:18:35,360
+And this is basically the core content of ***.
+
+668
+01:18:35,360 --> 01:18:56,800
+So what you do um every day is you log in here to the dashboard or you go to your um agent and then from the terminal you put *** start and once you put *** Start in the terminal and you have your harness connected and by the way you can check challenges with the instructions on how to set up your harness here.
+
+669
+01:18:56,800 --> 01:19:14,720
+So once you are connected every day you can run *** start and then we will do some things to connect um the lesson lessons content to your way of learning because there is also an assessment that we ask you to do and you can also do it from the homepage.
+
+670
+01:19:14,720 --> 01:19:22,720
+And once you do the assessment, we will get to know your habits, not your projects, nothing personal, but basically how you work.
+
+671
+01:19:22,720 --> 01:19:30,400
+And from the assessment you can also get to know your way of working in terms of *** letter that we built.
+
+672
+01:19:30,400 --> 01:19:42,000
+And then once you use this command *** start at the beginning of your day, then we will connect your scores from the assessment, not scores, but basically your profile.
+
+673
+01:19:42,320 --> 01:19:45,600
+In my case this is from 150 sessions.
+
+674
+01:19:45,600 --> 01:19:48,960
+We will connect it to the lesson and we will give you the brief.
+
+675
+01:19:48,960 --> 01:19:59,840
+So every day you will get a personalized brief that you can read how this lesson is useful for your harness, for your content, for your context of and the way of working.
+
+676
+01:19:59,840 --> 01:20:03,680
+So you can read the brief and then you can proceed to to the lesson.
+
+677
+01:20:03,680 --> 01:20:09,760
+Then you can watch the lesson and read the lesson and once you are done you can
+
+678
+01:20:10,640 --> 01:20:12,800
+check out the lessons challenge.
+
+679
+01:20:12,800 --> 01:20:25,040
+So once you click on the lessons challenge and or you can do it from your agent as well, you will have information about what to do and how to solve the puzzle that we have for each lesson.
+
+680
+01:20:25,040 --> 01:20:44,720
+And with uh not with every lesson but with most of them you will also be able to collect a card uh to your deck there is a deck tab in *** and here you will collect and and earn your *** cards that will give you *** certificate at the end so there is 20 lessons there is four live events
+
+681
+01:20:45,840 --> 01:20:54,320
+and uh those 20 lessons they all have challenges but not all of the challenges grant you cards just some of them because there is 12 cards.
+
+682
+01:20:54,320 --> 01:21:00,320
+So basically once you collect all of the cards you will be granted *** developer certificate.
+
+683
+01:21:00,320 --> 01:21:09,520
+Apart from those cards you will also have a lot of other cards with our gamification, the Arsenal and the lore cards, but those I'm gonna leave for now.
+
+684
+01:21:09,520 --> 01:21:12,640
+I think you're gonna explore them as we go.
+
+685
+01:21:12,640 --> 01:21:22,240
+If you have any questions about *** and how it basically works, let me know in the chat or just drop us a line at hello at ***.
+
+686
+01:21:22,240 --> 01:21:24,320
+We'll be happy to answer everything.
+
+687
+01:21:24,320 --> 01:21:34,640
+And uh for you guys joining today, uh for those of you joining, please make sure that you log in here to the HQ and then join our Discord and say hello.
+
+688
+01:21:34,640 --> 01:21:40,240
+The time to join is only till midnight Pacific time today.
+
+689
+01:21:40,240 --> 01:21:45,200
+So hopefully we can meet inside and
+
+690
+01:21:46,160 --> 01:21:58,160
+also you can decide during the first two weeks whether you want to stay with in *** and this is bring bringing you a lot of value or not during the first two week you can easily resign.
+
+691
+01:21:58,160 --> 01:22:01,280
+So I hope you guys saw today's lesson.
+
+692
+01:22:01,280 --> 01:22:07,520
+Those of you who are inside, I hope it was nice to meet our authors during the the kickoff.
+
+693
+01:22:07,520 --> 01:22:25,200
+This is how we usually organize it so that you can take a look at who's inside and you can uh chat um a bit to the we can chat a bit to the authors and now if we can um bring all of them in and i think that i can stop sharing now
+
+694
+01:22:26,080 --> 01:22:32,320
+and maybe you have um questions that I can ask all of them.
+
+695
+01:22:32,640 --> 01:22:37,600
+I think we can take two or three more questions so that they can uh they can answer.
+
+696
+01:22:37,600 --> 01:22:43,200
+I think the the one question I I picked I picked one, but there is plenty of those.
+
+697
+01:22:43,360 --> 01:22:46,400
+We will try to answer them on the Discord.
+
+698
+01:22:46,400 --> 01:22:54,720
+But the one good one that I picked up was what is the future you've seen in terms of how codebases and products evolves.
+
+699
+01:22:54,720 --> 01:22:56,240
+Maybe you can tell like
+
+700
+01:22:57,200 --> 01:23:04,160
+just just one or two sentences about um how the the code bases and our products will evolve.
+
+701
+01:23:04,480 --> 01:23:05,440
+what's your bet?
+
+702
+01:23:05,520 --> 01:23:05,840
+Um
+
+703
+01:23:06,960 --> 01:23:10,720
+and whoever wants to start.
+
+704
+01:23:10,800 --> 01:23:12,320
+I can go first for that.
+
+705
+01:23:12,320 --> 01:23:30,560
+I think we're gonna be moving away from this idea of like the source code being the source of truth and towards a a vaguer source of truth, which means like that we'll have transient problems and whatnot, but the idea of encoding intent instead of encoding behavior is, I think, a direction that we'll see everything moving towards.
+
+706
+01:23:30,880 --> 01:23:38,720
+I can tell you that the product that I'm working on is like 1.3 million lines of code that I have built myself over the last eight months.
+
+707
+01:23:38,720 --> 01:23:40,080
+And that's just like
+
+708
+01:23:40,880 --> 01:23:46,560
+no that's not a thing that we used to be able to do ever in any context.
+
+709
+01:23:46,560 --> 01:23:54,160
+And so the the future of the code base I think is definitely um I mean it it the size is not what matters.
+
+710
+01:23:54,160 --> 01:23:57,280
+It's the out outcome of what you're building, right?
+
+711
+01:23:57,520 --> 01:24:15,760
+But I think that we're able it my vision for the future is that software is invisible, that you you you don't talk about software, you talk about problems that you have and the software is like an implementation detail of how you solve that problem and the agents are going to be the ones managing that.
+
+712
+01:24:15,760 --> 01:24:17,840
+So what is the future of the code base?
+
+713
+01:24:18,080 --> 01:24:20,880
+I think that uh it's um
+
+714
+01:24:22,160 --> 01:24:29,760
+it is relegated to um something that we don't have to think about uh in the long term.
+
+715
+01:24:29,760 --> 01:24:31,920
+Yeah, I totally agree with that.
+
+716
+01:24:31,920 --> 01:24:37,760
+Um I think we'll start looking at the source code as something like
+
+717
+01:24:39,280 --> 01:24:45,440
+kind of the bytecode, the zeros and ones that this stuff all boils down to.
+
+718
+01:24:45,440 --> 01:25:02,000
+It'll be like that low level thing where like, yeah if you if you want to geek out and look at it sure knock yourself out but I don't think there'll be a requirement or a need to um like *** said I think it'll be much more about the intent.
+
+719
+01:25:02,400 --> 01:25:04,160
+We'll likely need
+
+720
+01:25:05,360 --> 01:25:07,600
+better ways to understand
+
+721
+01:25:08,400 --> 01:25:09,680
+like what's
+
+722
+01:25:10,640 --> 01:25:20,240
+what this code base does and the intent of it, you know, uh right now anybody can ask their agent that, but that doesn't seem scalable.
+
+723
+01:25:20,240 --> 01:25:26,000
+Um so I I wouldn't be surprised if we saw something surface there.
+
+724
+01:25:26,880 --> 01:25:29,040
+***, you have anything to add?
+
+725
+01:25:29,120 --> 01:25:29,600
+Sure.
+
+726
+01:25:29,920 --> 01:25:42,160
+Back to the earlier conversation, if you are comfortable with your agent building a compiler that you're going to use, would you be comfortable having your agent build a Git replacement that you're going to use or a CI replacements.
+
+727
+01:25:43,120 --> 01:26:03,680
+At what point do you just trust your agent to take over the entire pipeline so that the things you have locally goes directly to your customers and that your customers and their intents align with the the intents that you just have publicly served through I don't know I I guess I'll wait till *** vibecodes and new HTTP protocol.
+
+728
+01:26:03,920 --> 01:26:05,680
+I don't know what's what's next on your plate.
+
+729
+01:26:06,160 --> 01:26:08,080
+I have been thinking way too much about protocols.
+
+730
+01:26:08,080 --> 01:26:08,560
+Don't test.
+
+731
+01:26:08,880 --> 01:26:11,920
+I figured I figured what I've been taughting.
+
+732
+01:26:12,320 --> 01:26:13,120
+Sorry to.
+
+733
+01:26:14,000 --> 01:26:17,360
+Regarding that also Jeremy asked a question which is
+
+734
+01:26:18,240 --> 01:26:19,120
+quite important.
+
+735
+01:26:19,120 --> 01:26:23,840
+So do you think that skills like um skills will matter
+
+736
+01:26:24,640 --> 01:26:34,400
+or engineering will matter in the right patterns um if the right patterns are built into future versions of let's say cloud code or cursor or things like that.
+
+737
+01:26:34,400 --> 01:26:36,800
+I want to weigh in here first.
+
+738
+01:26:36,800 --> 01:26:37,120
+Um
+
+739
+01:26:38,560 --> 01:26:38,880
+I
+
+740
+01:26:40,000 --> 01:26:47,680
+I don't know how people are using skills, but that question like really gets under my skin a bit.
+
+741
+01:26:48,320 --> 01:26:53,520
+The whole purpose of skills is not to make up for what the model
+
+742
+01:26:54,400 --> 01:26:56,480
+is not capable of.
+
+743
+01:26:56,720 --> 01:26:59,040
+You can have a very capable model.
+
+744
+01:26:59,040 --> 01:27:01,840
+I can have a fable level model.
+
+745
+01:27:01,840 --> 01:27:04,640
+What skills provides is
+
+746
+01:27:05,920 --> 01:27:07,520
+my specific
+
+747
+01:27:08,480 --> 01:27:24,000
+context, like my workflow of how my team works so you have me you have *** you have *** you have *** all of us you know we work on different teams we have different workflows of how we want stuff done none of that is baked into
+
+748
+01:27:24,800 --> 01:27:26,000
+a model, right?
+
+749
+01:27:26,000 --> 01:27:27,760
+The model is generic.
+
+750
+01:27:28,000 --> 01:27:31,200
+And so it has general knowledge that it is trained up on.
+
+751
+01:27:31,680 --> 01:27:34,160
+very capable, very competent.
+
+752
+01:27:34,640 --> 01:27:44,080
+Skills provides not like how to do something, but how I want something done based on like my circumstance, right?
+
+753
+01:27:44,080 --> 01:27:49,120
+And so I don't think like we get rid of skills when the models are more capable.
+
+754
+01:27:49,120 --> 01:27:59,040
+In fact, like if you look at some of the harnesses, like I I look at uh like Chat GPT work, for example, I think it's beautifully engineered.
+
+755
+01:27:59,520 --> 01:28:20,240
+If you look beyond the prompt and see like what it's doing like it has a host of skills beyond my user generated skills a host of skills that tell it like how to you know interact with different things or how to use certain tools better based on like the harness itself.
+
+756
+01:28:21,360 --> 01:28:25,680
+And that does not exist in other platforms, right?
+
+757
+01:28:25,680 --> 01:28:30,400
+Even though they might have the same connections to these tools.
+
+758
+01:28:30,400 --> 01:28:35,120
+The authors of that harness have a very specific way that they think that this should work.
+
+759
+01:28:35,120 --> 01:28:37,840
+And so they baked that into the skills.
+
+760
+01:28:37,840 --> 01:28:57,120
+And what about maybe we can put an angle, maybe maybe *** or *** or or *** can also put an angle of human skills on that instead of agent skills because *** says that the question was maybe leaning a bit more towards human skills and how are we, you know, unnecessary or not in the loop.
+
+761
+01:28:57,840 --> 01:28:59,360
+I'll step up.
+
+762
+01:28:59,360 --> 01:29:12,160
+So to ***'s point there, if you pay attention to the community around trying to define terms for agents, terms like uh harness and subagent and everything.
+
+763
+01:29:12,160 --> 01:29:13,920
+Everyone has a different definition
+
+764
+01:29:14,720 --> 01:29:18,000
+and your engineering skills will be
+
+765
+01:29:20,800 --> 01:29:32,000
+The better you can articulate what those concepts are and fully understand the pieces and how they fit together, the better you'll be able to ask and communicate with the agents the things you need.
+
+766
+01:29:32,000 --> 01:29:42,320
+It's fine to be able to ask an agent, just make this website or make this game and have it be really fun for with the specific demographic.
+
+767
+01:29:42,320 --> 01:29:56,400
+The more you understand the demographic, the more you understand the technology that uh that powers the tools that you're building, the more you understand that the better your product is going to be for for your for your users, for your audience.
+
+768
+01:29:56,400 --> 01:30:24,960
+And it's going to require you to just be an expert in a lot of those a lot of that terminology that if you're not asking for the right thing it's not going to build the right thing um it'll build a cool demo that you can post on your timeline and get a lot of likes, but it's not going to build a thing that uh withstands the pressure of security, of, well, that's another discussion, of multiple agents interacting with it and on and on.
+
+769
+01:30:24,960 --> 01:30:40,560
+Yeah, on that note, one of the most underrated things, and I push this a bit in my section is the idea of like creating a shared grammar and language with your agents for a given project, because like words mean things, but they don't mean them well enough that the agent always means them the same way.
+
+770
+01:30:40,560 --> 01:30:49,120
+So if you can like define a a language that you and your agents and your work understand, it makes it so much easier to to build this shared knowledge.
+
+771
+01:30:49,120 --> 01:31:15,040
+And a lot of our job is going to be figuring out how much to understand and not to understand and being more selective around what you let enter your brain because if you're not you'll just always be overloaded and I think we're about to enter an era of constant overwhelm and constant barraging of useless information and we have to be very careful about what we do and don't let occupy space in our brains and time in our lives.
+
+772
+01:31:15,920 --> 01:31:19,280
+It's almost like attention is all you need.
+
+773
+01:31:20,640 --> 01:31:41,280
+I I um I actually have been thinking about this a lot this morning, uh thinking like what if right right now, um the the things that I talk about in my week, like one of them is uh about primitives and how you uh create those kinds of terms and the things that you talk about and the boxes that you draw around these abstractions and and the relationships.
+
+774
+01:31:41,440 --> 01:31:53,040
+And uh right now, setting that up um I think requires a a certain amount of technical ability and understandings of uh designing a good system and all of that.
+
+775
+01:31:53,360 --> 01:32:02,000
+I do think that eventually the models are just and the agents, the harnesses that harness them are gonna just get really, really, really good at all of that.
+
+776
+01:32:02,000 --> 01:32:03,840
+And so what's left for us?
+
+777
+01:32:04,160 --> 01:32:06,560
+And so I think that
+
+778
+01:32:08,000 --> 01:32:12,560
+communicating intent is valuable today and designing systems is valuable today.
+
+779
+01:32:12,560 --> 01:32:18,720
+I'm not confident in my ability to predict what it's going to look like a year from now because I I got it way wrong a year ago.
+
+780
+01:32:18,720 --> 01:32:35,280
+Like I had no idea how good we were gonna be a year ago and so um what I think is a really durable skill is the um the ability to adapt to what becomes possible uh this is a concept called adjacent possible.
+
+781
+01:32:35,440 --> 01:32:41,360
+Actually I've been thinking about this a lot this morning because I'm going to record a video about this exact thing as soon as we hang up here.
+
+782
+01:32:41,360 --> 01:33:04,000
+But this is just this idea of being aware of the advancements of technology and what becomes possible as the problems that people feel in the real world meet the technology that can solve those problems better than anything before, I think that will be uh a huge wedge uh a a huge like moat if you want to call that that um but uh
+
+783
+01:33:04,960 --> 01:33:10,640
+um it's an exciting time i i think that we're gonna be able to solve a lot of really cool problems
+
+784
+01:33:12,080 --> 01:33:18,960
+There's also quite a few questions about *** itself, so I allow myself to to answer also
+
+785
+01:33:19,760 --> 01:33:22,160
+a lot of answers you will find on the website.
+
+786
+01:33:22,480 --> 01:33:26,640
+But basically, yes, uh, this is async, the lessons are async.
+
+787
+01:33:26,640 --> 01:33:50,400
+So you will just uh go to the um *** HQ every day and you have a recording, like 20, 30 minutes of recording, it will be much more structured than the conversation that we have here of course and then the lesson content which is about half an hour reading so you can do it async you can do it during the week you can do during the weekend and then you have challenges that you spend some time on.
+
+788
+01:33:50,400 --> 01:33:54,640
+And if you want to get involved in the storyline also you can spend some time on that.
+
+789
+01:33:54,640 --> 01:34:02,320
+And then on top of that, you have uh each week you will have a uh live session with one of the authors.
+
+790
+01:34:02,320 --> 01:34:05,840
+So you'll be able to ask all of those great questions.
+
+791
+01:34:05,840 --> 01:34:12,000
+To be honest, I would love to answer all of them because there are really good questions on the chat right now.
+
+792
+01:34:12,000 --> 01:34:18,960
+But I'll allow myself to basically copy those questions and uh and pass them to uh to the live sessions and the discord
+
+793
+01:34:19,760 --> 01:34:43,600
+so uh that we make sure that we try to answer them because we are already 10 minutes past past time so maybe there is um some closing thoughts that you guys want to share um about *** and your weeks because basically we wanted to make it about about your weeks and to maybe you uh to introduce yourself uh to uh to *** students.
+
+794
+01:34:43,840 --> 01:34:52,160
+So if you have anything else to add, please do now and I will only quote *** or *** here.
+
+795
+01:34:52,480 --> 01:34:58,000
+I'm very happy with this intro, setting the tone for what will go through the coming weeks.
+
+796
+01:34:58,240 --> 01:35:01,520
+Great to see all instructors and excited.
+
+797
+01:35:01,520 --> 01:35:10,160
+Thanks so much, ***, and thank you all for coming and being here with us, meeting one another and the instructors as well.
+
+798
+01:35:10,160 --> 01:35:15,600
+As I mentioned, we also invited people from outside that were hesitant about joining ***.
+
+799
+01:35:15,600 --> 01:35:20,560
+Maybe it kind of gave you the the vibe of um of the weeks.
+
+800
+01:35:21,760 --> 01:35:27,360
+With uh all of all of you who are already inside, we will meet on Discord that we are already there.
+
+801
+01:35:27,360 --> 01:35:31,440
+Any final thoughts from you, ***, ***, ***, ***, ***?
+
+802
+01:35:31,760 --> 01:35:32,800
+Buckle up, I guess.
+
+803
+01:35:33,520 --> 01:35:35,520
+Yeah, it's gonna be alright, for sure.
+
+804
+01:35:35,520 --> 01:35:39,360
+Um there is a lot of content uh waiting for you already.
+
+805
+01:35:39,360 --> 01:35:41,920
+The first lesson is up and the challenge as well.
+
+806
+01:35:41,920 --> 01:35:59,120
+Uh and I've and I saw that you guys already started to to there's already two and a half thousand people on the platform so uh yeah *** someone with an open mind and an empty context window the goal is to help you reset and rethink where things are at the less you apply the way things
+
+807
+01:36:00,000 --> 01:36:07,600
+the way you do things today and the more you open up to new ways of doing things and thinking about things, the the more useful the material will be.
+
+808
+01:36:07,840 --> 01:36:09,200
+Burning tokens is easy.
+
+809
+01:36:09,200 --> 01:36:11,120
+Burning them well is a challenge.
+
+810
+01:36:11,120 --> 01:36:17,840
+And I think when you come out of this, you are going to be way more equipped to like spend your tokens for building things well.
+
+811
+01:36:18,080 --> 01:36:23,680
+And that's a a great skill that you'll be able to carry forward through the next decade at least.
+
+812
+01:36:23,680 --> 01:36:24,080
+Yeah.
+
+813
+01:36:24,080 --> 01:36:24,640
+Thank you all.
+
+814
+01:36:24,640 --> 01:36:31,120
+Thank you guys thanks so much for being here today and enjoy *** y'all bye

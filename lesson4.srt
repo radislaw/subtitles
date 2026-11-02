@@ -1,0 +1,1756 @@
+1
+00:00:02,560 --> 00:00:05,840
+Now that we understand how context works,
+it's time to take advantage of it.
+
+2
+00:00:05,840 --> 00:00:08,002
+If you want to get your agents to behave
+certain
+
+3
+00:00:08,002 --> 00:00:10,614
+ways and do certain things and stop making
+silly mistakes,
+
+4
+00:00:10,614 --> 00:00:11,920
+this is where we'll learn it.
+
+5
+00:00:11,920 --> 00:00:15,782
+The concept that we're going to talk about
+mostly is the idea of memory systems,
+
+6
+00:00:15,782 --> 00:00:17,520
+but more importantly, my spin on it.
+
+7
+00:00:17,520 --> 00:00:20,080
+Your knowledge system should just be your
+code base.
+
+8
+00:00:20,080 --> 00:00:22,349
+Throughout the years of building with
+agents,
+
+9
+00:00:22,349 --> 00:00:26,131
+there's been a lot of back and forth in how
+we should encode our knowledge,
+
+10
+00:00:26,131 --> 00:00:28,400
+everything from docs to beads to rules to
+dot
+
+11
+00:00:28,400 --> 00:00:32,080
+cursor files that we would have in our
+repos, all these different things.
+
+12
+00:00:32,080 --> 00:00:34,770
+Instead of focusing on these specific
+implementation details,
+
+13
+00:00:34,770 --> 00:00:37,063
+I want to focus more on how to work with a
+knowledge
+
+14
+00:00:37,063 --> 00:00:39,840
+system and how to make your agents behave
+better by using them.
+
+15
+00:00:39,840 --> 00:00:42,000
+I want to start here with a simple exercise.
+
+16
+00:00:42,000 --> 00:00:44,402
+Think back to the last time you were
+onboarded
+
+17
+00:00:44,402 --> 00:00:46,960
+onto a big code base you hadn't worked on
+before.
+
+18
+00:00:46,960 --> 00:00:48,550
+Whether this was at your job or you
+
+19
+00:00:48,550 --> 00:00:51,004
+were trying to contribute to some open
+source project,
+
+20
+00:00:51,004 --> 00:00:52,640
+I'm imagining pre-agents, obviously.
+
+21
+00:00:52,640 --> 00:00:56,315
+But remember that feeling that you got when
+you first opened the repo,
+
+22
+00:00:56,315 --> 00:00:59,360
+not understanding where anything was or what
+was going on?
+
+23
+00:00:59,360 --> 00:01:01,680
+I used to give a lot of advice on how to get
+through this.
+
+24
+00:01:01,680 --> 00:01:03,319
+It was a combination of techniques,
+
+25
+00:01:03,319 --> 00:01:05,800
+mostly starting from the idea that learning
+the whole
+
+26
+00:01:05,800 --> 00:01:08,000
+code base was never the right way to do
+things.
+
+27
+00:01:08,000 --> 00:01:11,746
+Nobody ever contributed to a codebase the
+size of Amazon or Googles by
+
+28
+00:01:11,746 --> 00:01:16,080
+reading every single file in it line by line
+until they built that understanding.
+
+29
+00:01:16,080 --> 00:01:17,260
+We got it other ways,
+
+30
+00:01:17,260 --> 00:01:21,360
+usually from seeing what was changing and
+how the pieces worked together.
+
+31
+00:01:21,360 --> 00:01:23,840
+And that's what we want our agents to have
+too.
+
+32
+00:01:23,840 --> 00:01:26,065
+Remember, every time you start a new thread,
+
+33
+00:01:26,065 --> 00:01:30,160
+that agent is effectively having its memory
+wiped and it's starting from scratch.
+
+34
+00:01:30,160 --> 00:01:32,543
+And our goal isn't to make sure everything
+
+35
+00:01:32,543 --> 00:01:35,040
+it could ever possibly need is in its brain.
+
+36
+00:01:35,040 --> 00:01:37,676
+Our goal is to make sure that the right
+paths exist to
+
+37
+00:01:37,676 --> 00:01:40,800
+help our agent find what it needs when it's
+making real changes.
+
+38
+00:01:40,800 --> 00:01:42,878
+Back in the day when I was trying to onboard
+
+39
+00:01:42,878 --> 00:01:45,334
+our new hires to the codebases at Amazon and
+Twitch,
+
+40
+00:01:45,334 --> 00:01:47,176
+I had a silly trick that I used to help
+
+41
+00:01:47,176 --> 00:01:49,680
+get through a lot of the friction for the
+onboarding.
+
+42
+00:01:49,680 --> 00:01:52,160
+I called it the Dumb Questions rule.
+
+43
+00:01:52,160 --> 00:01:54,000
+The point of this rule was simple.
+
+44
+00:01:54,000 --> 00:01:56,960
+Everybody's kinda scared of seeming dumb,
+especially when they ask questions.
+
+45
+00:01:56,960 --> 00:01:58,480
+Nobody likes feeling dumb.
+
+46
+00:01:58,480 --> 00:02:01,118
+We've historically addressed this problem by
+trying to go the
+
+47
+00:02:01,118 --> 00:02:03,280
+angle of there's no such thing as a dumb
+question.
+
+48
+00:02:03,280 --> 00:02:04,400
+I think that's silly.
+
+49
+00:02:04,400 --> 00:02:06,640
+Everybody has asked a question that's dumb.
+
+50
+00:02:06,640 --> 00:02:08,800
+I would rather just have them ask it.
+
+51
+00:02:08,800 --> 00:02:11,630
+So when I onboard a new employees at my
+other roles,
+
+52
+00:02:11,630 --> 00:02:15,440
+I implemented the dumb question rule, which
+was meant to inverse this.
+
+53
+00:02:15,440 --> 00:02:17,280
+The dumb question rule was simple.
+
+54
+00:02:17,280 --> 00:02:21,754
+Every day you were on payroll, you had to
+ask me or one of the other leads
+
+55
+00:02:21,754 --> 00:02:25,200
+at least one question that made you feel
+dumb for asking.
+
+56
+00:02:25,200 --> 00:02:28,320
+Until you had asked a question that made you
+feel kind of stupid,
+
+57
+00:02:28,320 --> 00:02:29,520
+your workday wasn't done.
+
+58
+00:02:29,520 --> 00:02:32,134
+Some people would do five in their first few
+hours,
+
+59
+00:02:32,134 --> 00:02:36,388
+some would wait until the end of the day to
+write like a really good dumb question,
+
+60
+00:02:36,388 --> 00:02:38,797
+but I found that actively encouraging
+employees
+
+61
+00:02:38,797 --> 00:02:40,950
+to ask these types of questions especially
+
+62
+00:02:40,950 --> 00:02:44,640
+new hires was incredibly useful so how does
+any of this apply to agents?
+
+63
+00:02:44,640 --> 00:02:48,395
+Well you're effectively hiring a world-class
+engineer that's never seen your
+
+64
+00:02:48,395 --> 00:02:51,360
+code base before every time you click the
+new thread button.
+
+65
+00:02:51,360 --> 00:02:53,685
+So one of the best things you can do is
+
+66
+00:02:53,685 --> 00:02:57,440
+have them ask dumb questions or ask it dumb
+questions yourself.
+
+67
+00:02:57,440 --> 00:02:59,520
+I'm gonna demo this in a pretty silly way.
+
+68
+00:02:59,520 --> 00:03:04,263
+I'm gonna take a real-world large code base,
+in this case the T3 code code base,
+
+69
+00:03:04,263 --> 00:03:08,354
+and I'm going to delete the README, the
+CLAUDE.md, and the AGENTS.md,
+
+70
+00:03:08,354 --> 00:03:12,800
+which is going to effectively lob off the
+context from the top of the repo.
+
+71
+00:03:12,800 --> 00:03:15,333
+So now when I spin up an agent in it and ask
+it things,
+
+72
+00:03:15,333 --> 00:03:17,360
+it's not going to have what it used to have.
+
+73
+00:03:17,360 --> 00:03:22,560
+So I'm going to ask it something simple like
+I want to work with you in this repo.
+
+74
+00:03:22,560 --> 00:03:29,520
+I want you to ask me questions about what it
+is and how it works.
+
+75
+00:03:29,520 --> 00:03:36,080
+What confusion arises as you start to
+explore the code base?
+
+76
+00:03:36,080 --> 00:03:38,726
+Sadly, this type of dumb question doesn't
+make a whole lot
+
+77
+00:03:38,726 --> 00:03:41,600
+of sense to ask anymore as I've just
+accidentally demonstrated.
+
+78
+00:03:41,600 --> 00:03:43,226
+So I'm going to show you some examples
+
+79
+00:03:43,226 --> 00:03:45,280
+that have actually been really beneficial to
+me.
+
+80
+00:03:45,280 --> 00:03:48,160
+Here's a real example that I did just a few
+days ago.
+
+81
+00:03:48,160 --> 00:03:50,624
+I was working on a video about Gemini 4
+Argon and
+
+82
+00:03:50,624 --> 00:03:53,440
+I was getting a lot of data for my own real-
+world usage.
+
+83
+00:03:53,520 --> 00:03:56,160
+And I was asking questions about it, like
+how does it behave?
+
+84
+00:03:56,160 --> 00:03:58,720
+How is it acting compared to all these other
+models?
+
+85
+00:03:58,720 --> 00:04:01,840
+And I got this nice little visualizer that
+it wrote for T3 code.
+
+86
+00:04:01,840 --> 00:04:02,800
+There's a problem though.
+
+87
+00:04:02,800 --> 00:04:06,328
+I don't know how well this will come up when
+the video is encoded,
+
+88
+00:04:06,328 --> 00:04:10,230
+but uh it's very clear to me right now there
+is a strong black background
+
+89
+00:04:10,230 --> 00:04:14,560
+around this embedded HTML that is different
+from the gray that we use in T3 code.
+
+90
+00:04:14,560 --> 00:04:18,753
+This is because the model wrote HTML for
+this response and gave it a hard,
+
+91
+00:04:18,753 --> 00:04:20,000
+true black background.
+
+92
+00:04:20,000 --> 00:04:20,800
+It is hideous.
+
+93
+00:04:20,800 --> 00:04:23,360
+And I had seen it doing this earlier the
+same day.
+
+94
+00:04:23,360 --> 00:04:26,400
+And here is where it's important to start
+asking questions.
+
+95
+00:04:26,400 --> 00:04:30,560
+Why do you always add awful black
+backgrounds to your inline HTML?
+
+96
+00:04:30,560 --> 00:04:34,000
+Whatever makes you do that, fix it here and
+push it to the fleet.
+
+97
+00:04:34,000 --> 00:04:36,757
+This one was convenient because this repo,
+my fleet repo,
+
+98
+00:04:36,757 --> 00:04:40,240
+is where I manage and maintain all of my
+skills for all of my harnesses.
+
+99
+00:04:40,240 --> 00:04:41,920
+More about that in the next two lessons.
+
+100
+00:04:41,920 --> 00:04:43,923
+But I could have just asked this first part,
+
+101
+00:04:43,923 --> 00:04:47,200
+why do you always add these awful black
+backgrounds to your inline HTML?
+
+102
+00:04:47,200 --> 00:04:48,880
+At the end here it said why?
+
+103
+00:04:48,880 --> 00:04:51,360
+The global true black rule was too broad.
+
+104
+00:04:51,360 --> 00:04:53,681
+I scoped it to product UI and added an
+
+105
+00:04:53,681 --> 00:04:57,040
+explicit rule that inline HTML inherits the
+chat theme.
+
+106
+00:04:57,040 --> 00:05:02,240
+This is a change it had made to my core file
+skill for this particular thing.
+
+107
+00:05:02,240 --> 00:05:05,360
+And I'm gonna be real with you, it wasn't a
+very good fix.
+
+108
+00:05:05,360 --> 00:05:09,887
+The agents are more than capable of telling
+you why they did something wrong,
+
+109
+00:05:09,887 --> 00:05:13,120
+but they don't always make the right changes
+to fix it.
+
+110
+00:05:13,120 --> 00:05:14,927
+So when I ask these questions,
+
+111
+00:05:14,927 --> 00:05:18,480
+it isn't necessarily because I want it to go
+fix it itself.
+
+112
+00:05:18,480 --> 00:05:19,695
+We might get to the point in the
+
+113
+00:05:19,695 --> 00:05:21,708
+future where the models can write really
+good skills,
+
+114
+00:05:21,708 --> 00:05:24,139
+write really good markdown to instruct
+themselves in the future,
+
+115
+00:05:24,139 --> 00:05:26,000
+write really good prompts, those types of
+things.
+
+116
+00:05:26,000 --> 00:05:28,810
+I don't find they're good at it at the time
+I'm filming this,
+
+117
+00:05:28,810 --> 00:05:32,080
+but I do find they're good at identifying
+what they're struggling with.
+
+118
+00:05:32,080 --> 00:05:33,874
+It's the whole classic you should trust your
+
+119
+00:05:33,874 --> 00:05:36,320
+customers with their problems but not their
+solutions thing.
+
+120
+00:05:36,320 --> 00:05:40,639
+I let it write the solution, not because I
+want to use the solution it wrote,
+
+121
+00:05:40,639 --> 00:05:43,107
+but because whatever it goes to go change is
+
+122
+00:05:43,107 --> 00:05:46,080
+a really good indicator of what needs to be
+adjusted.
+
+123
+00:05:46,080 --> 00:05:48,169
+And you can bet your butt the first thing I
+
+124
+00:05:48,169 --> 00:05:50,355
+did after this was go find that skill that
+it
+
+125
+00:05:50,355 --> 00:05:52,687
+changed and edit it properly in order to
+push it
+
+126
+00:05:52,687 --> 00:05:55,360
+across the fleet and fix this problem once
+and for all.
+
+127
+00:05:55,360 --> 00:05:56,240
+I do this a lot.
+
+128
+00:05:56,240 --> 00:06:00,080
+Just in the last few days I was able to find
+many examples.
+
+129
+00:06:00,080 --> 00:06:02,320
+Here's one where I was analyzing between
+threads.
+
+130
+00:06:02,560 --> 00:06:05,280
+This technique works with pretty much every
+harness now.
+
+131
+00:06:05,280 --> 00:06:07,049
+You might not be able to get an ID easily,
+
+132
+00:06:07,049 --> 00:06:09,493
+but you can just tell the agent what you
+were doing in the
+
+133
+00:06:09,493 --> 00:06:12,400
+other thread and it can usually look through
+the history and find it.
+
+134
+00:06:12,400 --> 00:06:17,840
+So I had a thread I was working on in T3
+code that used the wrong tool.
+
+135
+00:06:17,840 --> 00:06:20,590
+That really frustrates me when I have the
+right tools
+
+136
+00:06:20,590 --> 00:06:23,600
+that are provided to the model and it does
+something else.
+
+137
+00:06:23,600 --> 00:06:27,440
+It uses the wrong thing, it edits the wrong
+file, it makes the wrong change.
+
+138
+00:06:27,440 --> 00:06:28,400
+I ask why.
+
+139
+00:06:28,400 --> 00:06:30,640
+In this case I said the thread used the
+wrong tool.
+
+140
+00:06:30,640 --> 00:06:33,360
+Figure out why and update the skills to
+prevent it.
+
+141
+00:06:33,360 --> 00:06:37,647
+If I should make changes to how the MCP
+stuff is described as well on the T3 side,
+
+142
+00:06:37,647 --> 00:06:40,000
+let me know and I'll spin up a thread for
+it.
+
+143
+00:06:40,000 --> 00:06:41,920
+It pointed to the skill that caused the
+problem.
+
+144
+00:06:41,920 --> 00:06:45,847
+Apparently my Sol loop skill, which we'll
+probably talk about in the future,
+
+145
+00:06:45,847 --> 00:06:49,051
+instructed the agent to use my thread send
+command in T3 code,
+
+146
+00:06:49,051 --> 00:06:52,720
+which caused it to create new threads when I
+wanted it to do subagents.
+
+147
+00:06:52,720 --> 00:06:54,160
+That was the bug I was working on here.
+
+148
+00:06:54,160 --> 00:06:55,840
+I didn't even write it in the prompt because
+it didn't matter.
+
+149
+00:06:55,840 --> 00:06:57,840
+I trusted the thread to be able to figure it
+out.
+
+150
+00:06:57,840 --> 00:07:00,418
+Again, not telling the agents exactly what I
+want,
+
+151
+00:07:00,418 --> 00:07:02,480
+when I'm trying to figure out what's up.
+
+152
+00:07:02,480 --> 00:07:05,925
+Explicit instructions are great when you
+want the agent to make changes,
+
+153
+00:07:05,925 --> 00:07:08,318
+but when you're exploring and trying to
+figure out
+
+154
+00:07:08,318 --> 00:07:10,519
+what it knows and why it behaves certain
+ways,
+
+155
+00:07:10,519 --> 00:07:12,960
+ask it questions and then make changes
+accordingly.
+
+156
+00:07:12,960 --> 00:07:15,503
+One more quick example of a more generic
+type
+
+157
+00:07:15,503 --> 00:07:18,160
+of problem that this way of thinking can
+solve.
+
+158
+00:07:18,160 --> 00:07:21,680
+I noticed that one of my threads had massive
+scope creep.
+
+159
+00:07:21,680 --> 00:07:24,641
+It should have been like a simple 100 or 200
+line of code change,
+
+160
+00:07:24,641 --> 00:07:28,240
+but I noticed the PR getting into the
+thousands of lines, and I was frustrated.
+
+161
+00:07:28,240 --> 00:07:31,760
+There is nothing I hate more than simple
+things being unnecessarily complex.
+
+162
+00:07:31,760 --> 00:07:33,655
+And agents are more than happy to write a
+
+163
+00:07:33,655 --> 00:07:35,920
+ton of complex code even when they don't
+need to.
+
+164
+00:07:35,920 --> 00:07:37,520
+So I called it out accordingly.
+
+165
+00:07:37,520 --> 00:07:41,268
+I said directly, the thread on or this
+thread on my particular machine
+
+166
+00:07:41,268 --> 00:07:44,160
+Cup 2 in T3 code ended up hitting massive
+scope creep.
+
+167
+00:07:44,160 --> 00:07:47,508
+I think it was from the Sol loops, because
+again, my skill Sol Loop,
+
+168
+00:07:47,508 --> 00:07:49,920
+as powerful as it is, can cause some scope
+creep.
+
+169
+00:07:49,920 --> 00:07:51,121
+I told it to audit it,
+
+170
+00:07:51,121 --> 00:07:55,378
+figure out the causes of the scope creep and
+massive inflation of the PR size,
+
+171
+00:07:55,378 --> 00:07:55,760
+fix it.
+
+172
+00:07:55,760 --> 00:07:57,840
+It likely needs more guidance in the skills.
+
+173
+00:07:57,840 --> 00:08:01,600
+Something like, and I gave an example of
+something I thought would work well.
+
+174
+00:08:01,600 --> 00:08:05,040
+Don't let these review loops constantly
+expand the size and scope of the changes.
+
+175
+00:08:05,040 --> 00:08:08,587
+Keep an eye out for unnecessary tests,
+guarding for edge cases that don't matter,
+
+176
+00:08:08,587 --> 00:08:11,040
+unnecessary levels of integration or
+compatibility, etc.
+
+177
+00:08:11,280 --> 00:08:13,600
+Keep changes simple wherever you reasonably
+can.
+
+178
+00:08:13,600 --> 00:08:15,680
+I got a pretty useful response here from
+Claude.
+
+179
+00:08:15,680 --> 00:08:18,720
+I fixed the skills and installed them on all
+11 boxes.
+
+180
+00:08:18,720 --> 00:08:21,265
+You are right that the Sol loop caused part
+of it,
+
+181
+00:08:21,265 --> 00:08:23,200
+the other part came before any review.
+
+182
+00:08:23,200 --> 00:08:26,400
+And it went through and described where
+these problems came from.
+
+183
+00:08:26,400 --> 00:08:30,240
+It started with this PR that had 271 lines
+added and 13 removed.
+
+184
+00:08:30,240 --> 00:08:32,320
+The fix it needed was only about 15 lines.
+
+185
+00:08:32,320 --> 00:08:34,965
+When delegate task gets provider
+unavailable,
+
+186
+00:08:34,965 --> 00:08:38,080
+it should recheck the one provider and try
+once more.
+
+187
+00:08:38,080 --> 00:08:40,560
+Very useful description of what happened
+there.
+
+188
+00:08:40,560 --> 00:08:43,001
+The first version was small before Sol saw
+it,
+
+189
+00:08:43,001 --> 00:08:45,920
+then the agent's own review brief asked for
+more scope.
+
+190
+00:08:45,920 --> 00:08:51,600
+It asked Sol whether any other path should
+be covered and about probe storm risks.
+
+191
+00:08:51,600 --> 00:08:55,360
+The skills brief template also ask Sol to
+look for quote missed cases.
+
+192
+00:08:55,360 --> 00:08:58,559
+So it got 90 more lines after the first
+round of review and
+
+193
+00:08:58,559 --> 00:09:01,920
+then it kept going more and more until the
+PR got way too big.
+
+194
+00:09:01,920 --> 00:09:07,120
+What I'm trying to say here is to start from
+a core of what is the problem.
+
+195
+00:09:07,120 --> 00:09:10,085
+So step one should always be ask an agent to
+make the change in
+
+196
+00:09:10,085 --> 00:09:13,850
+the code base without giving it access to
+anything special and see what it does,
+
+197
+00:09:13,850 --> 00:09:15,920
+see where it struggles, see what goes wrong.
+
+198
+00:09:15,920 --> 00:09:17,746
+This is similar to how I worked at Amazon,
+
+199
+00:09:17,746 --> 00:09:19,703
+where I would give a ticket to a new hire
+who
+
+200
+00:09:19,703 --> 00:09:22,138
+didn't know where anything was yet and then
+set them off
+
+201
+00:09:22,138 --> 00:09:24,182
+to see where they ended up and have them ask
+me
+
+202
+00:09:24,182 --> 00:09:26,400
+a bunch of questions on things as they go to
+do it.
+
+203
+00:09:26,400 --> 00:09:28,855
+If you've somehow literally never fired off
+an agent in
+
+204
+00:09:28,855 --> 00:09:31,176
+your code base or you don't have any like
+AGENTS.md,
+
+205
+00:09:31,176 --> 00:09:34,880
+CLAUDE.md stuff like that there, this is a
+great example of a first prompt to send.
+
+206
+00:09:34,880 --> 00:09:37,040
+I want you to work on ticket number,
+whatever.
+
+207
+00:09:37,040 --> 00:09:39,200
+Explore the code base and propose a fix.
+
+208
+00:09:39,200 --> 00:09:42,560
+If you struggle to find anything or you find
+something confusing, let me know.
+
+209
+00:09:42,560 --> 00:09:44,800
+Don't be afraid to ask dumb questions.
+
+210
+00:09:44,800 --> 00:09:46,910
+This type of prompt can get you a lot of
+
+211
+00:09:46,910 --> 00:09:49,600
+good insights on how your agent sees the
+code base.
+
+212
+00:09:49,600 --> 00:09:51,600
+And then from there, if it has questions,
+
+213
+00:09:51,600 --> 00:09:54,332
+you can answer them or if it has a proposed
+fix that you
+
+214
+00:09:54,332 --> 00:09:57,112
+think is good you can tell it to go
+implement it and then
+
+215
+00:09:57,112 --> 00:10:00,185
+you can see what it does and if it does
+something confusing you
+
+216
+00:10:00,185 --> 00:10:03,600
+can go read through the transcript piece by
+piece or you can just ask.
+
+217
+00:10:03,600 --> 00:10:07,200
+And if you notice that your threads are
+consistently falling into the same holes.
+
+218
+00:10:07,200 --> 00:10:09,499
+Maybe they are wasting all of your CPU and
+they try to
+
+219
+00:10:09,499 --> 00:10:12,480
+run a dev server they shouldn't and it's
+causing the machine to crash.
+
+220
+00:10:12,480 --> 00:10:15,066
+Maybe they're running the typecheck command
+at the wrong time
+
+221
+00:10:15,066 --> 00:10:17,440
+and it's making builds take way longer than
+they should.
+
+222
+00:10:17,440 --> 00:10:20,732
+Maybe they're pushing a pull request but in
+the wrong format and they're getting
+
+223
+00:10:20,732 --> 00:10:22,831
+auto-closed because they're not following
+the rules
+
+224
+00:10:22,831 --> 00:10:24,560
+that you have for your templates properly.
+
+225
+00:10:24,560 --> 00:10:27,440
+Whatever it is, ask why.
+
+226
+00:10:27,440 --> 00:10:29,491
+Just ask the agent why it did a thing
+
+227
+00:10:29,491 --> 00:10:33,040
+and you will find surprisingly useful
+answers when that happens.
+
+228
+00:10:33,040 --> 00:10:37,040
+And then from there, you can start
+microadjusting to get it the right way.
+
+229
+00:10:37,040 --> 00:10:39,149
+If it's something simple like it didn't use
+
+230
+00:10:39,149 --> 00:10:41,503
+the right template when it filed a pull
+request,
+
+231
+00:10:41,503 --> 00:10:45,280
+you can make a small change to the global
+AGENTS.md or CLAUDE.md to fix that.
+
+232
+00:10:45,280 --> 00:10:48,720
+Just tell it, hey, when you make PRs, make
+sure they use this template.
+
+233
+00:10:48,720 --> 00:10:49,520
+Always start here.
+
+234
+00:10:49,520 --> 00:10:52,249
+If you have a more complex process like I do
+where I
+
+235
+00:10:52,249 --> 00:10:55,870
+want it to verify itself and babysit pull
+requests in a specific way,
+
+236
+00:10:55,870 --> 00:10:57,760
+then you can graduate up to a skill.
+
+237
+00:10:57,760 --> 00:11:01,144
+And with the skill, you can indicate when
+the model should use it
+
+238
+00:11:01,144 --> 00:11:04,320
+with a simple description that says use this
+when X, Y, or Z.
+
+239
+00:11:04,320 --> 00:11:05,542
+And then that is, again,
+
+240
+00:11:05,542 --> 00:11:09,360
+bringing in certain context that the model
+doesn't have to generate itself.
+
+241
+00:11:09,360 --> 00:11:11,564
+I think people are a little too fixated on
+
+242
+00:11:11,564 --> 00:11:14,713
+the idea of helping the model get somewhere
+slightly faster,
+
+243
+00:11:14,713 --> 00:11:17,547
+but generally speaking, it can read your
+package JSON,
+
+244
+00:11:17,547 --> 00:11:20,906
+it can read the hierarchy of files and
+folders in the code base,
+
+245
+00:11:20,906 --> 00:11:24,160
+it can look for the specific string that was
+in the screenshot
+
+246
+00:11:24,160 --> 00:11:27,360
+you gave it and figure out where in the code
+base that lives.
+
+247
+00:11:27,360 --> 00:11:29,066
+If you try to give it a map of the
+
+248
+00:11:29,066 --> 00:11:31,875
+code base in your guidance and in your
+knowledge system,
+
+249
+00:11:31,875 --> 00:11:33,731
+you are giving the model an outdated,
+
+250
+00:11:33,731 --> 00:11:36,640
+broken version of a thing that it can
+already find itself.
+
+251
+00:11:36,640 --> 00:11:39,920
+What you need to do is steer it away from
+the scary parts.
+
+252
+00:11:39,920 --> 00:11:41,990
+Stop thinking of your knowledge system as
+
+253
+00:11:41,990 --> 00:11:44,160
+the only way someone can figure things out.
+
+254
+00:11:44,160 --> 00:11:48,320
+Instead, think of it as like guardrails and
+walls of a bouncy house.
+
+255
+00:11:48,320 --> 00:11:50,363
+You just wanna make sure it's not going to
+hurt
+
+256
+00:11:50,363 --> 00:11:52,320
+itself as it gets to where you want it to
+go.
+
+257
+00:11:52,320 --> 00:11:54,720
+I want to jump in front of a lot of the
+mistakes
+
+258
+00:11:54,720 --> 00:11:57,920
+I see people making when they start going
+down this rabbit hole.
+
+259
+00:11:57,920 --> 00:12:01,007
+If you think the solution to the mistakes
+your agents are
+
+260
+00:12:01,007 --> 00:12:04,365
+making is leaving a bunch of comments all
+over your code base,
+
+261
+00:12:04,365 --> 00:12:07,723
+writing a manifesto of where everything
+lives in the codebase,
+
+262
+00:12:07,723 --> 00:12:09,727
+or trying your hardest to add so many
+
+263
+00:12:09,727 --> 00:12:12,327
+unit tests the agent could never make a
+mistake,
+
+264
+00:12:12,327 --> 00:12:15,360
+you're very far from the way things are
+going right now.
+
+265
+00:12:15,360 --> 00:12:18,663
+The best solution is almost always to make
+the code base
+
+266
+00:12:18,663 --> 00:12:22,320
+simpler and easier for both you and your
+agents to understand.
+
+267
+00:12:22,320 --> 00:12:25,450
+The vast majority of the problems I have run
+into with agents
+
+268
+00:12:25,450 --> 00:12:29,503
+making mistakes aren't because I didn't have
+the right knowledge in the system,
+
+269
+00:12:29,503 --> 00:12:31,760
+it's because the thing itself was confusing.
+
+270
+00:12:31,760 --> 00:12:35,304
+Even if I did write up how it worked,
+somewhere where the agent could access,
+
+271
+00:12:35,304 --> 00:12:38,480
+it would still be confusing, it would still
+be unnecessarily complex.
+
+272
+00:12:38,480 --> 00:12:40,285
+And the vast majority of the time,
+
+273
+00:12:40,285 --> 00:12:44,638
+whether this is at a big Fortune 500 company
+or a small startup or a side project,
+
+274
+00:12:44,638 --> 00:12:47,292
+you can almost always simplify things so
+that both
+
+275
+00:12:47,292 --> 00:12:50,000
+the humans and the agents can understand it
+better.
+
+276
+00:12:50,000 --> 00:12:52,440
+*** from Cursor and now SpaceX AI has had
+
+277
+00:12:52,440 --> 00:12:55,600
+some really good commentary on what's going
+on right now.
+
+278
+00:12:55,600 --> 00:12:58,400
+This is a post she made about how to trust
+your agent's work more.
+
+279
+00:12:58,400 --> 00:13:01,920
+She also says you can just copy the post or
+link and give it directly to your bot.
+
+280
+00:13:01,920 --> 00:13:02,880
+Highly recommend doing that.
+
+281
+00:13:02,880 --> 00:13:04,560
+You'll be surprised what it can find.
+
+282
+00:13:04,560 --> 00:13:06,080
+In fact, I will do that now.
+
+283
+00:13:06,080 --> 00:13:08,281
+I'm literally just grabbing the tweet,
+pasting the link,
+
+284
+00:13:08,281 --> 00:13:10,639
+screenshots because I know that GPT models
+aren't as good at
+
+285
+00:13:10,639 --> 00:13:13,272
+accessing X because uh somebody wants to
+keep them from doing that,
+
+286
+00:13:13,272 --> 00:13:15,158
+and just telling it use the principles from
+this
+
+287
+00:13:15,158 --> 00:13:17,280
+tweet to audit the code base and suggest
+improvements.
+
+288
+00:13:17,280 --> 00:13:18,640
+And while that runs, we can read it.
+
+289
+00:13:18,640 --> 00:13:20,883
+The first step to making sure you can trust
+your
+
+290
+00:13:20,883 --> 00:13:23,360
+agent's work more is to improve the code
+base itself.
+
+291
+00:13:23,360 --> 00:13:26,204
+This is just good software engineering,
+better architecture,
+
+292
+00:13:26,204 --> 00:13:28,480
+stronger types and invariants, clear
+boundaries.
+
+293
+00:13:28,480 --> 00:13:31,707
+Agents love to copy what exists and take the
+shortest path,
+
+294
+00:13:31,707 --> 00:13:33,840
+so make the easy thing the right thing.
+
+295
+00:13:33,840 --> 00:13:36,240
+This is one of the most important pieces.
+
+296
+00:13:36,240 --> 00:13:40,901
+I find everyone is trying to cover up the
+absolute chitchos that are their code
+
+297
+00:13:40,901 --> 00:13:43,910
+base by having these complex knowledge
+systems that
+
+298
+00:13:43,910 --> 00:13:46,860
+re-encode all of the complex spaghetti they
+wrote,
+
+299
+00:13:46,860 --> 00:13:49,280
+there is no excuse for spaghetti anymore.
+
+300
+00:13:49,280 --> 00:13:52,468
+Agents can go through that spaghetti and
+trim it down to
+
+301
+00:13:52,468 --> 00:13:55,200
+be way simpler if you guide them there to do
+it.
+
+302
+00:13:55,200 --> 00:13:58,461
+So if you have your agents doing stupid
+things or pushing
+
+303
+00:13:58,461 --> 00:14:02,466
+spaghetti all across your code base or
+making obviously bad decisions,
+
+304
+00:14:02,466 --> 00:14:04,240
+you need to fix your code base.
+
+305
+00:14:04,240 --> 00:14:07,032
+Categorically eliminate the problems through
+the code and
+
+306
+00:14:07,032 --> 00:14:09,040
+you won't need to think about this again.
+
+307
+00:14:09,040 --> 00:14:11,187
+After you have exhausted all of the things
+you
+
+308
+00:14:11,187 --> 00:14:13,240
+can do to make the code base itself simpler,
+
+309
+00:14:13,240 --> 00:14:15,107
+then you can go into these other layers,
+
+310
+00:14:15,107 --> 00:14:18,000
+but you should think of each one of these as
+a bigger failure.
+
+311
+00:14:18,000 --> 00:14:20,320
+The more you can do at the top level, the
+better.
+
+312
+00:14:20,320 --> 00:14:24,396
+If you somehow fail to make things behave
+better there, then go to the next layer,
+
+313
+00:14:24,396 --> 00:14:25,440
+like static analysis.
+
+314
+00:14:25,440 --> 00:14:28,880
+This is where things like lint rules, tests,
+CI and verification all come in.
+
+315
+00:14:28,880 --> 00:14:32,240
+It's a token efficient way to catch these
+types of issues ahead of time.
+
+316
+00:14:32,240 --> 00:14:35,439
+If you have CI that will test that the app
+behaves when a user
+
+317
+00:14:35,439 --> 00:14:39,619
+clicks a certain place that it hits the
+database and shows them the right result,
+
+318
+00:14:39,619 --> 00:14:42,406
+that can be verified without an agent having
+to do it,
+
+319
+00:14:42,406 --> 00:14:45,760
+which can be cheap and also help the agent
+make better decisions.
+
+320
+00:14:45,760 --> 00:14:46,482
+Generally speaking,
+
+321
+00:14:46,482 --> 00:14:49,178
+you should just make it so it writes the
+code correctly the first time,
+
+322
+00:14:49,178 --> 00:14:51,760
+but these tools help prevent it from making
+those types of mistakes.
+
+323
+00:14:51,760 --> 00:14:53,909
+If those two things are not enough,
+
+324
+00:14:53,909 --> 00:14:57,040
+then you must begrudgingly go into the prose
+layer.
+
+325
+00:14:57,040 --> 00:14:59,686
+This is where a lot of the knowledge system
+stuff lives,
+
+326
+00:14:59,686 --> 00:15:01,245
+and that's why I'm so against it,
+
+327
+00:15:01,245 --> 00:15:04,080
+because the knowledge system is two layers
+of failures deep.
+
+328
+00:15:04,080 --> 00:15:06,804
+Putting something about your code base in
+your knowledge
+
+329
+00:15:06,804 --> 00:15:09,479
+system means that you're admitting that your
+code is so
+
+330
+00:15:09,479 --> 00:15:11,327
+bad and that your linting and CI is so
+
+331
+00:15:11,327 --> 00:15:13,760
+bad that they can't steer the agent the
+right way.
+
+332
+00:15:13,760 --> 00:15:17,533
+So now you have to do it through unnecessary
+comments, rules,
+
+333
+00:15:17,533 --> 00:15:21,120
+AGENTS.md file changes, skills, all those
+types of things.
+
+334
+00:15:21,120 --> 00:15:22,480
+They can't be enforced.
+
+335
+00:15:22,480 --> 00:15:27,120
+They require the agent itself to do its own
+judgment around these things.
+
+336
+00:15:27,120 --> 00:15:29,200
+Use them minimally, but if you do need to
+
+337
+00:15:30,160 --> 00:15:32,697
+you can and then the final layer the one
+that slows
+
+338
+00:15:32,697 --> 00:15:35,333
+you down the most human review at the rate
+agents are
+
+339
+00:15:35,333 --> 00:15:38,815
+landing code it's pretty much impossible to
+thoroughly review every PR
+
+340
+00:15:38,815 --> 00:15:42,098
+so spend the effort you would have on the
+highest leverage points,
+
+341
+00:15:42,098 --> 00:15:45,680
+design environments where the agents will do
+the right thing by default.
+
+342
+00:15:45,680 --> 00:15:49,051
+I was just at the bottom here of looking
+through your Slack and chat messages
+
+343
+00:15:49,051 --> 00:15:50,758
+and code review comments to find places
+
+344
+00:15:50,758 --> 00:15:53,210
+where you're giving PR feedback code
+architecture stuff,
+
+345
+00:15:53,210 --> 00:15:56,712
+recalling all the past things, and then
+going through the code base and auditing
+
+346
+00:15:56,712 --> 00:15:59,120
+to clean it up to prevent these mistakes
+going forward.
+
+347
+00:15:59,120 --> 00:15:59,920
+Great advice.
+
+348
+00:15:59,920 --> 00:16:00,720
+Highly recommend it.
+
+349
+00:16:00,720 --> 00:16:04,320
+It already called out useful things for me
+to go adjust in my own code base.
+
+350
+00:16:04,320 --> 00:16:06,139
+Apparently we already have good rules,
+
+351
+00:16:06,139 --> 00:16:10,160
+but we need to make them more automatic so
+they apply more often and more correctly.
+
+352
+00:16:10,160 --> 00:16:13,135
+We need to increase visibility on missing
+provider coverage,
+
+353
+00:16:13,135 --> 00:16:17,300
+give agents a single command for doing
+things like selecting the right local
+checks,
+
+354
+00:16:17,300 --> 00:16:20,720
+convert mechanical reviews into Lint, and
+then reduce repeated prose.
+
+355
+00:16:20,800 --> 00:16:23,047
+We have a whole set of guidelines for how
+
+356
+00:16:23,047 --> 00:16:26,720
+to review things that change our effect
+service layer, for example.
+
+357
+00:16:26,720 --> 00:16:30,638
+That's all markdown-based guidance that this
+believes we can actually lint for,
+
+358
+00:16:30,638 --> 00:16:31,680
+which is cool to see.
+
+359
+00:16:31,680 --> 00:16:33,760
+Definitely should go do those things
+afterwards.
+
+360
+00:16:33,760 --> 00:16:36,400
+I have one last prompt to show you before we
+wrap up.
+
+361
+00:16:36,400 --> 00:16:39,041
+What are the most common issues my agents
+run into
+
+362
+00:16:39,041 --> 00:16:41,840
+while contributing to a given repo for the
+last week?
+
+363
+00:16:41,840 --> 00:16:44,049
+Go through my real history on this machine
+
+364
+00:16:44,049 --> 00:16:47,520
+and across my fleet to find common hiccups,
+wrong tool calls, etc.
+
+365
+00:16:47,680 --> 00:16:50,000
+My fleet is just the set of computers I do
+my work on.
+
+366
+00:16:50,000 --> 00:16:51,280
+You don't have to pay attention to that
+part.
+
+367
+00:16:51,280 --> 00:16:52,977
+If you do most of your work on one computer,
+
+368
+00:16:52,977 --> 00:16:55,600
+you can just tell it to go through the
+history on that one computer.
+
+369
+00:16:55,600 --> 00:16:58,720
+You will find some really cool stuff when
+you run a prompt like this.
+
+370
+00:16:58,720 --> 00:17:01,280
+But now I think it's time to talk about
+where this all runs.
+
+371
+00:17:01,280 --> 00:17:02,320
+The harness.

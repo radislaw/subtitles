@@ -1,0 +1,1970 @@
+1
+00:00:02,560 --> 00:00:05,920
+Hopefully now you understand how the model
+sees the world a bit better.
+
+2
+00:00:05,920 --> 00:00:08,233
+With that, we can take a bit more control
+and steer
+
+3
+00:00:08,233 --> 00:00:10,320
+the model towards the things we want it to
+do.
+
+4
+00:00:10,320 --> 00:00:13,648
+In the end, the only way we can really
+control what AI does is by giving
+
+5
+00:00:13,648 --> 00:00:16,190
+it the right context to do the things we
+want it to do,
+
+6
+00:00:16,190 --> 00:00:18,640
+and that's what this lesson is going to be
+all about.
+
+7
+00:00:18,640 --> 00:00:20,396
+Let's start with a simple demo of what
+
+8
+00:00:20,396 --> 00:00:22,800
+the different harnesses that you might be
+using see.
+
+9
+00:00:22,800 --> 00:00:25,920
+We're going to ask a simple prompt to a
+handful of different harnesses and models.
+
+10
+00:00:25,920 --> 00:00:28,542
+We're asking it to not run any tools and
+just list the
+
+11
+00:00:28,542 --> 00:00:31,600
+blocks of context that it can see right now
+from top to bottom.
+
+12
+00:00:31,600 --> 00:00:33,200
+System prompt tools, skills, etc.
+
+13
+00:00:33,360 --> 00:00:36,080
+I still remember the days where everyone was
+trying to protect their system prompts.
+
+14
+00:00:36,080 --> 00:00:38,680
+I'm thankful we're over that because it's
+good to know
+
+15
+00:00:38,680 --> 00:00:41,280
+what context exists in the model when you're
+using it.
+
+16
+00:00:41,280 --> 00:00:42,960
+So we can see exactly that here.
+
+17
+00:00:42,960 --> 00:00:44,720
+Here we have Claude Code's response.
+
+18
+00:00:44,720 --> 00:00:46,480
+It starts with the tool definitions.
+
+19
+00:00:46,480 --> 00:00:50,529
+These are all the things in the harness that
+it has access to, like the agent, tool,
+
+20
+00:00:50,529 --> 00:00:54,000
+bash, edit, read, write, all the things that
+the model would want to do.
+
+21
+00:00:54,000 --> 00:00:55,539
+We then have the system prompt,
+
+22
+00:00:55,539 --> 00:00:58,269
+which describes the identity that the model
+should take
+
+23
+00:00:58,269 --> 00:01:00,949
+because we want it to behave like a helpful
+assistant,
+
+24
+00:01:00,949 --> 00:01:04,721
+yada, yada, the rules of the harness, the
+things it should and shouldn't do,
+
+25
+00:01:04,721 --> 00:01:08,741
+how we want it to code, how we want it to
+speak to us and refer to us and itself,
+
+26
+00:01:08,741 --> 00:01:10,429
+confirm before risky actions rule,
+
+27
+00:01:10,429 --> 00:01:14,400
+which is telling it to ask us about doing
+things before it does something risky.
+
+28
+00:01:14,400 --> 00:01:15,253
+Context management,
+
+29
+00:01:15,253 --> 00:01:18,800
+which is a general like how to think about
+the things that are in your history.
+
+30
+00:01:18,800 --> 00:01:22,635
+These are all things that the anthropic team
+has written in order to
+
+31
+00:01:22,635 --> 00:01:26,640
+allow Claude to know what capabilities it
+has and how it should behave.
+
+32
+00:01:26,640 --> 00:01:28,744
+The simplest way to think about all of this
+
+33
+00:01:28,744 --> 00:01:31,093
+is it's almost like the models in Groundhog
+Day,
+
+34
+00:01:31,093 --> 00:01:34,960
+where it wakes up and knows nothing other
+than whatever it was taught as a kid.
+
+35
+00:01:34,960 --> 00:01:38,669
+The model has a bunch of knowledge, but it
+doesn't really know where it is,
+
+36
+00:01:38,669 --> 00:01:40,400
+why it's there, or what it's doing.
+
+37
+00:01:40,400 --> 00:01:41,760
+We have to give it all of that.
+
+38
+00:01:41,760 --> 00:01:45,012
+So you can see all of this data here, all of
+the system prompt stuff,
+
+39
+00:01:45,012 --> 00:01:48,170
+almost like a set of sticky notes that we
+give to the model when it
+
+40
+00:01:48,170 --> 00:01:51,280
+wakes up to let it know what's going on and
+what its job is to do.
+
+41
+00:01:51,280 --> 00:01:55,216
+There's a bunch more stuff the model's given
+access to like my global CLAUDE.md,
+
+42
+00:01:55,216 --> 00:01:59,103
+the git status snapshot that describes what
+the current state of the repo is so
+
+43
+00:01:59,103 --> 00:02:02,646
+that if you're using cloud code for code it
+has that info early and it's
+
+44
+00:02:02,646 --> 00:02:04,614
+commit and pr attribution lines which is
+
+45
+00:02:04,614 --> 00:02:06,779
+telling the model how to behave with commits
+
+46
+00:02:06,779 --> 00:02:10,617
+then we have your message this is what we
+actually sent and after our message,
+
+47
+00:02:10,617 --> 00:02:12,880
+all of these additional pieces come beyond
+it.
+
+48
+00:02:12,880 --> 00:02:14,960
+This isn't in the history before our
+message.
+
+49
+00:02:14,960 --> 00:02:16,160
+This actually comes after.
+
+50
+00:02:16,160 --> 00:02:18,496
+This is the environment info, the output
+style,
+
+51
+00:02:18,496 --> 00:02:21,229
+because you can set this in Claude Code, the
+tool list,
+
+52
+00:02:21,229 --> 00:02:24,757
+because remember I said before, mine is on
+search mode which means that
+
+53
+00:02:24,757 --> 00:02:27,291
+the tools aren't always there they're only
+there if
+
+54
+00:02:27,291 --> 00:02:29,676
+the model asks it just has vague
+descriptions of
+
+55
+00:02:29,676 --> 00:02:32,012
+them initially then we have the agent types
+all
+
+56
+00:02:32,012 --> 00:02:36,186
+of the different things that the agent can
+do and how it behaves i have a custom one
+
+57
+00:02:36,186 --> 00:02:38,223
+for Sol because uh it was not easy enough
+
+58
+00:02:38,223 --> 00:02:40,560
+to let Claude call Sol as a subagent
+initially.
+
+59
+00:02:40,560 --> 00:02:41,200
+This fixed it.
+
+60
+00:02:41,200 --> 00:02:42,080
+Probably don't need it anymore.
+
+61
+00:02:42,080 --> 00:02:43,200
+Shadow D3 code.
+
+62
+00:02:43,200 --> 00:02:45,840
+The MCP servers for things that the model
+might want to do.
+
+63
+00:02:45,840 --> 00:02:50,000
+In this case I gave my Claude access to the
+ChatGPT computer use server for Codex.
+
+64
+00:02:50,000 --> 00:02:54,095
+Then we have a skills list auto mode, which
+is a thing that the harness has
+
+65
+00:02:54,095 --> 00:02:56,880
+capability for where it can approve things
+for you.
+
+66
+00:02:56,880 --> 00:03:00,458
+And then the final reminder at the end to be
+concise, as well as today's date,
+
+67
+00:03:00,458 --> 00:03:03,440
+because people sometimes ask and it's good
+for the model to know.
+
+68
+00:03:03,440 --> 00:03:06,629
+But again, without all of this, the model
+doesn't know anything,
+
+69
+00:03:06,629 --> 00:03:09,120
+at least not anything about what we want it
+to do.
+
+70
+00:03:09,120 --> 00:03:12,480
+This is all the context that we give the
+model so that it feels smarter.
+
+71
+00:03:12,480 --> 00:03:17,600
+Because if you just asked a raw instance of
+Opus 5.5 to make changes to a code base.
+
+72
+00:03:17,600 --> 00:03:19,920
+It doesn't even know what code bases are
+really.
+
+73
+00:03:19,920 --> 00:03:21,241
+I mean it does to an extent,
+
+74
+00:03:21,241 --> 00:03:23,931
+like it knows what a GitHub repo is and that
+code exists,
+
+75
+00:03:23,931 --> 00:03:25,960
+but it doesn't know what your code base is,
+
+76
+00:03:25,960 --> 00:03:28,320
+what the state of it is or what's going on
+at all.
+
+77
+00:03:28,320 --> 00:03:30,204
+So by putting all of these things in the
+
+78
+00:03:30,204 --> 00:03:32,464
+system prompt and in the context the model
+gets,
+
+79
+00:03:32,464 --> 00:03:34,960
+we are steering it to behave in ways that
+are better.
+
+80
+00:03:34,960 --> 00:03:37,209
+I also ran this on Codex and you see it's
+very
+
+81
+00:03:37,209 --> 00:03:40,240
+similar in terms of its structure and what
+it is putting here.
+
+82
+00:03:40,240 --> 00:03:43,408
+It puts the user message much closer to the
+end than Claude Code does,
+
+83
+00:03:43,408 --> 00:03:44,720
+but it doesn't really matter.
+
+84
+00:03:44,720 --> 00:03:46,880
+They're all behaving effectively the same
+way here.
+
+85
+00:03:46,880 --> 00:03:50,320
+But then we have Pi, a beautiful minimal,
+elegant option.
+
+86
+00:03:50,320 --> 00:03:54,480
+It has a simple system prompt, a handful of
+really simple tools.
+
+87
+00:03:54,480 --> 00:03:57,120
+In this case, read, bash, edit, and write.
+
+88
+00:03:57,120 --> 00:03:58,560
+It then has available skills.
+
+89
+00:03:58,560 --> 00:04:01,021
+These are the ones that are provided by my
+setup,
+
+90
+00:04:01,021 --> 00:04:02,880
+which has a very small set of things.
+
+91
+00:04:02,880 --> 00:04:04,320
+It has my repo explorer skill.
+
+92
+00:04:04,320 --> 00:04:07,697
+I use railway skill for dealing with my
+railway deployments, PyDS4 config,
+
+93
+00:04:07,697 --> 00:04:10,800
+which came from something I installed a
+while ago, you get the idea.
+
+94
+00:04:10,800 --> 00:04:12,320
+Then we have the project instructions.
+
+95
+00:04:12,320 --> 00:04:14,880
+These are the things that are included for a
+specific project.
+
+96
+00:04:14,880 --> 00:04:18,720
+So if you have a CLAUDE.md or AGENTS.md in
+the repo, this gets added there.
+
+97
+00:04:18,720 --> 00:04:20,400
+We'll talk about those in just a bit.
+
+98
+00:04:20,400 --> 00:04:21,962
+We have the project context,
+
+99
+00:04:21,962 --> 00:04:25,589
+which is environment info it automatically
+pulls in when you run,
+
+100
+00:04:25,589 --> 00:04:29,160
+like the current directory, other little
+bits of info like that,
+
+101
+00:04:29,160 --> 00:04:31,280
+and then the user messages at the end.
+
+102
+00:04:31,280 --> 00:04:32,799
+I want to talk a bit more about
+
+103
+00:04:32,799 --> 00:04:35,395
+this groundhog day effect because I think
+it's really
+
+104
+00:04:35,395 --> 00:04:37,404
+important to understand as we try to make
+
+105
+00:04:37,404 --> 00:04:40,000
+our models more capable at delivering real
+good code.
+
+106
+00:04:40,000 --> 00:04:44,000
+Something weird about how I work is that I
+really don't like long-lived threads.
+
+107
+00:04:44,000 --> 00:04:47,343
+I try to keep all my threads as effectively
+ephemeral as possible with
+
+108
+00:04:47,343 --> 00:04:50,160
+the goal of closing it as soon as possible
+after I open it.
+
+109
+00:04:50,160 --> 00:04:52,560
+But as we've been discussing, the history is
+important.
+
+110
+00:04:52,560 --> 00:04:54,094
+If something isn't in the history,
+
+111
+00:04:54,094 --> 00:04:56,486
+the model doesn't know about it and then it
+has to do
+
+112
+00:04:56,486 --> 00:04:59,600
+things like call tools or hallucinate in
+order to get the next steps.
+
+113
+00:04:59,600 --> 00:05:02,141
+And we don't want it to hallucinate and we
+don't want it to have to
+
+114
+00:05:02,141 --> 00:05:03,582
+do a bunch of tool calls before making
+
+115
+00:05:03,582 --> 00:05:05,440
+simple changes that it should already know
+about.
+
+116
+00:05:05,440 --> 00:05:07,657
+Once you start working on lots of things in
+parallel,
+
+117
+00:05:07,657 --> 00:05:10,000
+you're going to start experiencing some
+weird behaviors.
+
+118
+00:05:10,000 --> 00:05:13,212
+Like you have one thread that got something
+wrong, you correct it,
+
+119
+00:05:13,212 --> 00:05:16,960
+then you go to one of the other threads and
+it also got the same thing wrong.
+
+120
+00:05:16,960 --> 00:05:18,640
+That can be annoying.
+
+121
+00:05:18,640 --> 00:05:20,011
+The reason for this is because the
+
+122
+00:05:20,011 --> 00:05:22,229
+model isn't sharing the information across
+the threads,
+
+123
+00:05:22,229 --> 00:05:23,520
+it has to get it from somewhere.
+
+124
+00:05:23,600 --> 00:05:27,280
+And the best place the model can get this
+info is from the code itself.
+
+125
+00:05:27,280 --> 00:05:29,440
+Let's see what this looks like with another
+demo.
+
+126
+00:05:29,440 --> 00:05:32,160
+Here we're going to start a new session
+called session one.
+
+127
+00:05:32,160 --> 00:05:35,520
+We're telling it that we're making some
+changes to our cart system.
+
+128
+00:05:35,520 --> 00:05:39,680
+We're adding discount codes and a receipt to
+this cart in two steps.
+
+129
+00:05:39,680 --> 00:05:42,480
+The first step is that we're adding this
+particular code.
+
+130
+00:05:42,480 --> 00:05:45,760
+We are adding this coupon code for saving
+10%.
+
+131
+00:05:45,760 --> 00:05:49,280
+And then step two is that we should add this
+new receipt function.
+
+132
+00:05:49,440 --> 00:05:51,920
+Returns one string, yada, yada, yada.
+
+133
+00:05:51,920 --> 00:05:55,600
+We're going to tell it to only do step one
+and do tests for it.
+
+134
+00:05:55,600 --> 00:05:57,890
+If we were to do that and then start another
+thread,
+
+135
+00:05:57,890 --> 00:05:59,520
+it wouldn't know where things are at.
+
+136
+00:05:59,520 --> 00:06:03,848
+It could like read the code, maybe it could
+even use its tools to find the history
+
+137
+00:06:03,848 --> 00:06:06,540
+of your chats on the computer to build this
+all up,
+
+138
+00:06:06,540 --> 00:06:09,760
+but ideally it could find what it needs from
+the code itself.
+
+139
+00:06:09,760 --> 00:06:12,080
+So in this case, we're going to fire this
+off.
+
+140
+00:06:12,080 --> 00:06:16,240
+It's going to make the change for this one
+part of the two part request.
+
+141
+00:06:16,240 --> 00:06:18,451
+So it started by doing a bunch of tool
+calls,
+
+142
+00:06:18,451 --> 00:06:21,840
+in this case reading the files that like the
+AGENTS.md and CLAUDE.md.
+
+143
+00:06:21,840 --> 00:06:24,960
+It doesn't have to do that because they're
+included in the context by default,
+
+144
+00:06:24,960 --> 00:06:27,200
+but if it doesn't know, it can go double
+check this way.
+
+145
+00:06:27,200 --> 00:06:30,720
+We then output some text and write it to
+Cart.js and then
+
+146
+00:06:30,720 --> 00:06:34,240
+we write a bit more text to HANDOFF.md to
+wrap things up.
+
+147
+00:06:34,240 --> 00:06:36,960
+Step one is now done and all eight tests
+pass.
+
+148
+00:06:36,960 --> 00:06:38,720
+I then stopped as you asked.
+
+149
+00:06:38,720 --> 00:06:41,180
+It made the changes, it updated the tests,
+
+150
+00:06:41,180 --> 00:06:45,281
+and then it wrote to the HANDOFF.md file
+explaining what things are at
+
+151
+00:06:45,281 --> 00:06:49,440
+and restating step two so that some other
+thread can pick this work up.
+
+152
+00:06:49,440 --> 00:06:52,560
+Obviously if we were working traditionally
+these two tasks are similar enough,
+
+153
+00:06:52,560 --> 00:06:55,280
+they should probably just be done in the
+same thread or in one shot.
+
+154
+00:06:55,280 --> 00:06:57,686
+But if you have complex work that you'll
+
+155
+00:06:57,686 --> 00:07:00,873
+be working on across many threads over large
+windows,
+
+156
+00:07:00,873 --> 00:07:04,000
+encoding what matters in the code base is
+important.
+
+157
+00:07:04,000 --> 00:07:07,360
+This is the contents of that HANDOFF.md file
+if you were curious by the way.
+
+158
+00:07:07,360 --> 00:07:09,840
+We can see it has a simple markdown file
+with a title.
+
+159
+00:07:09,840 --> 00:07:12,000
+It says the work split into two steps.
+
+160
+00:07:12,000 --> 00:07:15,081
+It says the basis of the project says what
+it already did,
+
+161
+00:07:15,081 --> 00:07:18,480
+and then it says what step two is so the
+model can do that next.
+
+162
+00:07:18,480 --> 00:07:22,472
+We press enter, session two starts and we
+give it a very simple request,
+
+163
+00:07:22,472 --> 00:07:24,800
+continue the work described in handoff.md.
+
+164
+00:07:24,800 --> 00:07:28,184
+And now, despite not having any of the
+history from before,
+
+165
+00:07:28,184 --> 00:07:31,224
+it's able to operate almost as though it
+does because
+
+166
+00:07:31,224 --> 00:07:34,320
+the context that it needed was it read from
+this file.
+
+167
+00:07:34,320 --> 00:07:37,040
+We're not even including the file in the
+history ourselves.
+
+168
+00:07:37,040 --> 00:07:40,560
+We are just telling the model the file
+exists and that it has what it needs.
+
+169
+00:07:40,560 --> 00:07:43,465
+So it runs this cat command to read the
+content,
+
+170
+00:07:43,465 --> 00:07:46,673
+which outputs the content into its history
+and now it
+
+171
+00:07:46,673 --> 00:07:49,760
+knows it can do things and what is requested
+of it.
+
+172
+00:07:49,760 --> 00:07:51,386
+It then generates the code,
+
+173
+00:07:51,386 --> 00:07:54,880
+it tells us all about what it changed and
+now we are done.
+
+174
+00:07:54,880 --> 00:07:57,069
+And you can see the effect here which is
+
+175
+00:07:57,069 --> 00:07:59,970
+that session one used 5,000 tokens and
+session 2 only
+
+176
+00:07:59,970 --> 00:08:02,433
+had about 500 because it didn't have to go
+do
+
+177
+00:08:02,433 --> 00:08:05,280
+all of these things and get all of this
+information.
+
+178
+00:08:05,280 --> 00:08:06,960
+It could just output a simple thing.
+
+179
+00:08:06,960 --> 00:08:10,033
+Now that we understand the basics of how the
+model gets the context,
+
+180
+00:08:10,033 --> 00:08:12,880
+I'm gonna say some things that might sound a
+bit contradictory.
+
+181
+00:08:12,880 --> 00:08:14,689
+We shouldn't be giving all of these
+
+182
+00:08:14,689 --> 00:08:17,429
+detailed instructions in our shared global
+AGENTS.md,
+
+183
+00:08:17,429 --> 00:08:19,600
+CLAUDE.md, or even the project level ones.
+
+184
+00:08:19,600 --> 00:08:23,505
+Anything that the model can get easily with
+one command probably doesn't belong in
+
+185
+00:08:23,505 --> 00:08:25,791
+your CLAUDE.md or AGENTS.md files because
+models
+
+186
+00:08:25,791 --> 00:08:27,600
+can run commands and get that context.
+
+187
+00:08:27,600 --> 00:08:29,853
+The reason that you put things in these
+shared
+
+188
+00:08:29,853 --> 00:08:32,547
+context files is to share knowledge that is
+not trivial
+
+189
+00:08:32,547 --> 00:08:35,045
+to get and more importantly to steer model
+behavior
+
+190
+00:08:35,045 --> 00:08:37,200
+in the directions that you want it to go in.
+
+191
+00:08:37,200 --> 00:08:41,280
+For reference, here is the actual ClaudeMD
+from T3 code.
+
+192
+00:08:41,280 --> 00:08:43,783
+We give a basic description of what T3 code
+is so that
+
+193
+00:08:43,783 --> 00:08:46,240
+it knows what it's working on as soon as it
+wakes up.
+
+194
+00:08:46,240 --> 00:08:49,280
+I then chose to tell the model what makes T3
+code special.
+
+195
+00:08:49,280 --> 00:08:52,608
+The reason I did this is I noticed the model
+would make changes that
+
+196
+00:08:52,608 --> 00:08:56,720
+didn't always embrace the core promises that
+I think are so important to my project.
+
+197
+00:08:56,720 --> 00:09:00,166
+In this case, that it's open at the core,
+that it's always performing very well,
+
+198
+00:09:00,166 --> 00:09:01,760
+so don't do things that slow it down.
+
+199
+00:09:01,760 --> 00:09:02,575
+It's remote ready,
+
+200
+00:09:02,575 --> 00:09:06,105
+so any and all changes and new features we
+add should work remotely as well as
+
+201
+00:09:06,105 --> 00:09:09,816
+on your local device and that it's multi-
+surface so that it will work well on web,
+
+202
+00:09:09,816 --> 00:09:10,720
+desktop, and mobile.
+
+203
+00:09:10,720 --> 00:09:13,559
+I have a note for myself, which might sound
+crazy,
+
+204
+00:09:13,559 --> 00:09:16,909
+but this helps the model understand how I am
+thinking about
+
+205
+00:09:16,909 --> 00:09:21,680
+things so that when I or others contribute
+to this code base, this context is given.
+
+206
+00:09:21,680 --> 00:09:24,803
+You can get the equivalent experience from
+the model by copy-pasting
+
+207
+00:09:24,803 --> 00:09:27,466
+this text at the start before you send your
+first message,
+
+208
+00:09:27,466 --> 00:09:29,670
+but I'd much rather the model just know what
+I'm
+
+209
+00:09:29,670 --> 00:09:32,655
+going for and also channel specific
+behaviors like measure twice,
+
+210
+00:09:32,655 --> 00:09:34,400
+cut once, and you ain't gonna need it.
+
+211
+00:09:34,400 --> 00:09:38,428
+These things are all small and you'll notice
+a lot of this is almost vibes based,
+
+212
+00:09:38,428 --> 00:09:41,263
+but I'm trying to vibe the model into the
+direction where
+
+213
+00:09:41,263 --> 00:09:43,600
+I live so that it behaves the ways that I
+want.
+
+214
+00:09:43,600 --> 00:09:46,003
+One of the best ways to improve here is to
+pay attention
+
+215
+00:09:46,003 --> 00:09:48,320
+to when the model does things you don't want
+it to do.
+
+216
+00:09:48,320 --> 00:09:51,771
+Like it takes too long to complete a task or
+it uses the wrong tool or edits a
+
+217
+00:09:51,771 --> 00:09:53,851
+file it shouldn't have edited or pushes code
+it
+
+218
+00:09:53,851 --> 00:09:56,240
+shouldn't have or it doesn't push code it
+should have.
+
+219
+00:09:56,240 --> 00:09:59,280
+Ask the model why it did the thing after it
+does it.
+
+220
+00:09:59,280 --> 00:10:02,800
+And then from there you can find
+opportunities to improve these files.
+
+221
+00:10:02,800 --> 00:10:04,580
+You might also have noticed there's
+something
+
+222
+00:10:04,580 --> 00:10:06,320
+missing from everything we looked at so far.
+
+223
+00:10:06,320 --> 00:10:09,360
+There isn't a single code path anywhere here
+so far.
+
+224
+00:10:09,360 --> 00:10:11,399
+The reason for that is because code paths
+are
+
+225
+00:10:11,399 --> 00:10:13,801
+not that important if the model can find
+them itself,
+
+226
+00:10:13,801 --> 00:10:15,840
+and these models are very, very good at
+that.
+
+227
+00:10:15,840 --> 00:10:18,640
+What they're less good at is communicating
+in the ways that we communicate.
+
+228
+00:10:18,640 --> 00:10:22,263
+So if you and your team have a specific
+grammar or set of terms you use,
+
+229
+00:10:22,263 --> 00:10:24,880
+defining that in one of these files is very
+helpful.
+
+230
+00:10:24,880 --> 00:10:26,918
+So you don't get confused when the model
+says
+
+231
+00:10:26,918 --> 00:10:29,680
+something in three different ways in three
+different threads.
+
+232
+00:10:29,680 --> 00:10:31,458
+You now have a shared grammar where you
+
+233
+00:10:31,458 --> 00:10:33,600
+and the model can understand each other
+better.
+
+234
+00:10:33,600 --> 00:10:35,328
+These types of glossaries have been way more
+
+235
+00:10:35,328 --> 00:10:36,978
+helpful than I ever would have expected in
+
+236
+00:10:36,978 --> 00:10:40,160
+my code bases and I've started introducing
+them into a lot of the work that I do.
+
+237
+00:10:40,160 --> 00:10:42,324
+There are other ways for the model to get
+context and
+
+238
+00:10:42,324 --> 00:10:44,978
+if you put all of its capabilities in the
+CLAUDE.md or AGENTS.md,
+
+239
+00:10:44,978 --> 00:10:48,080
+you're just going to bloat the context up
+with things that might not matter.
+
+240
+00:10:48,080 --> 00:10:50,790
+For example, I want the model to be able to
+spin up a
+
+241
+00:10:50,790 --> 00:10:54,114
+dev server on Tailscale if I'm using a
+remote box over Tailscale,
+
+242
+00:10:54,114 --> 00:10:57,489
+but I don't want it to just blindly run
+Tailscale commands all the
+
+243
+00:10:57,489 --> 00:11:01,120
+time and to have all this context when it
+doesn't work or isn't needed.
+
+244
+00:11:01,120 --> 00:11:02,872
+Like from running on my local machine,
+
+245
+00:11:02,872 --> 00:11:05,040
+I don't want it to fire off Tailscale
+commands.
+
+246
+00:11:05,040 --> 00:11:06,880
+And this is where skills come in.
+
+247
+00:11:06,880 --> 00:11:09,291
+Again, I'm going to use a real example from
+the
+
+248
+00:11:09,291 --> 00:11:11,600
+T3 code code base with our test T3 app
+skill.
+
+249
+00:11:11,600 --> 00:11:14,570
+I have a repo called Fleet where I
+personally manage all of my skills,
+
+250
+00:11:14,570 --> 00:11:17,200
+context that's shared across projects and
+all of those things.
+
+251
+00:11:17,200 --> 00:11:18,708
+And I'm going to look at one of my
+
+252
+00:11:18,708 --> 00:11:21,680
+personal favorite skills I've been using a
+lot recently, Full Stop.
+
+253
+00:11:21,680 --> 00:11:24,537
+This is a skill I built for when I want the
+agent
+
+254
+00:11:24,537 --> 00:11:27,744
+to go all the way end to end to figure out
+the problem,
+
+255
+00:11:27,744 --> 00:11:32,000
+verify it itself, iterate loop accordingly,
+and then make the thing work.
+
+256
+00:11:32,000 --> 00:11:33,120
+It should put up a PR,
+
+257
+00:11:33,120 --> 00:11:37,142
+continue monitoring the PR until it is ready
+to merge as far as it's concerned,
+
+258
+00:11:37,142 --> 00:11:39,280
+and then stop and tell me that it's ready.
+
+259
+00:11:39,280 --> 00:11:41,493
+The reason I call it full stop is that you
+do
+
+260
+00:11:41,493 --> 00:11:44,640
+everything it possibly can until merge and
+that's when it stops.
+
+261
+00:11:44,640 --> 00:11:46,800
+Skills have a few core pieces.
+
+262
+00:11:46,800 --> 00:11:49,727
+They have a name, a description, optional
+metadata,
+
+263
+00:11:49,727 --> 00:11:52,080
+and then the actual content of the skill.
+
+264
+00:11:52,080 --> 00:11:56,769
+I'm gonna give a hot take quick and say that
+description is a bad name for the
+
+265
+00:11:56,769 --> 00:11:59,835
+description because it's implying that the
+point of
+
+266
+00:11:59,835 --> 00:12:02,240
+this section is to tell us what it does.
+
+267
+00:12:02,240 --> 00:12:06,072
+It isn't that at all the point of the
+description is to tell the
+
+268
+00:12:06,072 --> 00:12:10,203
+model when it should use the thing I think
+the better phrase for this
+
+269
+00:12:10,203 --> 00:12:14,514
+would be trigger not description and that's
+how I use it you'll see here
+
+270
+00:12:14,514 --> 00:12:18,825
+I say use when *** asks for full stop or
+explicitly invokes this skill,
+
+271
+00:12:18,825 --> 00:12:20,800
+not when he asks to stop working.
+
+272
+00:12:20,800 --> 00:12:23,813
+I almost want to go change this and I
+probably will when I'm done
+
+273
+00:12:23,813 --> 00:12:27,614
+recording to literally just say use when
+*** asks for full stop and nothing else,
+
+274
+00:12:27,614 --> 00:12:29,840
+because that is how descriptions should be
+used.
+
+275
+00:12:29,840 --> 00:12:32,320
+They are what lets the model know the point
+of the skill.
+
+276
+00:12:32,320 --> 00:12:36,000
+The reason this all matters is the model
+chooses when the skill comes in.
+
+277
+00:12:36,000 --> 00:12:39,680
+When you write a skill, it's not just always
+there bloating your context.
+
+278
+00:12:39,680 --> 00:12:41,760
+The model sees a very small amount of data.
+
+279
+00:12:41,920 --> 00:12:44,960
+It just sees the name and the description
+and nothing else.
+
+280
+00:12:44,960 --> 00:12:48,422
+So if you want the model to decide when to
+pull the skill in itself,
+
+281
+00:12:48,422 --> 00:12:51,680
+you would give it a description that
+categorizes when it should.
+
+282
+00:12:51,680 --> 00:12:54,352
+If you want the model to only do a thing
+when you specify,
+
+283
+00:12:54,352 --> 00:12:56,240
+then you can say that in the description.
+
+284
+00:12:56,240 --> 00:12:59,416
+In this case, I only want the skill to run
+when I say full stop and I
+
+285
+00:12:59,416 --> 00:13:02,960
+don't have to like carefully do the dollar
+sign full dash stop to trigger it.
+
+286
+00:13:02,960 --> 00:13:05,280
+I just want the model to pull it in when it
+should.
+
+287
+00:13:05,280 --> 00:13:08,960
+And then we have the important part of the
+skill, the actual text content.
+
+288
+00:13:08,960 --> 00:13:11,040
+In this case, I describe what this is.
+
+289
+00:13:11,040 --> 00:13:14,397
+***'s not watching, own the work until the
+PR is ready for him to merge,
+
+290
+00:13:14,397 --> 00:13:16,880
+keep fixing, verifying, and reviewing, never
+merge it.
+
+291
+00:13:16,880 --> 00:13:18,907
+And then I describe all of the things I
+
+292
+00:13:18,907 --> 00:13:21,454
+wanted to do in this particular style of
+working,
+
+293
+00:13:21,454 --> 00:13:24,105
+but this is all the context that the model
+needs to
+
+294
+00:13:24,105 --> 00:13:27,120
+behave the way I want when I call out this
+specific thing.
+
+295
+00:13:27,120 --> 00:13:28,960
+You can do this for lots of different
+things.
+
+296
+00:13:28,960 --> 00:13:32,880
+For example, my leaving PR comments skill is
+one of my other favorites.
+
+297
+00:13:32,880 --> 00:13:38,000
+This one is how I describe to the model the
+format to use when it leaves comments.
+
+298
+00:13:38,000 --> 00:13:40,836
+I could manually invoke the skill by saying
+use the
+
+299
+00:13:40,836 --> 00:13:44,228
+leaving PR comment skill or running the
+command to invoke it,
+
+300
+00:13:44,228 --> 00:13:46,897
+but here I have a more vague description
+where I
+
+301
+00:13:46,897 --> 00:13:50,122
+say that it should use this whenever an
+agent is drafting,
+
+302
+00:13:50,122 --> 00:13:53,848
+posting, replying to, or resolving PRs or
+review comments for ***,
+
+303
+00:13:53,848 --> 00:13:56,240
+including comments made by other PR skills.
+
+304
+00:13:56,240 --> 00:13:59,604
+And here I describe the exact format I want
+the model to leave comments in,
+
+305
+00:13:59,604 --> 00:14:01,219
+if you go look at something like the
+
+306
+00:14:01,219 --> 00:14:03,506
+T3 code GitHub or any other place I'm
+contributing,
+
+307
+00:14:03,506 --> 00:14:05,614
+you'll see all the comments left in this
+format
+
+308
+00:14:05,614 --> 00:14:08,305
+because the models are smart enough to see
+the subscription,
+
+309
+00:14:08,305 --> 00:14:10,817
+say I should probably use that if I'm
+leaving a comment,
+
+310
+00:14:10,817 --> 00:14:12,880
+pull it into context and then act
+accordingly.
+
+311
+00:14:12,880 --> 00:14:14,400
+This is what makes skills so useful.
+
+312
+00:14:14,400 --> 00:14:15,680
+They're super dynamic.
+
+313
+00:14:15,680 --> 00:14:17,760
+The model can pull them in on different
+conditions.
+
+314
+00:14:17,760 --> 00:14:19,174
+You can manually pull them in,
+
+315
+00:14:19,174 --> 00:14:22,426
+and all of this allows the model to change
+how it behaves because the
+
+316
+00:14:22,426 --> 00:14:24,547
+context is different depending on what
+skills
+
+317
+00:14:24,547 --> 00:14:26,480
+you're using and when they're being used.
+
+318
+00:14:26,480 --> 00:14:29,308
+If there are certain behaviors or issues
+that you notice
+
+319
+00:14:29,308 --> 00:14:32,288
+you and your coworkers are running into on a
+given project,
+
+320
+00:14:32,288 --> 00:14:35,319
+you can use a combination of the CLAUDE.md,
+AGENTS.md files,
+
+321
+00:14:35,319 --> 00:14:38,400
+as well as custom skills to steer the model
+in the right way.
+
+322
+00:14:38,400 --> 00:14:38,895
+Separately,
+
+323
+00:14:38,895 --> 00:14:42,495
+if you have specific behaviors or
+characteristics you want the model to
+exhibit,
+
+324
+00:14:42,495 --> 00:14:45,375
+for example, you don't want it to bother you
+until the PR is up,
+
+325
+00:14:45,375 --> 00:14:47,445
+or you want to make sure it uses browser use
+a
+
+326
+00:14:47,445 --> 00:14:49,785
+bunch to test your changes before it puts up
+the PR,
+
+327
+00:14:49,785 --> 00:14:52,215
+you can make these all personal custom
+skills that the
+
+328
+00:14:52,215 --> 00:14:54,960
+model will have access to when it's running
+on your machines,
+
+329
+00:14:54,960 --> 00:14:56,940
+but these won't affect how your teammates do
+
+330
+00:14:56,940 --> 00:14:59,280
+things when they pull the code base down
+themselves.
+
+331
+00:14:59,280 --> 00:15:01,202
+One last thing I'll say here and I feel bad
+
+332
+00:15:01,202 --> 00:15:03,840
+because I've kind of broken the rule a bit
+myself recently.
+
+333
+00:15:03,840 --> 00:15:06,960
+I don't love writing skills with agents.
+
+334
+00:15:06,960 --> 00:15:09,253
+I'll often have them make the first version
+of the
+
+335
+00:15:09,253 --> 00:15:11,592
+skill and then send it across my fleet of
+machines,
+
+336
+00:15:11,592 --> 00:15:14,069
+but I'll almost always go back in and clean
+things up,
+
+337
+00:15:14,069 --> 00:15:17,600
+just deleting a bunch of useless text and
+things that don't matter that much.
+
+338
+00:15:17,600 --> 00:15:22,480
+LLMs love to be unnecessarily verbose and
+skills should be relatively simple.
+
+339
+00:15:22,480 --> 00:15:24,080
+The less text the better.
+
+340
+00:15:24,080 --> 00:15:25,760
+The simpler the instructions the better.
+
+341
+00:15:25,760 --> 00:15:29,604
+And if you give it a simple flow like do
+one, two, three, four, five,
+
+342
+00:15:29,604 --> 00:15:32,000
+the model almost always behave accordingly.
+
+343
+00:15:32,000 --> 00:15:34,128
+Skills shouldn't be treated as this esoteric
+
+344
+00:15:34,128 --> 00:15:36,160
+black box that you only touch with agents.
+
+345
+00:15:36,160 --> 00:15:40,053
+You should spend a decent bit of time
+customizing them, configuring them,
+
+346
+00:15:40,053 --> 00:15:43,680
+seeing how they behave and how small changes
+change their behaviors.
+
+347
+00:15:43,680 --> 00:15:45,564
+This is how you control the way the model
+
+348
+00:15:45,564 --> 00:15:48,000
+works with you and you should take advantage
+of that.
+
+349
+00:15:48,000 --> 00:15:50,678
+One last thing I want to touch on with
+context is the
+
+350
+00:15:50,678 --> 00:15:53,760
+types of things the model can see because
+it's not just text.
+
+351
+00:15:53,760 --> 00:15:55,471
+Different models have different
+capabilities,
+
+352
+00:15:55,471 --> 00:15:57,600
+but there's a handful that pretty much all
+of them have.
+
+353
+00:15:57,600 --> 00:16:00,716
+For example, pretty much every model you're
+going to be using with
+
+354
+00:16:00,716 --> 00:16:03,360
+code today has the ability to see and
+understand images.
+
+355
+00:16:03,360 --> 00:16:06,240
+I'll show this by taking a screenshot of T3
+code itself.
+
+356
+00:16:06,240 --> 00:16:09,029
+I use a tool called Shotter in order to
+annotate my screenshots and
+
+357
+00:16:09,029 --> 00:16:12,400
+I'm gonna show you something that honestly
+is still just like mind-blowing to me.
+
+358
+00:16:12,400 --> 00:16:16,074
+I'm gonna point an arrow at the icon here
+where I have the brain
+
+359
+00:16:16,074 --> 00:16:19,920
+in the word high because I don't love that
+we show this brain icon.
+
+360
+00:16:19,920 --> 00:16:25,036
+We all know what high means now, so I'm
+going to say something in here like ugly,
+
+361
+00:16:25,036 --> 00:16:25,920
+get rid of it.
+
+362
+00:16:25,920 --> 00:16:30,915
+Now I can take this image I made, put it on
+my clipboard, paste it to the model,
+
+363
+00:16:30,915 --> 00:16:33,600
+and without saying anything else, hit send.
+
+364
+00:16:33,680 --> 00:16:35,681
+Now the model is thinking about this image,
+
+365
+00:16:35,681 --> 00:16:38,240
+trying to pinpoint exactly where the arrow
+is pointing.
+
+366
+00:16:38,240 --> 00:16:40,291
+It looks like it's near the bottom bar area,
+
+367
+00:16:40,291 --> 00:16:43,600
+possibly indicating the high brain icon just
+below the composer's edge.
+
+368
+00:16:43,600 --> 00:16:46,515
+It then greps for brain in the code base,
+reads the picker,
+
+369
+00:16:46,515 --> 00:16:50,320
+which is the code where this lives, and
+decides what it wants to do about it.
+
+370
+00:16:50,320 --> 00:16:51,280
+It removed the icon.
+
+371
+00:16:51,280 --> 00:16:52,944
+Dependencies are not installed within the
+work tree,
+
+372
+00:16:52,944 --> 00:16:54,640
+so I'm installing them now to run lint and
+typecheck.
+
+373
+00:16:54,640 --> 00:16:57,520
+It's now running commands in order to test
+these things that it changed.
+
+374
+00:16:57,520 --> 00:17:02,000
+But this image that I sent it gave it the
+context it needed to know what to do.
+
+375
+00:17:02,000 --> 00:17:04,160
+I sent no text along with it.
+
+376
+00:17:04,160 --> 00:17:08,213
+T3 code will automatically insert this user-
+attached one or more files text,
+
+377
+00:17:08,213 --> 00:17:12,640
+just because some models and harnesses need
+some text, but it isn't even necessary.
+
+378
+00:17:12,640 --> 00:17:14,698
+This image is just another chunk of data
+that's
+
+379
+00:17:14,698 --> 00:17:16,799
+in the history as far as the model is
+concerned,
+
+380
+00:17:16,799 --> 00:17:19,295
+which means that all the other techniques
+we've given the
+
+381
+00:17:19,295 --> 00:17:21,440
+model to add things to its history work here
+too.
+
+382
+00:17:21,440 --> 00:17:24,876
+For example, if the model makes a UI change
+and it wants to confirm it,
+
+383
+00:17:24,876 --> 00:17:26,812
+it can use a tool to spin up the change,
+
+384
+00:17:26,812 --> 00:17:29,231
+it can use another tool to open it in the
+browser,
+
+385
+00:17:29,231 --> 00:17:33,199
+then it can use one last tool call to get a
+screenshot of the result that it would
+
+386
+00:17:33,199 --> 00:17:35,135
+then get in its history as a new message
+
+387
+00:17:35,135 --> 00:17:37,360
+that it can look at and make decisions
+around.
+
+388
+00:17:37,360 --> 00:17:38,212
+To wrap things up,
+
+389
+00:17:38,212 --> 00:17:41,858
+it's important to understand that the model
+only has so much knowledge in it,
+
+390
+00:17:41,858 --> 00:17:45,600
+and its behavior doesn't come from its
+training so much as what context it has.
+
+391
+00:17:45,600 --> 00:17:48,400
+Obviously the training matters, obviously
+the model matters,
+
+392
+00:17:48,400 --> 00:17:51,760
+but what it knows and what it has access to
+matters as much if not more.
+
+393
+00:17:51,760 --> 00:17:53,527
+The context the agent has is one of the
+
+394
+00:17:53,527 --> 00:17:55,974
+most important things we have to control its
+behavior,
+
+395
+00:17:55,974 --> 00:17:59,600
+which is why it's important to understand it
+and start working with it directly.
+
+396
+00:17:59,600 --> 00:18:03,108
+You can use the tools we showed here, things
+like skills, CLAUDE.md and AGENTS.md,
+
+397
+00:18:03,108 --> 00:18:05,290
+and all these other ways to give the model
+context,
+
+398
+00:18:05,290 --> 00:18:07,515
+even just changing what files are where in
+your code
+
+399
+00:18:07,515 --> 00:18:09,440
+base to make it easier for the model to
+find.
+
+400
+00:18:09,440 --> 00:18:11,520
+All of this is what steers the way the model
+behaves.
+
+401
+00:18:11,520 --> 00:18:15,459
+And if you ever notice the model doing
+things you don't like or that are confusing,
+
+402
+00:18:15,459 --> 00:18:17,642
+you can ask why it did it and what
+information
+
+403
+00:18:17,642 --> 00:18:19,920
+it had in its context that made it act that
+way.
+
+404
+00:18:19,920 --> 00:18:23,094
+You can always just ask the model what info
+it sees and what
+
+405
+00:18:23,094 --> 00:18:26,480
+it has and get good answers to figure out
+how it sees the world.
+
+406
+00:18:26,480 --> 00:18:28,781
+Because something might be obvious to us
+when we look
+
+407
+00:18:28,781 --> 00:18:30,474
+at the app or we look at the code base,
+
+408
+00:18:30,474 --> 00:18:32,775
+but the model doesn't know it until it runs
+the right
+
+409
+00:18:32,775 --> 00:18:35,120
+command to get the data that it needs to do
+the thing.
+
+410
+00:18:35,120 --> 00:18:37,006
+As models keep getting better,
+
+411
+00:18:37,006 --> 00:18:40,841
+they are improving their ability to build
+context themselves,
+
+412
+00:18:40,841 --> 00:18:44,676
+but it's still important to send them in the
+right direction,
+
+413
+00:18:44,676 --> 00:18:49,392
+and all of these lessons will help you
+understand why the models behave the
+
+414
+00:18:49,392 --> 00:18:53,920
+way they do and change the behavior to make
+them more effective for you.

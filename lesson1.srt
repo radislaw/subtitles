@@ -1,0 +1,927 @@
+1
+00:00:04,639 --> 00:00:05,680
+What's up nerds?
+
+2
+00:00:05,679 --> 00:00:08,240
+I'm ***, the first instructor for the *** course.
+
+3
+00:00:08,240 --> 00:00:12,560
+In order for us to get the best out of our agents, we need to understand how the agents themselves work.
+
+4
+00:00:12,560 --> 00:00:15,919
+And that's why we're starting with lesson one, generating text.
+
+5
+00:00:15,919 --> 00:00:30,720
+I know this might seem pretty basic, but hear me out because there's a lot of misconceptions that I would go as far as to say lies, that we just kind of make assumptions around and believe because it's easier to work that way, but I think understanding the details will make it easier to use these models more effectively.
+
+6
+00:00:30,719 --> 00:00:35,119
+When you send a message to a model, it's important to understand what it gets and how it responds.
+
+7
+00:00:35,119 --> 00:00:36,479
+It's not as simple as you think.
+
+8
+00:00:36,480 --> 00:00:41,520
+You're used to sending a text to a person that they read, they think about, they look into some things, and then they respond.
+
+9
+00:00:41,520 --> 00:00:43,199
+LLMs don't work that way.
+
+10
+00:00:43,200 --> 00:00:46,000
+We make them act that way, but that's not how they work underneath.
+
+11
+00:00:46,000 --> 00:00:54,960
+The simplest way of explaining it is that the model makes informed guesses based on the information in the chat history, and it does this chunk by chunk, not response by response.
+
+12
+00:00:54,960 --> 00:01:01,519
+It's not generating the perfect message based on the history, it's generating the perfect next token based on prior tokens.
+
+13
+00:01:01,520 --> 00:01:03,760
+Let's start with a really simple first message.
+
+14
+00:01:03,759 --> 00:01:04,879
+Subnerds.
+
+15
+00:01:04,879 --> 00:01:08,159
+This message would be read by a person word by word.
+
+16
+00:01:08,159 --> 00:01:11,039
+LLMs don't see words though, they see tokens.
+
+17
+00:01:11,040 --> 00:01:36,480
+Tokens are the chunks of text that LLMs use to understand and make suggestions as to what comes next, because in the end, LLMs are effectively just autocomplete they generate new tokens based on the previous token for example let's take the sentence the capital of the US is blank if you hand this to a traditional completion API with an LLM it would then generate the next tokens, which in this case would be Washington DC.
+
+18
+00:01:36,480 --> 00:01:44,879
+Notice how this is breaking things up though, with the dots, the spaces, and the letters sometimes being included, sometimes not.
+
+19
+00:01:44,879 --> 00:01:50,480
+These are all details of how different tokenizers are implemented, and certain things work well for code, certain ones don't.
+
+20
+00:01:50,480 --> 00:01:54,799
+A ton of iteration and innovation has happened in tokenizers over the last few years.
+
+21
+00:01:54,799 --> 00:02:06,879
+None of that is super important to understand beyond the fact that models aren't seeing the specific paragraphs we send them, they're getting these chunks of text and then guessing what's most likely to be next based on what we've given them.
+
+22
+00:02:06,880 --> 00:02:09,680
+Let's see how this looks in action with the simple demo with autocomplete.
+
+23
+00:02:09,680 --> 00:02:16,880
+I'm intentionally using an old and kind of dumb model here, but thankfully can actually run on my computer to show the insides of how it works.
+
+24
+00:02:16,879 --> 00:02:23,039
+Let's say we send a message like, write a JavaScript function that checks if a number is even, only code.
+
+25
+00:02:23,120 --> 00:02:25,439
+The expectation is that we get back code.
+
+26
+00:02:25,439 --> 00:02:27,759
+So let's see how the model actually does that.
+
+27
+00:02:27,759 --> 00:02:30,800
+The first important thing to understand is what the model actually gets.
+
+28
+00:02:30,800 --> 00:02:39,840
+It's not getting the text history, it's not getting a bunch of tokens, it's getting a specific text format that describes the state of the conversation and sets the model up to do the next thing.
+
+29
+00:02:39,840 --> 00:02:42,320
+The format for the text here is called chat ML.
+
+30
+00:02:42,319 --> 00:02:46,800
+There's a bunch of new formats since OpenAI since Open Sourced Harmony, which is a pretty good standard.
+
+31
+00:02:46,800 --> 00:02:49,120
+The thing to notice here though is these call-outs.
+
+32
+00:02:49,120 --> 00:02:52,080
+The IM underscore start and I am underscore end.
+
+33
+00:02:52,080 --> 00:02:58,159
+These are special tokens that the models are aware of because they're used during training that allow different behaviors to happen at different times.
+
+34
+00:02:58,159 --> 00:03:03,840
+Like for a user to send a message, the system to send a message, and then for the agent or assistant to respond to these messages.
+
+35
+00:03:03,840 --> 00:03:11,680
+So while we send something that looks like traditional JSON wrapped in an array to the model over the API, it doesn't get these JSON blobs.
+
+36
+00:03:11,680 --> 00:03:14,800
+It instead gets this custom format that it's using during training.
+
+37
+00:03:15,039 --> 00:03:16,159
+The format is pretty simple.
+
+38
+00:03:16,159 --> 00:03:18,719
+We have the indicator of a new message start.
+
+39
+00:03:18,719 --> 00:03:22,800
+It immediately opens with the type of message, whether it's system, user, or assistant.
+
+40
+00:03:22,800 --> 00:03:26,800
+We then give more context, in this case that it is Quen, it is a helpful assistant.
+
+41
+00:03:26,800 --> 00:03:30,240
+We then have a new message after the end, which is a user message.
+
+42
+00:03:30,240 --> 00:03:32,800
+This indicates that a user is sending this thing.
+
+43
+00:03:32,800 --> 00:03:35,840
+And then the most important part, we hard code a start.
+
+44
+00:03:35,840 --> 00:03:38,800
+We immediately say I am underscore start assistant.
+
+45
+00:03:38,800 --> 00:03:41,040
+This is important because it's an autocomplete model.
+
+46
+00:03:41,039 --> 00:03:46,400
+It has to generate the next token, so it wouldn't really know what to do if it just ended the user turn.
+
+47
+00:03:46,400 --> 00:03:54,400
+So we hard code a start to the next turn so the model can do what it thinks makes the most sense next, which we can see when we press enter.
+
+48
+00:03:54,800 --> 00:03:58,960
+Now that we have run this, we can see how the model responded with these percentages.
+
+49
+00:03:58,960 --> 00:04:00,560
+The percentages might be confusing.
+
+50
+00:04:00,560 --> 00:04:06,240
+The simplest way I can explain it is these percentages show how confident the model is with the given pick for the next term.
+
+51
+00:04:06,400 --> 00:04:15,920
+Here it thinks that after our message asking it to write a JavaScript function that checks if a number is even, that the best next response is the word certainly with 66% confidence.
+
+52
+00:04:15,920 --> 00:04:18,880
+Next it thinks sure it's a good option of 14%.
+
+53
+00:04:18,879 --> 00:04:22,960
+Next, it thinks that three back ticks could be a good option with 14% as well.
+
+54
+00:04:22,959 --> 00:04:29,600
+This is the option I would have preferred since we told it to only send code, but it wanted to be a helpful assistant, which steered it towards the word certainly.
+
+55
+00:04:29,600 --> 00:04:35,840
+Next, it was relatively confident, like 92% confident, that an exclamation point was the best next thing to include.
+
+56
+00:04:35,840 --> 00:04:37,600
+Then it suggested below.
+
+57
+00:04:37,600 --> 00:04:39,279
+This little dot is for a space.
+
+58
+00:04:39,280 --> 00:04:41,199
+So next I thought space below made sense.
+
+59
+00:04:41,199 --> 00:04:43,040
+Then I thought space is made sense.
+
+60
+00:04:43,519 --> 00:04:49,280
+yada yada and you can see all the other things it was considering before it responded with these particular words.
+
+61
+00:04:49,280 --> 00:04:52,240
+It then continued generating and finished its response.
+
+62
+00:04:52,240 --> 00:05:01,280
+And at the very end, if we had let it go all the way, it would hopefully have ended with one of these end tokens, thereby signifying to whatever tool is running this that the model can stop.
+
+63
+00:05:01,280 --> 00:05:03,199
+Remember, the model has to stop eventually.
+
+64
+00:05:03,199 --> 00:05:04,800
+It can't just autocomplete forever.
+
+65
+00:05:04,800 --> 00:05:08,080
+So one of the things they're trained on is this idea of stops.
+
+66
+00:05:08,079 --> 00:05:11,600
+They can respond with a certain phrase to trigger the end.
+
+67
+00:05:11,600 --> 00:05:13,120
+That's not the only thing they can trigger.
+
+68
+00:05:13,120 --> 00:05:14,400
+Remember this, we'll go back to it.
+
+69
+00:05:14,400 --> 00:05:23,360
+One more small thing to showcase the non-deterministic nature of all this, but the weird patterns that happen underneath is asking Quantum 25 to generate a random number.
+
+70
+00:05:23,360 --> 00:05:28,879
+It picks 8 with 20% confidence, 7 with 18%, 9 of 16%, etc.
+
+71
+00:05:29,040 --> 00:05:31,840
+So its definition of random is not quite our definition.
+
+72
+00:05:31,840 --> 00:05:34,320
+One more call out about the generation that it did here.
+
+73
+00:05:34,319 --> 00:05:38,720
+You'll see that when it said console.log is even seven, it responded true.
+
+74
+00:05:38,720 --> 00:05:43,520
+That is not a good response, because as I hope you understand, seven isn't even.
+
+75
+00:05:43,519 --> 00:05:51,600
+The problem with this style of generation is that the model can't go back and correct itself because it's just outputting one token at a time appending to this history.
+
+76
+00:05:51,600 --> 00:05:53,920
+It can't go back and say that's wrong and edit it.
+
+77
+00:05:53,920 --> 00:05:56,800
+It has to just keep adding to the existing text corpus.
+
+78
+00:05:56,800 --> 00:06:01,120
+This style of autocomplete responses allows for models to share information that they already know.
+
+79
+00:06:01,120 --> 00:06:08,160
+So if you ask the model who was president in 1952, it's able to generate a response based on the information it was trained on.
+
+80
+00:06:08,160 --> 00:06:14,079
+But then if you ask a modern smart model like Opus 5.5 what's today's date, you're not going to get a very good answer.
+
+81
+00:06:14,079 --> 00:06:16,880
+It's actually going to answer hundreds of days behind.
+
+82
+00:06:16,879 --> 00:06:23,120
+If you then ask it what the latest version of a package is, you're never going to get a correct answer, assuming it's been updated anytime recently.
+
+83
+00:06:23,120 --> 00:06:28,240
+All of this is because this data has changed since the model was trained, or maybe it was just trained on old data.
+
+84
+00:06:28,240 --> 00:06:32,560
+But when we use models and tools like Cloud Code, we don't see all of these types of issues.
+
+85
+00:06:32,560 --> 00:06:39,280
+The reason is because the model can get that data other ways, not through its training, not through its intelligence, but through tools.
+
+86
+00:06:39,280 --> 00:06:43,920
+In order to understand how agents get data, we have to do something that a lot of us haven't done in a while.
+
+87
+00:06:43,920 --> 00:06:44,879
+Read some code.
+
+88
+00:06:44,879 --> 00:06:47,840
+Jokes aside, I think it's important to understand all of this.
+
+89
+00:06:47,840 --> 00:06:52,399
+I have some code here that allows a model response to be parsed and then run as bash.
+
+90
+00:06:52,400 --> 00:06:55,520
+Remember what I said earlier about the model having to indicate when to stop?
+
+91
+00:06:55,519 --> 00:07:02,880
+One of the reasons it wants to stop isn't just to finish responding, it's to generate a tool call that allows it to get data that it doesn't know.
+
+92
+00:07:02,879 --> 00:07:12,320
+Like if it wants to know what the current date is, if it wants to know what files are in your code base, if it wants to know what packages are available on npm, the model has tools it can use to do that in most harnesses.
+
+93
+00:07:12,319 --> 00:07:18,640
+And those tools have custom syntaxes the model can use in order to respond and trigger those types of behaviors and actions.
+
+94
+00:07:18,639 --> 00:07:22,560
+In order for this to work, you need to stop generating once one of these tokens comes in.
+
+95
+00:07:22,560 --> 00:07:28,000
+In this case, we have a simple example where stop sequence includes closing tag for bash.
+
+96
+00:07:28,000 --> 00:07:33,840
+What we're saying here is when we see this in the response, that means stop and we have to go do something.
+
+97
+00:07:33,840 --> 00:07:40,000
+So the model will send something along the lines of bash ls close bash, which allows it to run this command.
+
+98
+00:07:40,000 --> 00:07:41,520
+And our code is pretty simple here.
+
+99
+00:07:41,519 --> 00:07:44,160
+We grab the command out of that syntax.
+
+100
+00:07:44,160 --> 00:07:53,600
+If we don't have a command, we just respond with the text, but if we do have a command, we output the command and then we run it with this sh helper to get the output of the command.
+
+101
+00:07:53,600 --> 00:07:56,800
+And then importantly, we push this onto the messages.
+
+102
+00:07:56,800 --> 00:07:57,920
+We'll talk about that in just a bit.
+
+103
+00:07:57,920 --> 00:08:01,200
+So let's see this in action with a simple demo that I just threw together.
+
+104
+00:08:01,199 --> 00:08:08,240
+The user sends what's in this directory and the model responds, oh, I can't see your file system, but it absolutely could.
+
+105
+00:08:08,240 --> 00:08:11,360
+If it just responded with that format, it would work fine.
+
+106
+00:08:11,360 --> 00:08:12,640
+So what's up?
+
+107
+00:08:12,639 --> 00:08:15,120
+Why can't it see this data?
+
+108
+00:08:15,120 --> 00:08:17,040
+The reason is actually quite simple.
+
+109
+00:08:17,040 --> 00:08:20,480
+We didn't tell the model that it has access to this syntax.
+
+110
+00:08:20,480 --> 00:08:23,840
+We can't just give it a tool and expect it to know how to use it.
+
+111
+00:08:23,840 --> 00:08:27,120
+We have to tell it what the tool is and that it exists in the first place.
+
+112
+00:08:27,120 --> 00:08:31,200
+Otherwise it has no idea that certain types of text can trigger certain behaviors.
+
+113
+00:08:31,199 --> 00:08:32,399
+Here we have done just that.
+
+114
+00:08:32,399 --> 00:08:40,319
+We added to the system prompt this tool prompt, which describes that the model is able to get data by using this format in order to run commands.
+
+115
+00:08:40,320 --> 00:08:50,319
+So if we rerun this with this addition to the system prompt, you'll see the model will run these different commands in order to figure out what's in this project and then respond accordingly.
+
+116
+00:08:50,320 --> 00:08:54,000
+This is a small JavaScript program called Cart, a shopping cart pricing module.
+
+117
+00:08:54,480 --> 00:08:55,680
+yada, you get the idea.
+
+118
+00:08:55,680 --> 00:08:59,360
+It's able to do all of this now because it knows that it has this tool it can call.
+
+119
+00:08:59,360 --> 00:09:00,960
+And the bash tool is pretty powerful.
+
+120
+00:09:00,960 --> 00:09:03,439
+It gives the model the ability to do a lot of different things.
+
+121
+00:09:03,440 --> 00:09:07,919
+This also showcases the importance of the system prompt and how it steers model behavior.
+
+122
+00:09:07,919 --> 00:09:13,600
+When the model has the ability to trigger certain behaviors or special syntaxes, it needs to know about it and know what it can do.
+
+123
+00:09:13,600 --> 00:09:18,000
+And then once it does those things, it needs to get the results back so that it can continue operating.
+
+124
+00:09:18,000 --> 00:09:20,480
+This all starts with what we usually call a system prompt.
+
+125
+00:09:20,480 --> 00:09:23,199
+In this case I'll call it system message because there can be more than one.
+
+126
+00:09:23,200 --> 00:09:28,079
+In a simple example I tell the model that it can use bash to get info using the following syntax.
+
+127
+00:09:28,080 --> 00:09:32,639
+We then follow up with a simple user message that says, what files are in this project?
+
+128
+00:09:32,639 --> 00:09:38,240
+So when it is spun up to respond, it can take advantage of all of this data which steers it in a certain direction.
+
+129
+00:09:38,240 --> 00:09:42,480
+One of the things the model can do is think, at least if it's a modern reasoning model.
+
+130
+00:09:42,480 --> 00:09:45,840
+So it will think about what it has access to, what is being asked for.
+
+131
+00:09:45,840 --> 00:09:48,480
+And remember earlier when I said the model can't correct itself?
+
+132
+00:09:48,480 --> 00:09:57,519
+It can't if it says something wrong, but if it's talking to itself in the thinking traces and it gets something wrong, it can correct itself and just say, no, that's not right, I should go this other way.
+
+133
+00:09:57,519 --> 00:10:00,960
+So by the time it gets to the output stage, it's much more likely to be correct.
+
+134
+00:10:00,960 --> 00:10:05,360
+So after it thinks for a bit, it says, good question, let me check what files are here.
+
+135
+00:10:05,360 --> 00:10:07,279
+And then it runs this bash command.
+
+136
+00:10:07,279 --> 00:10:09,039
+But then I have this line drawn.
+
+137
+00:10:09,039 --> 00:10:11,680
+I have this line drawn for a very important reason.
+
+138
+00:10:11,680 --> 00:10:13,200
+We're done.
+
+139
+00:10:13,200 --> 00:10:20,799
+After this response comes through and we hit our end token, which is this close bash, that is the end of the request.
+
+140
+00:10:20,639 --> 00:10:23,679
+the API request that was made is over.
+
+141
+00:10:23,680 --> 00:10:27,519
+The reason is because something has to happen before it can continue.
+
+142
+00:10:27,519 --> 00:10:32,079
+We asked for this command to be run, so now we have to go run said command.
+
+143
+00:10:32,080 --> 00:10:43,199
+Usually what this means is whatever's running this assistant, probably like a Cloud Code type tool, will fire off the command, get a response, and then send that response back as an append to the history.
+
+144
+00:10:43,200 --> 00:10:52,640
+Every time an API call is made to the Cloud code servers, codecs, whatever else you're using, it usually will include the entire chat history because the model needs that in order to generate the next tokens.
+
+145
+00:10:52,639 --> 00:11:04,559
+And when a tool call is made, the important thing to understand is that the response is run on whatever computer the harness is running on, and that response is appended to the history so the model can continue generating accordingly.
+
+146
+00:11:04,560 --> 00:11:11,040
+The same way that you send a question to the model, the tool call sends a response to the model, which allows it to continue after.
+
+147
+00:11:11,039 --> 00:11:19,279
+And the model then decides when to stop, whether it's stopping for a tool to be run or it's stopping because it's done doing whatever it has to do and it wants your response.
+
+148
+00:11:19,279 --> 00:11:23,759
+The tool or the model chooses when to stop with one of these indicators and then you act accordingly.
+
+149
+00:11:23,759 --> 00:11:27,199
+Let's talk a bit more about this part quick, the system message.
+
+150
+00:11:27,200 --> 00:11:32,079
+The example I have here is relatively small, but this is not how things will work in the real world.
+
+151
+00:11:32,080 --> 00:11:34,079
+I have another quick demo to show what I mean.
+
+152
+00:11:34,080 --> 00:11:42,639
+I'm going to simply say hi to a handful of different tools, harnesses, whatever you want to call them, to see how they respond and specifically how many tokens are being used.
+
+153
+00:11:42,639 --> 00:11:49,120
+If I send a simple say hi to Claude, it's not going to use the three tokens that say hi would be represented by.
+
+154
+00:11:49,120 --> 00:11:52,960
+It's going to use a hell of a lot more, thousands even.
+
+155
+00:11:52,960 --> 00:12:03,040
+I have tool search on, which means a lot of my tools, MCPs and stuff aren't included by default, just little bits of info that they exist, so the model knows they exist to go search for them with another tool.
+
+156
+00:12:03,120 --> 00:12:07,840
+But it's still 21,000 tokens for what seems like a very simple request.
+
+157
+00:12:07,840 --> 00:12:11,360
+Say hi, which it responded with, hi ***, what do you want to work on?
+
+158
+00:12:11,360 --> 00:12:12,879
+Oh, how does it know it's me?
+
+159
+00:12:12,879 --> 00:12:19,360
+It knows it's me because I have a Claude MD file that describes a handful of things that I wanted to know, including who I am.
+
+160
+00:12:19,360 --> 00:12:29,120
+It also will do things like figure out what the current git status is and run a command before it sends the request to include that in the prompt so the model has all of this data before it even starts.
+
+161
+00:12:29,120 --> 00:12:32,480
+Let's pull all this together with the next important thing to understand.
+
+162
+00:12:32,720 --> 00:12:33,439
+Agents.
+
+163
+00:12:33,440 --> 00:12:34,639
+What is an agent?
+
+164
+00:12:34,639 --> 00:12:43,919
+The simplest way to put it is that an agent is some type of tool or system that allows for an LLM to run in a loop and make tool calls to get whatever information it needs, make changes, etc.
+
+165
+00:12:44,080 --> 00:12:45,919
+The loop is the important part though.
+
+166
+00:12:45,920 --> 00:12:47,360
+It doesn't just stop here.
+
+167
+00:12:47,360 --> 00:12:50,879
+So with our example here, it just stops after the message runs.
+
+168
+00:12:50,879 --> 00:12:53,840
+You'd have to go make another API request for this to continue.
+
+169
+00:12:53,840 --> 00:12:56,879
+When I say that agents are loops, I mean it quite literally.
+
+170
+00:12:56,879 --> 00:13:02,960
+Most of the harnesses we use to run agents are literally running in a for loop or a while loop of some form.
+
+171
+00:13:02,960 --> 00:13:07,040
+In this case we have a simple for loop where I have a limit for turns at 40.
+
+172
+00:13:07,039 --> 00:13:08,960
+I'll explain what that means in a sec.
+
+173
+00:13:08,960 --> 00:13:12,720
+I also think this probably should have been the word step, not turn, but doesn't really matter here.
+
+174
+00:13:12,720 --> 00:13:18,319
+This is the first message in the history, and as you can guess, we'll be appending new messages to this history as we go.
+
+175
+00:13:18,320 --> 00:13:24,000
+So at the start of the loop, we call the Claud API with a request to create a message.
+
+176
+00:13:24,000 --> 00:13:34,240
+We say what model, how many tokens we want it to do at max, the system prompt, thinking, which is us turning on thinking saying that we want to get summaries of the results and that it's adaptive and then we give it tools.
+
+177
+00:13:34,240 --> 00:13:37,360
+In this case we have a simple bash tool that allows it to run things.
+
+178
+00:13:37,360 --> 00:13:41,200
+We then hand it messages, which is that same array from the top of the messages.
+
+179
+00:13:41,200 --> 00:13:43,680
+It's arguably the only really important part here.
+
+180
+00:13:43,680 --> 00:13:45,280
+Everything else could be kind of changed.
+
+181
+00:13:45,279 --> 00:13:46,319
+This cannot be changed.
+
+182
+00:13:46,320 --> 00:13:48,879
+The response is what we get back from Claude.
+
+183
+00:13:48,879 --> 00:13:52,080
+So at the end here, we push that onto the history.
+
+184
+00:13:52,080 --> 00:13:58,799
+In this case, we push it as role assistant because this is a response from the assistant, which is the model, and the content is whatever it's said.
+
+185
+00:13:58,879 --> 00:14:00,480
+We have to decide what to do next.
+
+186
+00:14:00,480 --> 00:14:03,440
+First we check to see if it is or in this case isn't tool use.
+
+187
+00:14:03,440 --> 00:14:08,320
+Because if the model's stopping for a reason other than calling a tool, that is because it's done.
+
+188
+00:14:08,320 --> 00:14:11,919
+Because we've only given it two reasons to stop, tool calls or being done.
+
+189
+00:14:12,000 --> 00:14:16,799
+So if it is the or so if it's not a tool call, that means it's done, so we early return and escape.
+
+190
+00:14:16,800 --> 00:14:19,920
+That means from here on it has to be a tool call.
+
+191
+00:14:19,920 --> 00:14:21,679
+So now we can assume accordingly.
+
+192
+00:14:21,680 --> 00:14:27,920
+We grab the calls from response content filter where we filter based on if it is a tool call block or not.
+
+193
+00:14:27,920 --> 00:14:31,360
+This is important because sometimes the model can respond with more than one tool call.
+
+194
+00:14:31,360 --> 00:14:41,840
+Here we have results which is where we collect all of the results of the things we call because we're going to go through and safely parse and then get responses for all the different bash requests that it made.
+
+195
+00:14:41,840 --> 00:14:48,399
+If any of these fail, we append to results with an invalid call saying it's an error and that the content is invalid input.
+
+196
+00:14:48,399 --> 00:14:54,000
+Otherwise we rip the data, we run it, we get an output, and then we send this as a result.
+
+197
+00:14:54,000 --> 00:14:56,960
+And at the end here, this is where things all come together.
+
+198
+00:14:56,960 --> 00:15:01,199
+We push with role user the contents of those results.
+
+199
+00:15:01,200 --> 00:15:07,519
+This means that we're taking all of the outputs from all of those tool calls and then appending them to the history like a normal message.
+
+200
+00:15:07,519 --> 00:15:15,679
+So what the model would then see is the results of that tool call is a bunch of like bash outputs and it knows to continue working accordingly.
+
+201
+00:15:15,680 --> 00:15:19,040
+And of course, we can wrap this up with one last demo.
+
+202
+00:15:19,039 --> 00:15:22,080
+Pnpm agent will run the code that we were just looking at.
+
+203
+00:15:22,080 --> 00:15:25,600
+Here we have a really simple broken demo app with some tests that are failing.
+
+204
+00:15:25,600 --> 00:15:27,440
+So let's ask the model to fix it.
+
+205
+00:15:27,440 --> 00:15:28,799
+The tests in this project are failing.
+
+206
+00:15:28,800 --> 00:15:30,639
+Find out why and fix the code.
+
+207
+00:15:30,639 --> 00:15:35,439
+And here we can see the model responding with tool calls that it can run and then it gets the results of those.
+
+208
+00:15:35,440 --> 00:15:38,720
+It runs another, it gets the results, and then it says something.
+
+209
+00:15:38,720 --> 00:15:39,439
+Two bugs.
+
+210
+00:15:39,440 --> 00:15:41,600
+Discount doesn't divide by 100.
+
+211
+00:15:41,600 --> 00:15:44,720
+It runs another command to edit and fix that.
+
+212
+00:15:44,720 --> 00:15:46,639
+It says all five tests pass now.
+
+213
+00:15:46,639 --> 00:15:49,759
+There were two bugs in Source CartJS and I didn't touch the tests.
+
+214
+00:15:49,759 --> 00:15:51,039
+It says what it did.
+
+215
+00:15:51,039 --> 00:15:59,919
+And then when we run the tests after, they are correct, because the model was able to run a command here, this said command, to actually edit the files to fix the issues.
+
+216
+00:15:59,920 --> 00:16:12,240
+So all this agent had was access to bash and it ran in a for loop so that every time it did something or requested a command to be run, we would run it, append that to the history, and then let the model generate the next thing.
+
+217
+00:16:12,240 --> 00:16:19,120
+Whether that is another tool call, a explanation, some code that would be executed via tool call, all of those things, doesn't matter.
+
+218
+00:16:19,120 --> 00:16:25,039
+The model is able to keep going until it tells us to stop or we hit our limit, which in this case was those 40 steps.
+
+219
+00:16:25,040 --> 00:16:27,679
+Let's quickly go through the important takeaways from this lesson.
+
+220
+00:16:27,680 --> 00:16:31,439
+First and foremost, the models aren't generating responses to our messages.
+
+221
+00:16:31,440 --> 00:16:34,879
+They are autocompleting text based on the existing text history.
+
+222
+00:16:34,879 --> 00:16:38,720
+If the thing doesn't exist in the history or the model's weights, it cannot use it.
+
+223
+00:16:38,720 --> 00:16:42,799
+And this history is helpful in steering the model towards the right things in its weights.
+
+224
+00:16:42,800 --> 00:16:48,559
+If the model is trained properly, it can use text outputs to request certain types of data through what we call tools.
+
+225
+00:16:48,560 --> 00:16:54,960
+This allows them to go fetch things that they might not have, to run commands, to edit things, and to do stuff other than just output text.
+
+226
+00:16:54,960 --> 00:17:02,240
+By doing these tool calls, it's able to put things in its own history and make changes in the world around it in order to make the next thing it does more accurate.
+
+227
+00:17:02,240 --> 00:17:05,600
+All of this allows for the model to build its own context in history.
+
+228
+00:17:05,599 --> 00:17:09,600
+And the vast majority of the context models work with are not what we told it.
+
+229
+00:17:09,599 --> 00:17:20,000
+It's all of the data in the system prompt, all the tool calls and things that it's exposed to, and then it builds the context itself by using these tool calls to get the information it needs to make the next things it generates more accurate.
+
+230
+00:17:20,000 --> 00:17:29,039
+And by doing this in a loop, you end up with what we call an agent, a model that's able to use tool calls to build the context it needs and make real changes using all of the things we just discussed.
+
+231
+00:17:29,519 --> 00:17:30,400
+That was a lot.
+
+232
+00:17:30,400 --> 00:17:40,000
+And now that we understand it all, we can start taking advantage of it by learning more about the context and how we can manipulate it to make the models more successful in the things that we care about.
