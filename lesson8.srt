@@ -1,0 +1,1628 @@
+1
+00:00:04,720 --> 00:00:06,400
+Congratulations!
+
+2
+00:00:06,400 --> 00:00:11,600
+You're now in charge of your retail
+company's newly developed customer service
+agent.
+
+3
+00:00:11,600 --> 00:00:13,161
+We're signed in as Alex,
+
+4
+00:00:13,161 --> 00:00:17,520
+a customer who wants to exchange a pair of
+shoes for a larger size.
+
+5
+00:00:17,520 --> 00:00:22,080
+Notice the customer vaguely described what
+they want, as customers do.
+
+6
+00:00:22,080 --> 00:00:24,616
+And now the agent needs to work out how to
+
+7
+00:00:24,616 --> 00:00:28,480
+respond using its instructions and the
+capabilities that it has.
+
+8
+00:00:28,480 --> 00:00:33,120
+Of course the agent needs the order number,
+so let's go ahead and supply that.
+
+9
+00:00:33,120 --> 00:00:35,520
+And now it's able to look up the shoes.
+
+10
+00:00:35,520 --> 00:00:39,196
+Now given the order number, the agent
+successfully found the order,
+
+11
+00:00:39,196 --> 00:00:41,994
+which is a pair of blue sneakers in a size 8
+and it
+
+12
+00:00:41,994 --> 00:00:46,000
+then asks the customer which size that
+they'd like to replace these with.
+
+13
+00:00:46,000 --> 00:00:49,505
+So let's go ahead and say a 9 and then the
+agent
+
+14
+00:00:49,505 --> 00:00:55,200
+comes back and says that it can't actually
+check availability or do exchanges.
+
+15
+00:00:55,200 --> 00:00:59,120
+So why did it ask us that question in the
+first place?
+
+16
+00:00:59,120 --> 00:01:01,811
+This is the kind of stuff that annoys
+customers
+
+17
+00:01:01,811 --> 00:01:04,560
+when your company rolls out its fancy new
+agent.
+
+18
+00:01:04,560 --> 00:01:06,640
+As engineers, we can make this better.
+
+19
+00:01:06,640 --> 00:01:10,400
+First, we need to understand why the agent
+responded this way.
+
+20
+00:01:10,400 --> 00:01:12,686
+So let's open up its definition and look
+
+21
+00:01:12,686 --> 00:01:16,000
+at the instructions and capabilities that
+it's been given.
+
+22
+00:01:16,000 --> 00:01:20,720
+The agent is built using the open source
+framework Mastra and here's its definition.
+
+23
+00:01:20,720 --> 00:01:23,040
+It needs a model to process the information.
+
+24
+00:01:23,040 --> 00:01:25,120
+It's given and generate a response.
+
+25
+00:01:25,120 --> 00:01:28,000
+And this is your first design decision to
+make.
+
+26
+00:01:28,000 --> 00:01:33,440
+So you shouldn't reach for the biggest, most
+expensive model on the market by default.
+
+27
+00:01:33,440 --> 00:01:37,760
+Remember you have end users that are
+engaging with this agent.
+
+28
+00:01:37,760 --> 00:01:41,437
+So ask yourself, given the task that your
+agent needs to do,
+
+29
+00:01:41,437 --> 00:01:45,360
+what's the most efficient yet affordable
+model that you can use.
+
+30
+00:01:45,360 --> 00:01:47,381
+So we're using GPT-6 Luna here,
+
+31
+00:01:47,381 --> 00:01:52,400
+which is a smaller model because the agent's
+tasks are fairly focused, right?
+
+32
+00:01:52,400 --> 00:01:55,094
+It just needs to identify some missing
+information,
+
+33
+00:01:55,094 --> 00:01:58,000
+request the order lookup and respond using
+the results.
+
+34
+00:01:58,000 --> 00:02:02,640
+So smaller models generally cost less and
+they can respond faster.
+
+35
+00:02:02,640 --> 00:02:06,320
+So they're a useful starting point for this
+kind of task.
+
+36
+00:02:06,320 --> 00:02:11,612
+And you can test whether the model follows
+instructions and it uses its tools
+
+37
+00:02:11,612 --> 00:02:16,560
+correctly and if it does struggle then you
+can try a more capable model.
+
+38
+00:02:16,560 --> 00:02:19,120
+Now let's look at the instructions.
+
+39
+00:02:19,120 --> 00:02:24,238
+Now the instructions are critical system
+level prompts that define the agent's
+identity
+
+40
+00:02:24,238 --> 00:02:29,120
+and expertise and we can also use these
+instructions to guide the agent's behavior.
+
+41
+00:02:29,120 --> 00:02:33,360
+For example, we state that the agent is not
+allowed to make up details.
+
+42
+00:02:33,360 --> 00:02:38,153
+Instead, we tell it what to do if the tool
+isn't available and we also give
+
+43
+00:02:38,153 --> 00:02:43,840
+it permission to fail versus making up order
+details just to give the customer an answer.
+
+44
+00:02:43,840 --> 00:02:47,600
+Also we give it permission to ask for
+missing information.
+
+45
+00:02:47,600 --> 00:02:51,120
+That's why it asks Alex for an order number.
+
+46
+00:02:51,120 --> 00:02:53,167
+The lookup needs that information,
+
+47
+00:02:53,167 --> 00:02:56,720
+so we've told the agent to ask for it rather
+than to guess.
+
+48
+00:02:56,720 --> 00:02:59,680
+And then we can also give the agents tools.
+
+49
+00:02:59,680 --> 00:03:03,820
+So this is what allows the agent to actually
+take actions and these
+
+50
+00:03:03,820 --> 00:03:08,640
+can be tools that we've defined and
+implemented or they can be external tools.
+
+51
+00:03:08,640 --> 00:03:12,996
+For example, here is where we've registered
+the get order tool with the
+
+52
+00:03:12,996 --> 00:03:16,800
+agent and this tool maps to a function that
+we've implemented.
+
+53
+00:03:16,800 --> 00:03:21,920
+Now registering the tool makes it available
+to the model along with its description.
+
+54
+00:03:21,920 --> 00:03:26,400
+And that description explains what the tool
+does and when to use it.
+
+55
+00:03:26,400 --> 00:03:31,120
+Now notice that get orders availability is
+conditional on the order lookup setting.
+
+56
+00:03:31,120 --> 00:03:33,734
+So you could use this same approach to make
+a tool
+
+57
+00:03:33,734 --> 00:03:37,760
+available based on anything like the
+customer's permissions or anything else.
+
+58
+00:03:37,760 --> 00:03:42,640
+And then there's 2 other tools here that
+we've created as custom memory helpers.
+
+59
+00:03:42,640 --> 00:03:45,040
+In fact, let's look at memory.
+
+60
+00:03:45,040 --> 00:03:48,720
+So here we're defining how our agent's
+memory should work.
+
+61
+00:03:48,720 --> 00:03:53,120
+So we're supplying earlier messages so that
+the agent can follow the conversation.
+
+62
+00:03:53,120 --> 00:03:55,858
+When Alex replies with just an order number,
+
+63
+00:03:55,858 --> 00:03:59,840
+those earlier messages explain what Alex was
+even talking about.
+
+64
+00:03:59,840 --> 00:04:04,719
+Here we include the latest 20 messages from
+this thread and we could send
+
+65
+00:04:04,719 --> 00:04:07,860
+the entire conversation but the model
+processes
+
+66
+00:04:07,860 --> 00:04:10,734
+that history with every request right so as
+
+67
+00:04:10,734 --> 00:04:16,682
+the conversation grows that means more
+tokens to pay for and potentially slower
+responses
+
+68
+00:04:16,682 --> 00:04:21,760
+models also have a limit on how much
+information they can receive in 1 call.
+
+69
+00:04:21,760 --> 00:04:27,360
+So keeping the last 20 messages puts a bound
+on how much history that we're sending.
+
+70
+00:04:27,360 --> 00:04:29,360
+But there is a trade-off, right?
+
+71
+00:04:29,440 --> 00:04:33,760
+An important detail from earlier in the
+conversation might get left out.
+
+72
+00:04:33,760 --> 00:04:36,400
+And 20 isn't a magic number.
+
+73
+00:04:36,400 --> 00:04:40,365
+We needed to choose a limit that gives our
+agent enough history
+
+74
+00:04:40,365 --> 00:04:44,960
+to handle the customer's request without
+sending more than what it needs.
+
+75
+00:04:44,960 --> 00:04:48,475
+Now 1 fascinating thing about memory is that
+there are several
+
+76
+00:04:48,475 --> 00:04:52,160
+different types of memory and all of them
+work a bit differently.
+
+77
+00:04:52,160 --> 00:04:57,423
+For example, semantic recall would retrieve
+relevant messages based
+
+78
+00:04:57,423 --> 00:05:00,880
+on their meaning rather than exact keywords.
+
+79
+00:05:00,880 --> 00:05:06,480
+We've turned that off so that we're using
+recent messages without that extra search.
+
+80
+00:05:06,480 --> 00:05:11,360
+And then working memory lets the agent keep
+information across conversations.
+
+81
+00:05:11,360 --> 00:05:14,898
+So we've turned this off as well because we
+don't
+
+82
+00:05:14,898 --> 00:05:20,240
+want the agent automatically carrying order
+details into its next request.
+
+83
+00:05:20,240 --> 00:05:24,560
+Now we still want customers to be able to
+save shopping preferences.
+
+84
+00:05:24,560 --> 00:05:28,640
+And for that, we've registered read
+preference and save preference tools.
+
+85
+00:05:28,640 --> 00:05:32,664
+So the agent can save a preference when the
+customer asks it
+
+86
+00:05:32,664 --> 00:05:37,760
+to remember 1 and then it can retrieve a
+preference in another conversation.
+
+87
+00:05:37,760 --> 00:05:41,962
+So buying a pair of shoes or requesting a
+replacement
+
+88
+00:05:41,962 --> 00:05:46,560
+size doesn't by itself ask the agent to save
+a preference.
+
+89
+00:05:46,560 --> 00:05:50,130
+Now all of these configurations together
+shape how the
+
+90
+00:05:50,130 --> 00:05:55,683
+agent responds and it also gives us a hint
+of which parts of the agent we might need
+
+91
+00:05:55,683 --> 00:05:59,120
+to observe and tweak when his behavior is
+not ideal.
+
+92
+00:05:59,120 --> 00:06:02,473
+Now remember we saw the agent asked Alex for
+more information,
+
+93
+00:06:02,473 --> 00:06:04,960
+even though it couldn't complete the
+exchange.
+
+94
+00:06:04,960 --> 00:06:08,320
+The instructions that we've given it shape
+that behavior.
+
+95
+00:06:08,320 --> 00:06:11,110
+If we're telling it to collect replacement
+details,
+
+96
+00:06:11,110 --> 00:06:14,228
+then we need to consider whether collecting
+those details
+
+97
+00:06:14,228 --> 00:06:16,800
+is useful with the tools that it currently
+has.
+
+98
+00:06:16,800 --> 00:06:21,360
+Or maybe we can even extend its capabilities
+by providing more tools.
+
+99
+00:06:21,360 --> 00:06:24,480
+So that's why we're looking at how this
+agent is configured.
+
+100
+00:06:24,480 --> 00:06:27,531
+We want to understand what's leading it to
+ask those
+
+101
+00:06:27,531 --> 00:06:30,640
+questions so that we can decide what needs
+to change.
+
+102
+00:06:30,640 --> 00:06:34,800
+In this case, we can already see why it's
+asking for replacement details.
+
+103
+00:06:34,800 --> 00:06:38,800
+We've instructed it to do that, even though
+it can't complete the exchange.
+
+104
+00:06:38,800 --> 00:06:41,061
+But when you're working on an agent,
+
+105
+00:06:41,061 --> 00:06:46,462
+it might not always be that obvious right um
+you might get an incorrect answer and you
+
+106
+00:06:46,462 --> 00:06:49,100
+need to find out whether the tool returned
+
+107
+00:06:49,100 --> 00:06:52,617
+the wrong information or the model used that
+information
+
+108
+00:06:52,617 --> 00:06:55,506
+incorrectly so let's use this request to
+learn
+
+109
+00:06:55,506 --> 00:06:58,332
+how to inspect what happened during a run
+and
+
+110
+00:06:58,332 --> 00:07:03,920
+we'll follow the order lookup and see how
+the result became a part of the agent's
+answer.
+
+111
+00:07:03,920 --> 00:07:06,617
+So many people treat agents as black boxes,
+
+112
+00:07:06,617 --> 00:07:11,760
+but as engineers we need to know how to peek
+inside that box and what to look for.
+
+113
+00:07:11,760 --> 00:07:14,640
+So let's check the trace in Mastra Studio.
+
+114
+00:07:14,640 --> 00:07:18,400
+A trace is a record of what the agent did
+during 1 run.
+
+115
+00:07:18,400 --> 00:07:20,991
+We can use this to check whether the agent
+called the
+
+116
+00:07:20,991 --> 00:07:24,560
+right tool and whether that tool returned
+the information that it needed.
+
+117
+00:07:24,560 --> 00:07:28,080
+So here's the run from when Alex supplied
+the order number.
+
+118
+00:07:28,080 --> 00:07:34,400
+In the trace details, we can follow the
+steps that the agent took to answer Alex.
+
+119
+00:07:34,400 --> 00:07:37,280
+So this tree shows what happened during the
+run.
+
+120
+00:07:37,280 --> 00:07:42,224
+The conversation history is loaded from
+memory, then the model works through its
+steps,
+
+121
+00:07:42,224 --> 00:07:45,520
+calling tools as needed, and then finally
+the conversation
+
+122
+00:07:46,400 --> 00:07:48,960
+is saved for the next message.
+
+123
+00:07:48,960 --> 00:07:51,040
+The numbering starts at 0.
+
+124
+00:07:51,040 --> 00:07:54,640
+So step 0 is the first step.
+
+125
+00:07:54,640 --> 00:08:00,360
+Now under input we have our instructions
+from our agent definition that's going
+
+126
+00:08:00,360 --> 00:08:04,560
+to be in every single step which is why I
+said whatever is
+
+127
+00:08:04,560 --> 00:08:10,135
+in those instructions is critical and then
+the input also includes the recent
+
+128
+00:08:10,135 --> 00:08:16,000
+conversation history up to 20 messages which
+we configured in the memory setting.
+
+129
+00:08:16,000 --> 00:08:19,360
+Okay now let's take a look at the output.
+
+130
+00:08:19,360 --> 00:08:23,415
+So the model has made a tool request and it
+wants the agent to
+
+131
+00:08:23,415 --> 00:08:28,320
+run the get order tool and it supplied
+Alex's order number as the argument.
+
+132
+00:08:28,320 --> 00:08:31,157
+The agent then runs that function which we
+can
+
+133
+00:08:31,157 --> 00:08:34,240
+inspect in a separate get order entry in the
+tree.
+
+134
+00:08:34,240 --> 00:08:39,120
+So input shows what the function received
+and output shows what it returned.
+
+135
+00:08:39,120 --> 00:08:44,880
+So here the lookup found Alex's order and
+returned the blue sneaker in size 8.
+
+136
+00:08:44,880 --> 00:08:48,560
+Now the database access happens in our code.
+
+137
+00:08:48,560 --> 00:08:51,814
+We don't need the model to figure out how to
+query
+
+138
+00:08:51,814 --> 00:08:56,240
+the database or decide whether Alex is
+allowed to access this order.
+
+139
+00:08:56,240 --> 00:09:01,360
+We've already defined those rules so we can
+enforce them with deterministic code.
+
+140
+00:09:01,360 --> 00:09:05,722
+And that gives us a predictable check
+without paying
+
+141
+00:09:05,722 --> 00:09:10,000
+for another model call or waiting for its
+response.
+
+142
+00:09:10,000 --> 00:09:11,840
+And then it also helps with debugging.
+
+143
+00:09:11,840 --> 00:09:17,668
+So if the agent gave Alex the wrong shoe
+size, then this is 1 place that we would
+look if
+
+144
+00:09:17,668 --> 00:09:21,138
+the value was wrong in the tool result we
+checked the
+
+145
+00:09:21,138 --> 00:09:24,281
+lookup code or the stored order right but if
+the
+
+146
+00:09:24,281 --> 00:09:28,210
+value was correct here and then wrong in the
+agent's answer,
+
+147
+00:09:28,210 --> 00:09:31,680
+then we'd investigate how the agent used
+that result.
+
+148
+00:09:31,680 --> 00:09:33,120
+Let's look at the next step.
+
+149
+00:09:33,120 --> 00:09:37,840
+So along with the conversation, there is
+also now a result
+
+150
+00:09:38,800 --> 00:09:41,680
+from the call to get order.
+
+151
+00:09:41,680 --> 00:09:45,674
+So the agent sent that result back to the
+model for another call,
+
+152
+00:09:45,674 --> 00:09:49,360
+giving it information that it didn't have in
+the first step.
+
+153
+00:09:49,360 --> 00:09:54,385
+And this cycle where the agent repeatedly
+presents the model with information and
+
+154
+00:09:54,385 --> 00:09:58,480
+then the model responds to the agent with
+the next action to take.
+
+155
+00:09:58,480 --> 00:10:01,200
+This is what's known as the agentic loop.
+
+156
+00:10:01,200 --> 00:10:06,000
+So when the model requests a tool, the agent
+runs it and sends the result back.
+
+157
+00:10:06,000 --> 00:10:11,440
+And then the model can then use that result
+to respond or request another tool.
+
+158
+00:10:11,440 --> 00:10:15,600
+And note that finishing a run doesn't mean
+that the customer's problem is solved.
+
+159
+00:10:15,600 --> 00:10:18,880
+In Alex's case, the model responded with a
+question, right?
+
+160
+00:10:18,880 --> 00:10:22,658
+So this run ended and the agent waited for
+another customer
+
+161
+00:10:22,658 --> 00:10:27,332
+message as you're developing your agents 1
+important thing to consider is
+
+162
+00:10:27,332 --> 00:10:30,726
+how many times the model can continue this
+loop so if
+
+163
+00:10:30,726 --> 00:10:34,632
+a tool keeps returning an error for example
+we don't want the
+
+164
+00:10:34,632 --> 00:10:38,794
+agent to keep trying indefinitely while the
+customer waits and we
+
+165
+00:10:38,794 --> 00:10:41,803
+pay for more calls so we can set a limit on
+how
+
+166
+00:10:41,803 --> 00:10:45,133
+many model steps a run can take so here in
+our agent
+
+167
+00:10:45,133 --> 00:10:49,295
+definition we've added a default option that
+sets max steps to 5,
+
+168
+00:10:49,295 --> 00:10:52,240
+which gives each run a limit of 5 model
+steps.
+
+169
+00:10:52,240 --> 00:10:57,360
+A step is a call to the model and that call
+can request more than 1 tool.
+
+170
+00:10:57,360 --> 00:11:00,400
+So 5 steps doesn't mean 5 tool calls.
+
+171
+00:11:00,400 --> 00:11:04,960
+It means the model can be called up to 5
+times during that run.
+
+172
+00:11:04,960 --> 00:11:07,280
+It's also a maximum, not a target, right?
+
+173
+00:11:07,280 --> 00:11:12,240
+So the agent can respond before it reaches
+that limit, uh, which would be great.
+
+174
+00:11:12,240 --> 00:11:15,440
+So how do you choose a suitable limit for
+your agent?
+
+175
+00:11:15,440 --> 00:11:18,960
+Well, you'll need to test the work that the
+agent needs to do.
+
+176
+00:11:18,960 --> 00:11:21,816
+So you can run multiple scenarios via evals,
+
+177
+00:11:21,816 --> 00:11:25,840
+which we'll cover in detail in a later
+chapter in this course.
+
+178
+00:11:25,840 --> 00:11:29,036
+And we could measure how many steps it takes
+an
+
+179
+00:11:29,036 --> 00:11:34,000
+agent to get to a successful result without
+excessive floundering, right?
+
+180
+00:11:34,000 --> 00:11:36,400
+So our agent needed 2 steps.
+
+181
+00:11:36,400 --> 00:11:39,128
+So 5 gives it a bit of buffer now back to
+
+182
+00:11:39,128 --> 00:11:43,853
+the agent's annoying behavior where it's
+quizzing the user for exchange
+
+183
+00:11:43,853 --> 00:11:48,112
+details even though it has no capability to
+process exchanges we
+
+184
+00:11:48,112 --> 00:11:51,440
+now know where to go to fix this so let's do
+that.
+
+185
+00:11:51,440 --> 00:11:55,403
+Here in the instructions is where we're
+telling the agent to collect
+
+186
+00:11:55,403 --> 00:11:59,600
+replacement details and we also tell it that
+it can't process exchanges.
+
+187
+00:11:59,600 --> 00:12:03,520
+So we've given it instructions to gather
+information that it can't use.
+
+188
+00:12:03,520 --> 00:12:07,760
+So really this is our fault and then people
+blame it on AI.
+
+189
+00:12:07,760 --> 00:12:10,720
+As engineers we can change that behavior.
+
+190
+00:12:10,720 --> 00:12:15,069
+For now, we wanted to explain that exchanges
+aren't
+
+191
+00:12:15,069 --> 00:12:19,760
+supported and to stop asking exchange
+questions, right?
+
+192
+00:12:19,760 --> 00:12:24,080
+So it should still help when a customer asks
+to look up an order.
+
+193
+00:12:24,080 --> 00:12:27,360
+So let's go ahead and change that and we'll
+leave everything else the same.
+
+194
+00:12:27,360 --> 00:12:30,160
+The model, the order, and the tools.
+
+195
+00:12:30,160 --> 00:12:34,000
+I'm starting a new thread so that the agent
+has fresh context.
+
+196
+00:12:34,000 --> 00:12:37,280
+Let's go ahead and ask about the exchange
+again.
+
+197
+00:12:37,280 --> 00:12:39,120
+Great, that's much better.
+
+198
+00:12:39,120 --> 00:12:42,640
+Models are non-deterministic, but we do have
+a bit of control.
+
+199
+00:12:42,640 --> 00:12:46,240
+So the system instructions are included with
+every call to the model.
+
+200
+00:12:46,240 --> 00:12:49,680
+That means the agent gets that guidance
+again on every turn.
+
+201
+00:12:49,680 --> 00:12:51,760
+Now I don't want to mislead you.
+
+202
+00:12:51,760 --> 00:12:55,815
+Instructions don't guarantee that the model
+will always behave as intended,
+
+203
+00:12:55,815 --> 00:12:59,600
+but at least you've done your part to guide
+it in the right direction.
+
+204
+00:12:59,600 --> 00:13:01,840
+The model itself is stateless.
+
+205
+00:13:01,840 --> 00:13:06,824
+It has no recollection of previous calls, so
+every time our agent calls the model,
+
+206
+00:13:06,824 --> 00:13:11,200
+it has to supply all of the information that
+the model needs to respond.
+
+207
+00:13:11,200 --> 00:13:14,400
+And that information is its context.
+
+208
+00:13:14,400 --> 00:13:19,440
+So the context window is the limit on how
+much the model can work with at once.
+
+209
+00:13:19,440 --> 00:13:23,373
+The system instructions are part of that
+context and our agent
+
+210
+00:13:23,373 --> 00:13:27,370
+also includes up to the last 20 messages
+from the conversation,
+
+211
+00:13:27,370 --> 00:13:30,859
+which is inclusive of the user's prompts as
+well as the
+
+212
+00:13:30,859 --> 00:13:35,744
+model's responses and it also supplies
+information about the available tools,
+
+213
+00:13:35,744 --> 00:13:41,200
+such as their names and descriptions, along
+with the arguments that each tool accepts.
+
+214
+00:13:41,200 --> 00:13:47,040
+So if a tool has already run, then its
+result is included there as well.
+
+215
+00:13:47,040 --> 00:13:52,960
+As the conversation grows, we need to decide
+what to keep sending, right?
+
+216
+00:13:52,960 --> 00:13:59,034
+Remember that we've limited the message
+history to 20 messages and some of the
+
+217
+00:13:59,034 --> 00:14:04,640
+older messages before then may still be
+relevant and some of it may not.
+
+218
+00:14:04,640 --> 00:14:07,360
+So compaction is helpful here.
+
+219
+00:14:07,360 --> 00:14:10,262
+It's where older messages are compressed
+into
+
+220
+00:14:10,262 --> 00:14:13,680
+shorter notes that are included with recent
+messages.
+
+221
+00:14:13,680 --> 00:14:17,760
+The trade-off is that those notes may leave
+out some details.
+
+222
+00:14:17,760 --> 00:14:22,320
+We can also save specific information
+separately from the conversation.
+
+223
+00:14:22,320 --> 00:14:24,585
+Our agent can retrieve a preference,
+
+224
+00:14:24,585 --> 00:14:28,800
+for example when it's needed and include it
+in the model's context.
+
+225
+00:14:28,800 --> 00:14:30,320
+Let's see how that works.
+
+226
+00:14:30,320 --> 00:14:34,960
+So let's first ask whether the agent has a
+save shoe size for Alex.
+
+227
+00:14:34,960 --> 00:14:37,626
+So we see that it calls the read preference
+tool,
+
+228
+00:14:37,626 --> 00:14:41,760
+which is a tool that we implemented to read
+this information from the store.
+
+229
+00:14:41,760 --> 00:14:43,948
+The result says that it wasn't found,
+
+230
+00:14:43,948 --> 00:14:48,560
+which is exactly what we expect because we
+have not saved this preference yet.
+
+231
+00:14:48,560 --> 00:14:50,080
+So let's go ahead and store it.
+
+232
+00:14:50,080 --> 00:14:53,600
+Please remember my preferred shoe size is 9.
+
+233
+00:14:53,600 --> 00:14:57,879
+This time the model calls the save
+preference tool,
+
+234
+00:14:57,879 --> 00:15:03,920
+which writes that preference to the database
+and returns a confirmation.
+
+235
+00:15:03,920 --> 00:15:06,800
+Okay, let's try again in a new thread.
+
+236
+00:15:06,800 --> 00:15:07,840
+Wonderful.
+
+237
+00:15:07,840 --> 00:15:10,013
+So we know that our agent is capable of
+
+238
+00:15:10,013 --> 00:15:13,301
+remembering and recalling things outside of
+a chat session,
+
+239
+00:15:13,301 --> 00:15:15,920
+but there's a bit more to consider here,
+right?
+
+240
+00:15:15,920 --> 00:15:20,800
+When you add memory to an agent, decide
+what's worth remembering.
+
+241
+00:15:20,800 --> 00:15:23,440
+Let's look at the functions for these tools.
+
+242
+00:15:23,440 --> 00:15:28,880
+Now we're making a deliberate choice about
+what should carry across conversations.
+
+243
+00:15:29,040 --> 00:15:33,425
+A customer might discuss 1 order today and a
+different order tomorrow and we
+
+244
+00:15:33,425 --> 00:15:38,560
+don't want a remembered order number
+deciding which purchase their next request
+is about.
+
+245
+00:15:38,560 --> 00:15:42,476
+Remember that we've disabled automatic
+working memory in the agent
+
+246
+00:15:42,476 --> 00:15:47,520
+definition and instead we provided those
+tools specifically for shopping preferences.
+
+247
+00:15:47,520 --> 00:15:52,884
+The Save Tools schema accepts categories
+such as shoe size and shirt size and the
+tool
+
+248
+00:15:52,884 --> 00:15:55,691
+description tells the model to save only
+when
+
+249
+00:15:55,691 --> 00:15:58,560
+the customer asks it to remember a
+preference.
+
+250
+00:15:58,560 --> 00:16:03,200
+And our agent pulls the customer's identity
+when it reads or writes a preference.
+
+251
+00:16:03,200 --> 00:16:07,282
+And the database stores each category
+separately for each customer
+
+252
+00:16:07,282 --> 00:16:11,920
+so another customer's lookup doesn't return
+Alex's preferences for example.
+
+253
+00:16:11,920 --> 00:16:14,960
+Let's dive a bit more into the power of
+tools.
+
+254
+00:16:14,960 --> 00:16:20,000
+Here in our agent definition we've seen the
+agent retrieve order details using Get
+Order.
+
+255
+00:16:20,000 --> 00:16:23,749
+Now I want to show you what happens if we
+remove that tool
+
+256
+00:16:23,749 --> 00:16:28,080
+and how the agent responds when it can no
+longer look up the order.
+
+257
+00:16:28,080 --> 00:16:33,033
+Now remember that get order is conditionally
+available and this order lookup
+
+258
+00:16:33,033 --> 00:16:37,920
+setting controls whether it's included in
+the tools that we give the model.
+
+259
+00:16:37,920 --> 00:16:40,080
+So I'm gonna change it to false.
+
+260
+00:16:40,080 --> 00:16:45,840
+And now if we look in studio, we see that
+get order is no longer available to the
+agent.
+
+261
+00:16:45,920 --> 00:16:49,120
+In a new thread, let's ask it about an
+order.
+
+262
+00:16:49,120 --> 00:16:53,208
+So the agent sent the model, the system
+instructions, the user's prompts,
+
+263
+00:16:53,208 --> 00:16:55,840
+and info about the tools that it had access
+to,
+
+264
+00:16:55,840 --> 00:16:58,640
+which are only the read and save preferences
+tool.
+
+265
+00:16:58,640 --> 00:17:02,767
+The model doesn't have access to the
+database right and it only
+
+266
+00:17:02,767 --> 00:17:07,091
+has access to whatever information the agent
+has provided to it so
+
+267
+00:17:07,091 --> 00:17:10,760
+when we remove this tool from the agent it
+no longer has
+
+268
+00:17:10,760 --> 00:17:14,560
+access to that tool so it can't share that
+with the model.
+
+269
+00:17:14,560 --> 00:17:17,920
+So tools are what agents use to take
+actions.
+
+270
+00:17:17,920 --> 00:17:22,400
+I'm gonna revert this back to true and then
+let's inspect the tool definition.
+
+271
+00:17:22,400 --> 00:17:25,714
+So the description says retrieve an order
+belonging to the
+
+272
+00:17:25,714 --> 00:17:29,200
+current customer and that tells the model
+what the tool does.
+
+273
+00:17:29,200 --> 00:17:33,937
+The next sentence says that it should use it
+to verify order details before
+
+274
+00:17:33,937 --> 00:17:38,800
+answering questions about a purchase and
+that tells the model when to use it.
+
+275
+00:17:38,800 --> 00:17:41,312
+So we've kept that guidance with the tool
+
+276
+00:17:41,312 --> 00:17:44,560
+rather than repeating it in the agent's
+instructions.
+
+277
+00:17:44,560 --> 00:17:47,372
+And the instructions still say not to invent
+order
+
+278
+00:17:47,372 --> 00:17:50,240
+details and what to do when lookup isn't
+available.
+
+279
+00:17:50,240 --> 00:17:54,240
+We need those rules even when this tool
+isn't registered.
+
+280
+00:17:54,240 --> 00:17:58,144
+Now the input schema defines the input that
+the tool accepts,
+
+281
+00:17:58,144 --> 00:18:00,320
+which in this case is an order ID.
+
+282
+00:18:00,320 --> 00:18:04,560
+And the execute function contains the
+application code that performs the lookup.
+
+283
+00:18:04,560 --> 00:18:06,400
+So those parts have different jobs.
+
+284
+00:18:06,400 --> 00:18:10,000
+A clear description helps the model select
+the appropriate tool.
+
+285
+00:18:10,000 --> 00:18:13,093
+A schema lets the application validate the
+shape of
+
+286
+00:18:13,093 --> 00:18:17,520
+the request and then the implementation
+determines what actually happens.
+
+287
+00:18:17,520 --> 00:18:20,463
+Now, an order ID being a valid string
+doesn't mean
+
+288
+00:18:20,463 --> 00:18:23,230
+that the customer is allowed to see that
+order,
+
+289
+00:18:23,230 --> 00:18:26,880
+so we also need to check access in the
+implementation as well.
+
+290
+00:18:26,880 --> 00:18:28,880
+Here's where we enforce access.
+
+291
+00:18:28,880 --> 00:18:36,320
+The query requires both the requested order
+ID and the current customer's ID to match.
+
+292
+00:18:36,320 --> 00:18:40,056
+So this is common since programming, but
+let's face it, you know,
+
+293
+00:18:40,056 --> 00:18:42,240
+many of us aren't coding much anymore.
+
+294
+00:18:42,240 --> 00:18:47,245
+So I just want to point out how important it
+is for us to remember the logic,
+
+295
+00:18:47,245 --> 00:18:50,560
+even if we're not the ones that's writing
+the code.
+
+296
+00:18:50,560 --> 00:18:53,920
+So if Alex applies someone else's order
+number,
+
+297
+00:18:53,920 --> 00:18:58,424
+that combination won't match and the
+function returns order not
+
+298
+00:18:58,424 --> 00:19:04,000
+found for this customer without returning
+the other customer's orders details.
+
+299
+00:19:04,000 --> 00:19:09,920
+So the model can request the lookup, but our
+code controls which record it can retrieve.
+
+300
+00:19:09,920 --> 00:19:14,560
+And that access check runs every time the
+tool performs a lookup.
+
+301
+00:19:14,560 --> 00:19:20,400
+So we aren't relying on the model to follow
+some instructions about privacy.
+
+302
+00:19:20,400 --> 00:19:23,370
+So 1 more thing before we wrap up this
+chapter,
+
+303
+00:19:23,370 --> 00:19:26,720
+I want to touch on how we test this agent
+with evals.
+
+304
+00:19:26,720 --> 00:19:29,509
+So evals are tests where we give the agent a
+
+305
+00:19:29,509 --> 00:19:33,440
+request and then we check his behavior
+against what we expect.
+
+306
+00:19:33,440 --> 00:19:39,280
+And these cases use our customer Alex in
+orders that we've created as test data.
+
+307
+00:19:39,280 --> 00:19:41,862
+Because we know what's in those orders,
+
+308
+00:19:41,862 --> 00:19:46,960
+we can check whether the agent retrieves and
+reports the correct information.
+
+309
+00:19:46,960 --> 00:19:48,666
+For a production agent,
+
+310
+00:19:48,666 --> 00:19:54,080
+we expand this set to cover different
+customers and different situations.
+
+311
+00:19:54,080 --> 00:19:54,468
+Okay,
+
+312
+00:19:54,468 --> 00:20:01,068
+each case describes the behavior that we
+want rather than requiring 1 exact sentence,
+
+313
+00:20:01,068 --> 00:20:02,000
+for example.
+
+314
+00:20:02,000 --> 00:20:04,116
+So for a direct order question,
+
+315
+00:20:04,116 --> 00:20:09,440
+we check that the agent calls get order and
+reports the correct purchase item.
+
+316
+00:20:09,440 --> 00:20:11,200
+A plausible answer isn't enough.
+
+317
+00:20:11,200 --> 00:20:14,240
+We want to see that it used the store's
+data.
+
+318
+00:20:14,240 --> 00:20:15,562
+For an exchange request,
+
+319
+00:20:15,562 --> 00:20:19,254
+we check that the agent explains its
+limitations without collecting
+
+320
+00:20:19,254 --> 00:20:22,560
+more details or claiming that an exchange
+has been approved.
+
+321
+00:20:22,560 --> 00:20:25,360
+So this checks whether the instruction
+change we made actually
+
+322
+00:20:26,320 --> 00:20:28,640
+stops that unnecessary behavior.
+
+323
+00:20:28,640 --> 00:20:31,552
+And then when querying another customer's
+order,
+
+324
+00:20:31,552 --> 00:20:34,343
+we check that the lookup returns no
+accessible
+
+325
+00:20:34,343 --> 00:20:37,680
+order and that the answer doesn't disclose
+its context.
+
+326
+00:20:37,680 --> 00:20:40,550
+So this checks both the access rule in our
+
+327
+00:20:40,550 --> 00:20:44,240
+code and how the agent responds when access
+is denied.
+
+328
+00:20:44,240 --> 00:20:46,812
+So just like any application test,
+
+329
+00:20:46,812 --> 00:20:53,166
+it's a good idea to rerun these cases after
+changing the agent's instructions or its
+
+330
+00:20:53,166 --> 00:20:59,520
+tools or its model to check whether a change
+broke anything that was working before.
+
+331
+00:20:59,520 --> 00:21:04,827
+In this chapter we explore the primitives
+that make up an agent and how the model,
+
+332
+00:21:04,827 --> 00:21:07,092
+the system instructions, the tools,
+
+333
+00:21:07,092 --> 00:21:11,040
+context and memory all come together within
+the agentic loop.
+
+334
+00:21:11,040 --> 00:21:16,240
+As engineers, we decide how to configure
+these pieces and we can inspect their
+
+335
+00:21:16,240 --> 00:21:21,440
+behavior and tweak these configurations to
+have the agent work as we intended.
+
+336
+00:21:21,440 --> 00:21:22,740
+In the next chapter,
+
+337
+00:21:22,740 --> 00:21:28,460
+we'll build on this retail agent and we'll
+start giving it some capabilities to
+actually
+
+338
+00:21:28,460 --> 00:21:33,920
+handle an exchange and introduce a decision
+model to help it decide what to do next.

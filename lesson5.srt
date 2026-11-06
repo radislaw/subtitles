@@ -1,0 +1,1823 @@
+1
+00:00:02,560 --> 00:00:04,374
+It's time to talk about the thing that I've
+
+2
+00:00:04,374 --> 00:00:07,200
+been dancing around for all the lessons so
+far, the harness itself.
+
+3
+00:00:07,200 --> 00:00:09,559
+This is the layer that allows your LLM that
+is
+
+4
+00:00:09,559 --> 00:00:13,200
+effectively just generating text to actually
+do things in your systems.
+
+5
+00:00:13,200 --> 00:00:16,035
+When we did the simple demo earlier with the
+bash tool call,
+
+6
+00:00:16,035 --> 00:00:17,453
+it was the start of a harness,
+
+7
+00:00:17,453 --> 00:00:20,383
+but obviously modern harnesses are way more
+complex than that,
+
+8
+00:00:20,383 --> 00:00:23,360
+offering functionality that goes far beyond
+writing bash calls.
+
+9
+00:00:23,360 --> 00:00:26,000
+Modern harnesses have fancy memory systems
+built in.
+
+10
+00:00:26,000 --> 00:00:29,648
+They have tools that allow them to spawn
+additional sub-agents or their own threads
+
+11
+00:00:29,648 --> 00:00:31,670
+or sometimes complex workflows where they
+have
+
+12
+00:00:31,670 --> 00:00:34,000
+multiple steps that agents run through
+independently.
+
+13
+00:00:34,000 --> 00:00:36,547
+They have their own tools for editing files,
+reading files,
+
+14
+00:00:36,547 --> 00:00:39,440
+updating data through MCP calls, and a whole
+of these other things.
+
+15
+00:00:39,440 --> 00:00:42,969
+There are a ton of different harnesses that
+have tons of different capabilities,
+
+16
+00:00:42,969 --> 00:00:45,528
+and I could spend a lot of time going
+through all of that,
+
+17
+00:00:45,528 --> 00:00:48,175
+but the harsh reality is that by the time
+this video is out,
+
+18
+00:00:48,175 --> 00:00:50,160
+they probably will have changed
+meaningfully.
+
+19
+00:00:50,160 --> 00:00:55,040
+So I'm gonna once again skirt around all of
+this and teach you durable skills instead.
+
+20
+00:00:55,040 --> 00:00:57,446
+So we're going to ignore that top because
+we're
+
+21
+00:00:57,446 --> 00:01:00,160
+talking about how to not get trapped by your
+harness.
+
+22
+00:01:00,160 --> 00:01:01,760
+A much more important thing.
+
+23
+00:01:01,760 --> 00:01:03,360
+Tell me if you've been there before.
+
+24
+00:01:03,360 --> 00:01:06,560
+You finally start getting really deep into
+cursor.
+
+25
+00:01:06,560 --> 00:01:09,803
+You've set up all the rules, you have
+everything in a state you like,
+
+26
+00:01:09,803 --> 00:01:12,341
+you're making changes to your code pretty
+effectively,
+
+27
+00:01:12,341 --> 00:01:14,880
+and then Claude Code drops and everybody
+swears by it.
+
+28
+00:01:14,880 --> 00:01:16,710
+Or maybe you've already made the switch over
+
+29
+00:01:16,710 --> 00:01:18,790
+to Claude Code and you're getting pretty
+familiar,
+
+30
+00:01:18,790 --> 00:01:21,120
+but your bill's going up a bunch and you
+just heard that
+
+31
+00:01:21,120 --> 00:01:23,782
+the new OpenAI model is really good and it's
+way cheaper to run,
+
+32
+00:01:23,782 --> 00:01:26,444
+so your workplace is trying to push you to
+switch over to Codex,
+
+33
+00:01:26,444 --> 00:01:28,400
+but you just set everything up for Claude
+Code.
+
+34
+00:01:28,400 --> 00:01:30,000
+You're screwed now, right?
+
+35
+00:01:30,000 --> 00:01:31,440
+Well, in some ways, yes.
+
+36
+00:01:31,440 --> 00:01:35,443
+It's a lot easier to change models than it
+is to change harnesses, unless, of course,
+
+37
+00:01:35,443 --> 00:01:38,880
+the model is being provided subsidized but
+exclusively through 1 harness.
+
+38
+00:01:38,880 --> 00:01:41,120
+Anthropic is anthropic, they'll be how they
+are.
+
+39
+00:01:41,120 --> 00:01:41,630
+But ideally,
+
+40
+00:01:41,630 --> 00:01:45,200
+you should be able to switch between these
+things without feeling too much friction.
+
+41
+00:01:45,200 --> 00:01:48,240
+Not to self-plug too hard, but I love
+***'s commentary here.
+
+42
+00:01:48,240 --> 00:01:50,508
+If you're not familiar with him, he's the
+creator of Effect,
+
+43
+00:01:50,508 --> 00:01:53,040
+which is a really popular way to make your
+TypeScript scale better.
+
+44
+00:01:53,040 --> 00:01:55,933
+He posted recently saying that since he
+started using T3 code,
+
+45
+00:01:55,933 --> 00:01:58,080
+he no longer cares what harness is being
+used.
+
+46
+00:01:58,080 --> 00:01:59,920
+He'd actually like to get rid of all of
+them.
+
+47
+00:01:59,920 --> 00:02:02,240
+This is the thing that you should strive
+towards.
+
+48
+00:02:02,240 --> 00:02:05,040
+You should not really feel the harness while
+you work.
+
+49
+00:02:05,040 --> 00:02:08,217
+Fixating on which harness you're using to me
+feels similar
+
+50
+00:02:08,217 --> 00:02:11,504
+to fixating really deeply on which code
+editor you're using,
+
+51
+00:02:11,504 --> 00:02:15,120
+but it's even less useful and less
+productive than in those cases.
+
+52
+00:02:15,120 --> 00:02:18,023
+Generally speaking, the labs are now
+training their models
+
+53
+00:02:18,023 --> 00:02:20,625
+on their harness through their real-world
+histories,
+
+54
+00:02:20,625 --> 00:02:23,127
+so most of the major releases like from
+Claude and
+
+55
+00:02:23,127 --> 00:02:26,480
+OpenAI are gonna behave best in Claude Code
+and Codex respectively.
+
+56
+00:02:26,480 --> 00:02:30,649
+Generally speaking, if you're leaving those,
+you should have good reasons for it,
+
+57
+00:02:30,649 --> 00:02:33,120
+but you also shouldn't care too much in
+general.
+
+58
+00:02:33,120 --> 00:02:35,172
+I find people, myself included,
+
+59
+00:02:35,172 --> 00:02:40,400
+get way too fixated on using whatever
+harness is coolest and hottest right now.
+
+60
+00:02:40,400 --> 00:02:43,806
+But what matters much more is that you're
+taking the most advantage of
+
+61
+00:02:43,806 --> 00:02:47,552
+the tools you are using today in building
+skills not like the markdown files,
+
+62
+00:02:47,552 --> 00:02:49,693
+but the actual skills around working with AI
+
+63
+00:02:49,693 --> 00:02:52,320
+that will be durable across these different
+solutions.
+
+64
+00:02:52,320 --> 00:02:55,280
+There's a lot of things that go into the
+harness.
+
+65
+00:02:55,280 --> 00:02:58,720
+You have the UI that is exposing the
+capabilities of the harness.
+
+66
+00:02:58,720 --> 00:03:02,712
+This could be a nice desktop app like the
+Codex app or the Claude Code desktop app,
+
+67
+00:03:02,712 --> 00:03:06,800
+or it could be a terminal UI like an open
+code in the terminal or the Claude command.
+
+68
+00:03:06,800 --> 00:03:09,638
+And the user, which is, believe it or not,
+you,
+
+69
+00:03:09,638 --> 00:03:13,321
+sits in front and sends things and
+interfaces through the UI,
+
+70
+00:03:13,321 --> 00:03:15,253
+which interfaces to the harness,
+
+71
+00:03:15,253 --> 00:03:19,600
+which then goes off and hits the APIs for
+whatever models you are using.
+
+72
+00:03:19,600 --> 00:03:23,040
+And then that generates tokens that get sent
+back to the harness.
+
+73
+00:03:23,040 --> 00:03:25,920
+And if the tokens match certain patterns, it
+triggers certain behaviors.
+
+74
+00:03:25,920 --> 00:03:28,310
+And then eventually it spits those outputs
+into the
+
+75
+00:03:28,310 --> 00:03:30,560
+UI that you read and then make decisions
+around.
+
+76
+00:03:30,560 --> 00:03:35,330
+But there are other things that go into the
+harness, capabilities, knowledge,
+connections,
+
+77
+00:03:35,330 --> 00:03:39,040
+and more, like maybe you have an MCP server
+that is connected to this.
+
+78
+00:03:39,040 --> 00:03:41,783
+And now the harness has to inform the APIs
+and
+
+79
+00:03:41,783 --> 00:03:45,360
+the LLMs of this MCP's capabilities and that
+it's available.
+
+80
+00:03:45,360 --> 00:03:49,996
+Maybe you have something that automatically
+runs a get status command right before it
+
+81
+00:03:49,996 --> 00:03:53,760
+hits up the API so that the model knows
+immediately what is going on.
+
+82
+00:03:53,760 --> 00:03:55,636
+This is why I had that silly thing in the
+last
+
+83
+00:03:55,636 --> 00:03:57,920
+lesson where the model was aware of the
+files I deleted.
+
+84
+00:03:57,920 --> 00:04:00,240
+That was my mistake because I'd forgotten.
+
+85
+00:04:00,240 --> 00:04:03,286
+Claude Code loves to include the git status
+in whatever
+
+86
+00:04:03,286 --> 00:04:06,000
+thing it sends as soon as you start a new
+thread.
+
+87
+00:04:06,000 --> 00:04:08,693
+The problem that I see a lot is that people
+think
+
+88
+00:04:08,693 --> 00:04:12,320
+of the harness not as this little box that
+everything connects to.
+
+89
+00:04:12,320 --> 00:04:16,410
+They think of it like this, this whole
+thing, all of the commands it can run,
+
+90
+00:04:16,410 --> 00:04:20,765
+all of the stuff built into the system
+prompt, the MCPs that you're connecting to,
+
+91
+00:04:20,765 --> 00:04:25,280
+the skills that you wrote that it has access
+to, the UI that you're using it through.
+
+92
+00:04:25,280 --> 00:04:26,720
+They see all of this as the same.
+
+93
+00:04:26,720 --> 00:04:29,200
+And I don't blame them for thinking that
+way, because that's what the labs want.
+
+94
+00:04:29,200 --> 00:04:34,037
+Anthropic and OpenAI really wants you to
+think that this is Claude or Codex or
+
+95
+00:04:34,037 --> 00:04:36,952
+whatever else because then you'll get locked
+in
+
+96
+00:04:36,952 --> 00:04:39,680
+and never leave the thing that you're using.
+
+97
+00:04:39,680 --> 00:04:44,760
+But similar to what *** said on Twitter,
+I don't even feel or notice the harness at
+
+98
+00:04:44,760 --> 00:04:47,680
+this point because I work in a different UI
+layer.
+
+99
+00:04:47,680 --> 00:04:49,600
+Personally, I'm using T3 code.
+
+100
+00:04:49,600 --> 00:04:52,720
+There's plenty of others too, like herder,
+human layer, orca, and more.
+
+101
+00:04:52,720 --> 00:04:56,824
+Obviously, I like my own and it's open
+source, so you can change it however you
+want,
+
+102
+00:04:56,824 --> 00:05:00,880
+but there's tons of different options for
+how you will interface with the harnesses.
+
+103
+00:05:00,880 --> 00:05:04,720
+And then when you switch from 1 harness to
+another, less of your workflow will break.
+
+104
+00:05:04,720 --> 00:05:05,351
+Personally,
+
+105
+00:05:05,351 --> 00:05:10,400
+I think 1 of the first things you should do
+is yank that UI layer away from the harness.
+
+106
+00:05:10,400 --> 00:05:14,727
+If you continuously tie yourself to the
+specific way of working that the harness
+has,
+
+107
+00:05:14,727 --> 00:05:17,018
+then you're going to be screwed the next
+time
+
+108
+00:05:17,018 --> 00:05:19,360
+the best model switches from 1 lab to
+another.
+
+109
+00:05:19,360 --> 00:05:22,800
+Right now, as the time of filming, there is
+no question that the best models are
+
+110
+00:05:22,800 --> 00:05:25,294
+currently coming from anthropic if you're
+working on code,
+
+111
+00:05:25,294 --> 00:05:26,800
+but that could change at any point.
+
+112
+00:05:26,800 --> 00:05:27,539
+And when it does,
+
+113
+00:05:27,539 --> 00:05:30,756
+if you're all built around Claude Code and
+you want to move over to codex,
+
+114
+00:05:30,756 --> 00:05:34,625
+you're going to have to relearn everything
+from your key bindings to where you should
+put
+
+115
+00:05:34,625 --> 00:05:38,320
+your skills to how the model behaves when it
+connects to things or does computer use.
+
+116
+00:05:38,320 --> 00:05:41,146
+So the more you can abstract the layer that
+you interface with,
+
+117
+00:05:41,146 --> 00:05:43,120
+the less scary it is when a new model drops.
+
+118
+00:05:43,120 --> 00:05:46,720
+This gets particularly dangerous once you
+start customizing the harness.
+
+119
+00:05:46,720 --> 00:05:51,844
+I've seen people do some crazy things with
+Claude Code, building it up into this big,
+
+120
+00:05:51,844 --> 00:05:55,280
+beautiful, chaotic machine that has endless
+capabilities.
+
+121
+00:05:55,280 --> 00:05:58,480
+Every time I see them do that, it ends up
+burning them some amount.
+
+122
+00:05:58,480 --> 00:05:59,126
+For example,
+
+123
+00:05:59,126 --> 00:06:03,920
+Matt Pocock went all in customizing Claude
+Code to make it everything he wanted and
+more.
+
+124
+00:06:03,920 --> 00:06:07,680
+And then Anthropic put out Claude mods that
+even further extended your customization.
+
+125
+00:06:07,680 --> 00:06:11,553
+He has since almost entirely moved away
+because he's so frustrated with the way that
+
+126
+00:06:11,553 --> 00:06:13,950
+Claude Code subscriptions don't have clear
+terms for
+
+127
+00:06:13,950 --> 00:06:15,840
+where you can and can't use those tokens.
+
+128
+00:06:15,840 --> 00:06:18,535
+And he doesn't know what and how to build
+around
+
+129
+00:06:18,535 --> 00:06:22,240
+Claude because of how weird anthropics been
+with those same terms.
+
+130
+00:06:22,240 --> 00:06:26,231
+Obviously open source solutions are going to
+be less uh risky in this way,
+
+131
+00:06:26,231 --> 00:06:28,928
+but generally you should try to build in
+ways that
+
+132
+00:06:28,928 --> 00:06:31,840
+aren't so tied to a specific harness and its
+features.
+
+133
+00:06:31,840 --> 00:06:35,760
+If you're okay with throwing it all away
+it's totally fine and actually quite fun.
+
+134
+00:06:35,760 --> 00:06:38,545
+I love building weird hacks into Claude
+Code, Codex, Pi,
+
+135
+00:06:38,545 --> 00:06:40,597
+whatever else I'm using at any given time,
+
+136
+00:06:40,597 --> 00:06:44,800
+but I have found that I'm way more
+productive when I do as little of that as
+possible.
+
+137
+00:06:44,800 --> 00:06:47,080
+I switch to a UI or application that I'm
+
+138
+00:06:47,080 --> 00:06:49,931
+very familiar with using and have all my
+keybinds,
+
+139
+00:06:49,931 --> 00:06:54,720
+all of my skills, all of the things I rely
+on for my workflow there and ready to go.
+
+140
+00:06:54,720 --> 00:06:55,864
+And from that point,
+
+141
+00:06:55,864 --> 00:06:59,869
+I just kind of fire things off and can get a
+good gut feel really fast
+
+142
+00:06:59,869 --> 00:07:04,160
+as to what tools I do and don't like because
+I have a flow that works well.
+
+143
+00:07:04,160 --> 00:07:07,280
+And in the end, we're just sending text to
+these things anyways.
+
+144
+00:07:07,280 --> 00:07:10,838
+We're writing prose in English for what we
+want and we're hoping that the
+
+145
+00:07:10,838 --> 00:07:14,640
+model has access to the tools and knowledge
+it needs to make the right result.
+
+146
+00:07:14,800 --> 00:07:16,958
+Similar to what I was pushing on the last
+lesson,
+
+147
+00:07:16,958 --> 00:07:19,689
+your goal shouldn't be to make sure your
+environment has every
+
+148
+00:07:19,689 --> 00:07:22,640
+single thing you could ever need before you
+send your first prompt.
+
+149
+00:07:22,640 --> 00:07:24,080
+You should hit the ground running.
+
+150
+00:07:24,080 --> 00:07:27,120
+Try to use these things and get work done
+with them.
+
+151
+00:07:27,120 --> 00:07:31,040
+And as you run into problems, that's when
+you should start making adjustments.
+
+152
+00:07:31,040 --> 00:07:31,374
+Ideally,
+
+153
+00:07:31,374 --> 00:07:34,800
+you should make those adjustments in ways
+that are easy to reproduce other places.
+
+154
+00:07:34,800 --> 00:07:38,880
+1 of the things agents are great at is
+recreating and rewriting stuff in different
+shapes.
+
+155
+00:07:38,880 --> 00:07:42,044
+If you have skills that are formatted in a
+way that only cursor likes,
+
+156
+00:07:42,044 --> 00:07:45,298
+or maybe you have some old cursor rule files
+that you want to port over,
+
+157
+00:07:45,298 --> 00:07:46,880
+you can tell your agent to do that.
+
+158
+00:07:46,880 --> 00:07:49,200
+They do need somewhere where it all lives.
+
+159
+00:07:49,200 --> 00:07:51,200
+Everybody has their own strategies for this.
+
+160
+00:07:51,200 --> 00:07:53,680
+I quite like mine, so I'm going to show that
+to you.
+
+161
+00:07:53,680 --> 00:07:57,200
+This is a real repo that I maintain actively
+called Fleet.
+
+162
+00:07:57,200 --> 00:08:01,576
+I have it called Fleet because it manages
+all of my skills, my config,
+
+163
+00:08:01,576 --> 00:08:04,640
+my MCPs and everything across all of my
+machines.
+
+164
+00:08:04,640 --> 00:08:05,920
+And I have a lot of them now.
+
+165
+00:08:05,920 --> 00:08:09,105
+I have like 16 computers that I'm using for
+my agent work on a given day,
+
+166
+00:08:09,105 --> 00:08:12,640
+and I pass things around to the different
+boxes depending on what I'm working on.
+
+167
+00:08:12,640 --> 00:08:15,918
+I've started working on automatically
+hitting the right box for the right thing,
+
+168
+00:08:15,918 --> 00:08:19,360
+but uh that's a lesson for another time,
+just some fun stuff I'm experimenting with.
+
+169
+00:08:19,360 --> 00:08:22,160
+What we're here for is to see how I'm
+organizing things.
+
+170
+00:08:22,160 --> 00:08:25,866
+And I want to be clear, I don't actually
+open this folder up a whole
+
+171
+00:08:25,866 --> 00:08:28,482
+lot outside of going to make changes to the
+prose
+
+172
+00:08:28,482 --> 00:08:31,316
+in my skills and markdown files because
+that's where
+
+173
+00:08:31,316 --> 00:08:33,440
+a lot of the value I can bring here is.
+
+174
+00:08:33,440 --> 00:08:35,680
+The rest is just the general management.
+
+175
+00:08:35,680 --> 00:08:37,904
+So I have here skills as a folder and I
+
+176
+00:08:37,904 --> 00:08:41,440
+have different subfolders for ones that I
+only want in Claude.
+
+177
+00:08:41,440 --> 00:08:43,520
+Why would I have skills I only want in
+Claude?
+
+178
+00:08:43,520 --> 00:08:46,748
+That's because I had a few skills in here
+that I only wanted to have
+
+179
+00:08:46,748 --> 00:08:50,640
+used when I was using Claude because they
+were teaching Claude how to call Codex.
+
+180
+00:08:50,720 --> 00:08:53,200
+These ones actually don't exist anymore, so
+I can delete those folders.
+
+181
+00:08:53,200 --> 00:08:54,880
+As you can tell, I don't spend a lot of time
+here.
+
+182
+00:08:54,880 --> 00:08:57,531
+But the Anthropic front end design skill is
+1 that works really
+
+183
+00:08:57,531 --> 00:09:00,560
+well with anthropics models that I found
+doesn't work great with others.
+
+184
+00:09:00,560 --> 00:09:05,266
+So I put it in this folder and I have a
+metadata field here for the harness where
+
+185
+00:09:05,266 --> 00:09:10,320
+I say only Claude and now this skill will be
+on my Claude Code instances across my fleet.
+
+186
+00:09:10,320 --> 00:09:15,360
+I then have a universal folder for all of
+the skills I want in multiple different
+places.
+
+187
+00:09:15,360 --> 00:09:18,560
+So this 1, full send, I use multiple times a
+day.
+
+188
+00:09:18,560 --> 00:09:20,696
+This is the skill I invoke when I know the
+model can
+
+189
+00:09:20,696 --> 00:09:23,120
+complete the task and I don't want to have
+to see it again.
+
+190
+00:09:23,120 --> 00:09:24,640
+I just want it to go merge the change.
+
+191
+00:09:24,640 --> 00:09:28,781
+And here I specify that the harnesses I want
+it to be in are Claude, Codex, Anti-Gravity,
+
+192
+00:09:28,781 --> 00:09:29,200
+and Muse.
+
+193
+00:09:29,200 --> 00:09:32,080
+And I want this on both my Macs, which is
+Darwin, and on my Linux machines,
+
+194
+00:09:32,080 --> 00:09:33,962
+because I do have some skills that are only
+on my
+
+195
+00:09:33,962 --> 00:09:35,920
+Macs and then some that are only on my Linux
+boxes.
+
+196
+00:09:35,920 --> 00:09:38,960
+How am I managing and configuring all of
+this?
+
+197
+00:09:38,960 --> 00:09:39,840
+Great question.
+
+198
+00:09:39,840 --> 00:09:42,240
+You can probably guess the answer if you
+know me particularly well.
+
+199
+00:09:42,240 --> 00:09:45,015
+I open a new thread in the fleet repo and I
+tell
+
+200
+00:09:45,015 --> 00:09:48,080
+it what I changed or what I want and then it
+does it.
+
+201
+00:09:48,080 --> 00:09:51,755
+If I make a new skill, I tell it I made a
+new skill, it will commit it,
+
+202
+00:09:51,755 --> 00:09:56,000
+push it up to the repo, and then push it to
+all the right places across the fleet.
+
+203
+00:09:56,000 --> 00:09:58,480
+I didn't write any custom scripts to do this
+for me.
+
+204
+00:09:58,480 --> 00:10:00,160
+I don't even know if there are any right
+now.
+
+205
+00:10:00,160 --> 00:10:03,460
+I vaguely recall at 1 point that Astra wrote
+a script to
+
+206
+00:10:03,460 --> 00:10:07,879
+automate this process of distributing my
+skills and config across my fleet,
+
+207
+00:10:07,879 --> 00:10:10,000
+but I'm not actually sure if it did.
+
+208
+00:10:10,000 --> 00:10:11,520
+I just think it did.
+
+209
+00:10:11,520 --> 00:10:15,328
+I don't care though, because when I tell it
+I want the skill on all the machines,
+
+210
+00:10:15,328 --> 00:10:16,080
+it just does it.
+
+211
+00:10:16,080 --> 00:10:17,464
+And when I get a new machine,
+
+212
+00:10:17,464 --> 00:10:21,520
+I open up this project and I say configure
+the new machine based on what I have here.
+
+213
+00:10:21,520 --> 00:10:25,040
+And this isn't just for configuring my
+harness and giving it all the skills it
+needs.
+
+214
+00:10:25,040 --> 00:10:28,553
+This goes as far as describing how I like to
+use my computers,
+
+215
+00:10:28,553 --> 00:10:33,199
+what tools they should have installed on
+them, how Tailscale should be configured,
+
+216
+00:10:33,199 --> 00:10:37,675
+how to identify given machines, the color
+coding systems that are built for it,
+
+217
+00:10:37,675 --> 00:10:40,621
+all these things are just files in this
+project that
+
+218
+00:10:40,621 --> 00:10:43,680
+I use as a reference point when I configure
+new tools.
+
+219
+00:10:43,680 --> 00:10:46,307
+But even then, when I try out something
+truly new,
+
+220
+00:10:46,307 --> 00:10:50,353
+like I move over to anti-gravity because I'm
+trying out the new Google model,
+
+221
+00:10:50,353 --> 00:10:54,400
+I will start without any of this initially
+just to see how it works, vanilla.
+
+222
+00:10:54,400 --> 00:10:57,602
+And then after I've gotten an idea for how
+it works by itself,
+
+223
+00:10:57,602 --> 00:10:59,719
+I then tell Claude or Codex to go through
+
+224
+00:10:59,719 --> 00:11:02,560
+this repo and configure everything the way
+I'm used to.
+
+225
+00:11:02,560 --> 00:11:03,942
+I then try that out for a bit,
+
+226
+00:11:03,942 --> 00:11:07,166
+I figure out the gaps between what I liked
+before and what I like now,
+
+227
+00:11:07,166 --> 00:11:10,160
+and then I microadjust accordingly until I
+land somewhere I like.
+
+228
+00:11:10,160 --> 00:11:13,643
+That said, I do have some workflows that I
+really like using right now,
+
+229
+00:11:13,643 --> 00:11:15,213
+so I've encoded those as skills,
+
+230
+00:11:15,213 --> 00:11:18,941
+and as soon as I'm working on a machine or a
+harness that doesn't have them,
+
+231
+00:11:18,941 --> 00:11:22,080
+I usually go pretty mad and I'll just tell
+it to copy them over.
+
+232
+00:11:22,080 --> 00:11:26,560
+All of this combined has made me feel pretty
+much entirely harness agnostic.
+
+233
+00:11:26,560 --> 00:11:31,403
+I was able to move over fully from Claude
+Code to Muse in like 3 minutes, not even,
+
+234
+00:11:31,403 --> 00:11:36,480
+and barely noticed the difference in terms
+of how it behaved and what it had access to.
+
+235
+00:11:36,480 --> 00:11:39,760
+And at that point, I'm effectively just
+evaluating the model.
+
+236
+00:11:39,760 --> 00:11:44,160
+The harness you're using barely matters
+outside of the system prompt at this point.
+
+237
+00:11:44,160 --> 00:11:47,068
+And I found that adjusting that will have a
+much bigger impact
+
+238
+00:11:47,068 --> 00:11:50,960
+in your day-to-day experience than changing
+which tools are available to the model.
+
+239
+00:11:50,960 --> 00:11:53,322
+I find that if you get too deep in 1
+specific harness,
+
+240
+00:11:53,322 --> 00:11:57,040
+you're gonna lose out on a lot of the things
+that make all of this stuff really cool.
+
+241
+00:11:57,040 --> 00:11:59,120
+Think about the composition of your team at
+work.
+
+242
+00:11:59,120 --> 00:12:03,120
+Imagine if you took the best engineer and
+you cloned them 5 times.
+
+243
+00:12:03,120 --> 00:12:05,360
+How much more code can you write?
+
+244
+00:12:05,360 --> 00:12:06,240
+Probably a lot.
+
+245
+00:12:06,240 --> 00:12:08,720
+But how much better are your code reviews
+gonna get?
+
+246
+00:12:08,720 --> 00:12:12,088
+Probably not that much, because if 5 people
+think the exact same way,
+
+247
+00:12:12,088 --> 00:12:14,480
+they're gonna come to the exact same
+conclusions.
+
+248
+00:12:14,480 --> 00:12:17,200
+Ideally the tools you're using will let you
+hop between different brains.
+
+249
+00:12:17,200 --> 00:12:20,880
+So different models, different agents,
+different harnesses, different whatever.
+
+250
+00:12:20,880 --> 00:12:23,600
+And this is 1 of the things that I'm really
+proud of in T3 code.
+
+251
+00:12:23,600 --> 00:12:26,400
+We allow for your agents to call other
+harnesses.
+
+252
+00:12:26,400 --> 00:12:31,235
+So here we can see that this run I'm doing
+with Opus 5.5 is also able to call Muse
+
+253
+00:12:31,235 --> 00:12:34,891
+for writing code sometimes and it's even
+calling GPT-61Soul in
+
+254
+00:12:34,891 --> 00:12:37,840
+Codex to get feedback on the work that it's
+doing.
+
+255
+00:12:37,840 --> 00:12:41,391
+I find that this is useful even if a smart
+model is asking for feedback from a dumber
+
+256
+00:12:41,391 --> 00:12:43,521
+1 because the dumber model might think about
+things
+
+257
+00:12:43,521 --> 00:12:46,320
+slightly differently and find things that
+the smarter model missed.
+
+258
+00:12:46,320 --> 00:12:49,360
+And if I was all in on Claude Code, I
+wouldn't be able to do this.
+
+259
+00:12:49,360 --> 00:12:51,515
+In fact, when I was all in on Claude Code,
+
+260
+00:12:51,515 --> 00:12:56,080
+I had a bunch of modifications in it so that
+I could use OpenAI models in my Claude Code.
+
+261
+00:12:56,080 --> 00:12:57,311
+If you were curious,
+
+262
+00:12:57,311 --> 00:13:01,680
+I still have this set up and I can in Claude
+Code call my codex models.
+
+263
+00:13:01,680 --> 00:13:05,077
+I did this for a while, but I found that the
+codex models behave best
+
+264
+00:13:05,077 --> 00:13:07,637
+in codex and the cloud models behave best in
+Claude,
+
+265
+00:13:07,637 --> 00:13:10,935
+so I now have a solution that lets me use
+Claude models with Claude
+
+266
+00:13:10,935 --> 00:13:15,120
+and Codex models with Codex without the
+friction of them not being able to
+interface.
+
+267
+00:13:15,120 --> 00:13:17,484
+I used to have them generate markdown files
+or HTML
+
+268
+00:13:17,484 --> 00:13:19,709
+pages so I could link the context between
+the 2,
+
+269
+00:13:19,709 --> 00:13:21,840
+and that ended up becoming my job for a
+while.
+
+270
+00:13:21,840 --> 00:13:25,120
+It's effectively just passing the context
+from 1 agent to another,
+
+271
+00:13:25,120 --> 00:13:28,400
+putting it in my code review tools or
+wherever else it needs to go
+
+272
+00:13:28,400 --> 00:13:31,680
+so that I could get the best out of all of
+these different things.
+
+273
+00:13:31,680 --> 00:13:35,440
+And then I have tools like macroscope,
+greptile, and code rabbit reviewing PRs.
+
+274
+00:13:35,440 --> 00:13:39,120
+You're getting 1 layer of feedback there
+that prevents agents from making dumb
+mistakes.
+
+275
+00:13:39,120 --> 00:13:42,579
+And now inside of my actual daily driving
+ADE, which is T3 code,
+
+276
+00:13:42,579 --> 00:13:45,714
+I'm able to get additional feedback from
+other families of
+
+277
+00:13:45,714 --> 00:13:49,120
+models and other harnesses without having to
+change how I work.
+
+278
+00:13:49,120 --> 00:13:52,480
+When a new model comes out, it's just
+another thing to click in my drop-down.
+
+279
+00:13:52,480 --> 00:13:54,320
+It's not a whole new world to learn.
+
+280
+00:13:54,320 --> 00:13:58,895
+It's not like switching frameworks from
+React to Svelte or from Svelte to Angular,
+
+281
+00:13:58,895 --> 00:14:00,960
+it's more like switching a CSS class.
+
+282
+00:14:00,960 --> 00:14:04,574
+You're just changing over from 1 flavor of
+LLMs to another,
+
+283
+00:14:04,574 --> 00:14:08,800
+and the harness starts to evaporate once you
+think about it this way.
+
+284
+00:14:08,800 --> 00:14:12,160
+What's going on now is effectively another
+level of abstraction.
+
+285
+00:14:12,160 --> 00:14:16,443
+Similar to how back in the day we would
+abstract from the binary code that
+
+286
+00:14:16,443 --> 00:14:18,874
+our computers were running up to low-level
+
+287
+00:14:18,874 --> 00:14:21,710
+languages that were much more writable by
+humans,
+
+288
+00:14:21,710 --> 00:14:26,224
+up to runtimes that would allow for even
+simpler languages to be built on top,
+
+289
+00:14:26,224 --> 00:14:31,200
+that type of abstracting more and more as
+things evolve is going on rapidly right now.
+
+290
+00:14:31,200 --> 00:14:33,224
+So of course at the bottom we have code,
+
+291
+00:14:33,224 --> 00:14:36,311
+but above that we had LLMs that could start
+writing the code,
+
+292
+00:14:36,311 --> 00:14:39,600
+usually through autocomplete when you were
+typing in your editor.
+
+293
+00:14:39,600 --> 00:14:43,722
+Maybe you would select some text command K
+and say change this thing and it would,
+
+294
+00:14:43,722 --> 00:14:45,280
+but we keep abstracting on top.
+
+295
+00:14:45,280 --> 00:14:48,860
+Eventually harnesses happened and the role
+of the harness was
+
+296
+00:14:48,860 --> 00:14:51,970
+to give the LLMs access to more things that
+you could
+
+297
+00:14:51,970 --> 00:14:54,435
+then trust it to do more work through a UI
+
+298
+00:14:54,435 --> 00:14:57,663
+layer like a terminal with claude code or
+with T3 code,
+
+299
+00:14:57,663 --> 00:15:01,360
+whatever else, it is very likely we're going
+to abstract again.
+
+300
+00:15:01,360 --> 00:15:04,876
+I would be surprised if most of us haven't
+moved to an assistant
+
+301
+00:15:04,876 --> 00:15:08,392
+layer of some form on top over the next few
+months to few years,
+
+302
+00:15:08,392 --> 00:15:11,029
+where instead of managing every thread
+yourself,
+
+303
+00:15:11,029 --> 00:15:15,040
+you're talking to a higher level agent that
+commands the threads for you.
+
+304
+00:15:15,040 --> 00:15:20,320
+And this is also why I get so concerned
+about people obsessing over any 1 of these
+layers.
+
+305
+00:15:20,320 --> 00:15:24,221
+We've mostly gotten over our obsession with
+like the specific framework we're using,
+
+306
+00:15:24,221 --> 00:15:27,379
+the specific syntax we're writing, fighting
+over tabs versus spaces,
+
+307
+00:15:27,379 --> 00:15:28,400
+those types of things.
+
+308
+00:15:28,400 --> 00:15:29,760
+That's what we would fight about here.
+
+309
+00:15:29,760 --> 00:15:31,972
+When we were in the LLMs doing the stuff
+era,
+
+310
+00:15:31,972 --> 00:15:35,314
+we were fighting a lot about which rules to
+use, which model to use,
+
+311
+00:15:35,314 --> 00:15:37,280
+what reasoning efforts and temperatures.
+
+312
+00:15:37,280 --> 00:15:39,500
+Like I still remember the era where
+everybody was
+
+313
+00:15:39,500 --> 00:15:42,400
+complaining that we didn't have temperature
+controls in T3 chat.
+
+314
+00:15:42,400 --> 00:15:44,134
+This all seemed so important at the time,
+
+315
+00:15:44,134 --> 00:15:46,968
+but I could tell it wasn't because I knew
+the labs would get to the
+
+316
+00:15:46,968 --> 00:15:50,480
+point where the defaults were right and we
+didn't have to tune those knobs anymore.
+
+317
+00:15:50,480 --> 00:15:52,240
+Now I see the same with harnesses.
+
+318
+00:15:52,240 --> 00:15:56,695
+Everybody who used to care too much about
+what temperature was set on their models,
+
+319
+00:15:56,695 --> 00:16:00,560
+now cares way too much about which tools are
+available in their harness.
+
+320
+00:16:00,560 --> 00:16:03,684
+I was talking to somebody at an event
+yesterday that was trying
+
+321
+00:16:03,684 --> 00:16:06,560
+to make a startup to help your agents pick
+the right tool.
+
+322
+00:16:06,560 --> 00:16:07,520
+I have bad news for you.
+
+323
+00:16:07,680 --> 00:16:09,986
+The agents are gonna pick the right tool and
+if they didn't,
+
+324
+00:16:09,986 --> 00:16:11,600
+it's because your tool description sucked.
+
+325
+00:16:11,600 --> 00:16:14,000
+Stop over-optimizing at this layer.
+
+326
+00:16:14,000 --> 00:16:18,240
+The harness should be as easy to swap out as
+the model you're using is.
+
+327
+00:16:18,240 --> 00:16:20,962
+And if you are super deep on your 1 specific
+harness,
+
+328
+00:16:20,962 --> 00:16:24,198
+you're going to be screwed when we have
+another abstraction and
+
+329
+00:16:24,198 --> 00:16:27,280
+we move to assistants that are calling our
+harnesses for us.
+
+330
+00:16:27,280 --> 00:16:29,683
+I've only just started playing with this in
+T3
+
+331
+00:16:29,683 --> 00:16:32,400
+code and it's kind of mind-boggling what it
+enables.
+
+332
+00:16:32,400 --> 00:16:36,929
+I know a few people that have used T3 code
+way more than me that have done so much more
+
+333
+00:16:36,929 --> 00:16:39,480
+work and it had tens of thousands of threads
+that
+
+334
+00:16:39,480 --> 00:16:42,395
+did all of it through 1 high message chat
+with instinct,
+
+335
+00:16:42,395 --> 00:16:44,320
+commanding the app remotely for them.
+
+336
+00:16:44,320 --> 00:16:47,579
+And the more effort you put into super
+customizing the harness,
+
+337
+00:16:47,579 --> 00:16:50,320
+the less prepared you will be when we
+abstract again.
+
+338
+00:16:50,320 --> 00:16:54,076
+So generally speaking, what you want to do
+is make the work that your
+
+339
+00:16:54,076 --> 00:16:57,614
+agents are doing as easy to understand as
+possible for the agent,
+
+340
+00:16:57,614 --> 00:16:59,520
+regardless of what tool they're in.
+
+341
+00:16:59,520 --> 00:17:03,467
+This could be your agent in CLAUDE.md, but
+ideally it's the code base itself,
+
+342
+00:17:03,467 --> 00:17:07,773
+as I showed before, describing to people and
+more importantly to agents where things
+
+343
+00:17:07,773 --> 00:17:10,080
+are so that they go to the right place
+first.
+
+344
+00:17:10,080 --> 00:17:12,505
+There's a trick I learned with ADHD a long
+time
+
+345
+00:17:12,505 --> 00:17:15,600
+ago from Adam Savage that has fundamentally
+changed my life.
+
+346
+00:17:15,600 --> 00:17:19,078
+When you are trying to find something in
+your house and it's not where you
+
+347
+00:17:19,078 --> 00:17:22,650
+expect it and then you go hunt and hunt
+until you find where it actually is,
+
+348
+00:17:22,650 --> 00:17:23,920
+there's a place it belongs.
+
+349
+00:17:23,920 --> 00:17:25,520
+It's wherever you checked first.
+
+350
+00:17:25,520 --> 00:17:28,240
+Always put the thing back where you checked
+first.
+
+351
+00:17:28,240 --> 00:17:30,560
+This applies tenfold to LLMs.
+
+352
+00:17:30,560 --> 00:17:35,280
+If you make it so the obvious, easy thing it
+does is right, you're gonna succeed.
+
+353
+00:17:35,280 --> 00:17:39,455
+If you add hundreds of fancy tools to the
+harness layer so that the model is checking
+
+354
+00:17:39,455 --> 00:17:43,581
+500 times with all these fancy things you
+built into it if the code is right or not,
+
+355
+00:17:43,581 --> 00:17:46,480
+you're never gonna figure out what the
+model's doing wrong.
+
+356
+00:17:46,480 --> 00:17:48,202
+And you're also probably just gonna
+overwhelm
+
+357
+00:17:48,202 --> 00:17:50,000
+it with choices that don't actually make
+sense.
+
+358
+00:17:50,000 --> 00:17:52,880
+And the most important thing to understand
+about these
+
+359
+00:17:52,880 --> 00:17:55,280
+abstractions is that when we move up a
+layer,
+
+360
+00:17:55,280 --> 00:17:57,840
+the layer below becomes much easier to swap
+out.
+
+361
+00:17:57,840 --> 00:18:01,280
+When we were living in code, changing
+frameworks was miserable.
+
+362
+00:18:01,280 --> 00:18:03,740
+But now that we've abstracted as much as we
+have,
+
+363
+00:18:03,740 --> 00:18:08,058
+LLMs can rewrite a code base in a different
+language, much less a different framework,
+
+364
+00:18:08,058 --> 00:18:08,560
+trivially.
+
+365
+00:18:08,560 --> 00:18:10,443
+And then once the harnesses got really good,
+
+366
+00:18:10,443 --> 00:18:13,995
+we got to the point where we can swap out
+the model and still get good performance,
+
+367
+00:18:13,995 --> 00:18:17,120
+even if it's a different harness model
+pairing than is normally expected.
+
+368
+00:18:17,120 --> 00:18:20,480
+And once we're in assistance, we're just not
+going to be thinking about this anymore.
+
+369
+00:18:20,480 --> 00:18:24,880
+And the more abstracted we get, the less the
+layer that we were in prior matters.
+
+370
+00:18:25,280 --> 00:18:27,818
+so the conclusion on my lesson about
+harnesses is
+
+371
+00:18:27,818 --> 00:18:30,304
+to stop thinking so much about them and
+build in
+
+372
+00:18:30,304 --> 00:18:32,997
+a way where the harness you're using doesn't
+feel so
+
+373
+00:18:32,997 --> 00:18:36,000
+important and the way you're working is what
+matters most.
+
+374
+00:18:36,000 --> 00:18:39,173
+And that's why I'm really excited for my
+last lesson, workflows,
+
+375
+00:18:39,173 --> 00:18:43,387
+where I'm going to show you how I actually
+take the ways I like to work and teach the
+
+376
+00:18:43,387 --> 00:18:47,600
+models how to do it so that I can be more
+effective in how I want to deliver software

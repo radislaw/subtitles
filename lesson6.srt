@@ -1,0 +1,2280 @@
+1
+00:00:02,480 --> 00:00:06,160
+It's time to pull together everything we've
+learned so far to talk about workflows.
+
+2
+00:00:06,160 --> 00:00:08,940
+How do we take advantage of what the model
+sees, knows,
+
+3
+00:00:08,940 --> 00:00:11,316
+and can do in order to make workflows that
+make
+
+4
+00:00:11,316 --> 00:00:14,400
+sense for us to deliver software more
+effectively and faster.
+
+5
+00:00:14,640 --> 00:00:18,160
+There are a lot of different places that we
+can encode the way that we work.
+
+6
+00:00:18,160 --> 00:00:22,849
+We can do it with code itself by writing
+scripts, custom functionality, CI rules,
+
+7
+00:00:22,849 --> 00:00:26,960
+lint rules, all those types of things to
+make certain behaviors happen.
+
+8
+00:00:26,960 --> 00:00:29,231
+We can even write code to change how code
+gets
+
+9
+00:00:29,231 --> 00:00:31,600
+landed or how code is pushed up from our
+agents.
+
+10
+00:00:31,600 --> 00:00:33,970
+We could rewrite the GitHub CLI or wrap it
+in some
+
+11
+00:00:33,970 --> 00:00:36,720
+way where we are restricting what the model
+is capable of.
+
+12
+00:00:36,720 --> 00:00:39,760
+When models were dumber that made a lot of
+sense, but they've gotten pretty smart now.
+
+13
+00:00:39,760 --> 00:00:43,081
+So putting your time into building custom
+wrapper functions around
+
+14
+00:00:43,081 --> 00:00:45,798
+your tools to prevent them from doing the
+wrong thing,
+
+15
+00:00:45,798 --> 00:00:47,760
+probably not the best use of your time.
+
+16
+00:00:47,760 --> 00:00:51,168
+The reality is that your workflows should
+primarily live in places like
+
+17
+00:00:51,168 --> 00:00:54,480
+your prompts themselves and the skills that
+your agent has access to.
+
+18
+00:00:54,480 --> 00:00:58,847
+And these workflows can be very dynamic and
+involve a lot of code,
+
+19
+00:00:58,847 --> 00:01:03,280
+but it's using these 3 things that really
+makes workflows cemented.
+
+20
+00:01:03,280 --> 00:01:05,344
+And where things start to get really fun is
+
+21
+00:01:05,344 --> 00:01:07,840
+once you start to compose all of these
+capabilities.
+
+22
+00:01:07,840 --> 00:01:12,560
+I'm going to start with a specific example
+of a skill I use that I found really
+helpful.
+
+23
+00:01:12,560 --> 00:01:13,200
+Sol Loop.
+
+24
+00:01:13,200 --> 00:01:16,607
+Sol Loop is a skill that I made because I
+noticed that OpenAI's model,
+
+25
+00:01:16,607 --> 00:01:19,917
+specifically GPT-5.6 Sol, might not be my
+favorite for writing code,
+
+26
+00:01:19,917 --> 00:01:22,400
+but they were incredibly thorough for
+reviewing it.
+
+27
+00:01:22,400 --> 00:01:27,020
+So when I used models that I preferred
+working with, which at the time was Fable 5,
+
+28
+00:01:27,020 --> 00:01:29,247
+it changes all the time, doesn't matter,
+
+29
+00:01:29,247 --> 00:01:34,201
+I noticed that the GPT models were a really
+good thing to bring in to give feedback on
+my
+
+30
+00:01:34,201 --> 00:01:36,595
+changes before I pushed them up to a PR and
+
+31
+00:01:36,595 --> 00:01:39,600
+wasted my other code review agents and my
+team's time.
+
+32
+00:01:39,600 --> 00:01:40,880
+A thing I think a lot about,
+
+33
+00:01:40,880 --> 00:01:44,766
+and I think it'll be useful to know that
+this is something that's always on my brain,
+
+34
+00:01:44,766 --> 00:01:45,680
+is the merge button.
+
+35
+00:01:45,840 --> 00:01:47,962
+Merge button itself is just a button,
+
+36
+00:01:47,962 --> 00:01:51,920
+but there's a lot that goes into the before
+and after of that button.
+
+37
+00:01:51,920 --> 00:01:55,211
+Something I know about myself is I get
+incredibly frustrated when
+
+38
+00:01:55,211 --> 00:01:57,034
+I go to a PR and I want to merge it,
+
+39
+00:01:57,034 --> 00:01:59,920
+but I can't because I don't know if the
+changes are good.
+
+40
+00:01:59,920 --> 00:02:03,760
+I don't have a way to check the work that it
+did and see if it functions or not.
+
+41
+00:02:03,760 --> 00:02:06,400
+Or I'm waiting on somebody else to approve
+the thing.
+
+42
+00:02:06,400 --> 00:02:08,080
+Even worse though is the other side.
+
+43
+00:02:08,080 --> 00:02:09,280
+Once I click merge?
+
+44
+00:02:09,280 --> 00:02:10,640
+What if the changes were broken?
+
+45
+00:02:10,800 --> 00:02:12,240
+What if they do cause problems?
+
+46
+00:02:12,240 --> 00:02:14,080
+How do I undo the damage?
+
+47
+00:02:14,080 --> 00:02:18,073
+So when I think about the merge button, I
+think a lot about the before,
+
+48
+00:02:18,073 --> 00:02:21,504
+which is how do I make sure that by the time
+I go to this PR,
+
+49
+00:02:21,504 --> 00:02:26,060
+I have everything I need to verify the
+changes are good and the confidence to hit
+
+50
+00:02:26,060 --> 00:02:30,560
+merge because I know that the code is
+probably good by the time it's in that PR.
+
+51
+00:02:30,560 --> 00:02:32,864
+And then the other side which is if it did
+end up
+
+52
+00:02:32,864 --> 00:02:35,685
+bad because no matter how good you guys are
+at writing code,
+
+53
+00:02:35,685 --> 00:02:39,352
+even if you have the best engineers in the
+world obsessively reviewing things,
+
+54
+00:02:39,352 --> 00:02:41,280
+mistakes will break through your systems.
+
+55
+00:02:41,280 --> 00:02:46,240
+So how do you handle those mistakes and undo
+the damage before it affects too many
+people?
+
+56
+00:02:46,240 --> 00:02:48,640
+This is stuff like a staged rollout or
+really
+
+57
+00:02:48,640 --> 00:02:51,787
+good nightly systems where beta testers
+catch things early,
+
+58
+00:02:51,787 --> 00:02:54,080
+a proper QA org and system, whatever it is,
+
+59
+00:02:54,080 --> 00:02:58,187
+making it so that merging is less scary
+because by the time you're in the PR,
+
+60
+00:02:58,187 --> 00:02:59,680
+it's more likely to be good.
+
+61
+00:02:59,680 --> 00:03:04,518
+And after you merge, if it is broken, it's
+really easy to revert with a minimal amount
+
+62
+00:03:04,518 --> 00:03:09,525
+of damage these are the things I think the
+most about when I think about my workflows
+and
+
+63
+00:03:09,525 --> 00:03:12,000
+you'll see this as I describe how they work.
+
+64
+00:03:12,000 --> 00:03:14,320
+I want to be clear though you don't have to
+think the way I think.
+
+65
+00:03:14,320 --> 00:03:18,560
+Do I think I am correct in the way I have
+done the before and after of the merge
+button?
+
+66
+00:03:18,560 --> 00:03:19,280
+Mostly yeah.
+
+67
+00:03:19,280 --> 00:03:20,880
+There are ups and downs for the way I think.
+
+68
+00:03:20,880 --> 00:03:24,480
+There's obviously systems where you can't so
+simply revert a change.
+
+69
+00:03:24,480 --> 00:03:27,360
+Like if I was writing code for a pacemaker,
+I would probably be fired.
+
+70
+00:03:27,360 --> 00:03:30,583
+But the way I work makes a lot more sense
+for the companies I've worked at,
+
+71
+00:03:30,583 --> 00:03:31,571
+like Amazon and Twitch,
+
+72
+00:03:31,571 --> 00:03:34,880
+where you can stage your changes and make
+sure things are good ahead of time.
+
+73
+00:03:34,880 --> 00:03:36,984
+But you should adjust your workflows based
+on how
+
+74
+00:03:36,984 --> 00:03:38,960
+you work and what isn't isn't working for
+you.
+
+75
+00:03:38,960 --> 00:03:42,400
+But more importantly, you should be willing
+to adjust them as things change.
+
+76
+00:03:42,400 --> 00:03:44,720
+And believe me, they are going to change a
+lot.
+
+77
+00:03:44,720 --> 00:03:47,840
+That's why I'm choosing this Sol loop skill
+as a starting point.
+
+78
+00:03:47,840 --> 00:03:50,565
+I know I only wrote this a few months ago
+with GPT-5.6 Sol,
+
+79
+00:03:50,565 --> 00:03:53,521
+but I've actually had to adjust this skill
+multiple times since,
+
+80
+00:03:53,521 --> 00:03:56,800
+and I think this will help you understand
+the way I think about things.
+
+81
+00:03:56,800 --> 00:04:00,000
+So this skill was originally actually very,
+very simple.
+
+82
+00:04:00,000 --> 00:04:03,280
+My first version of this skill was almost
+hilariously simple.
+
+83
+00:04:03,280 --> 00:04:05,600
+Use GPT-5.6 Sol to review your work.
+
+84
+00:04:05,600 --> 00:04:08,463
+Keep asking for feedback and addressing it
+until you
+
+85
+00:04:08,463 --> 00:04:10,720
+have code that both you and Sol agree on.
+
+86
+00:04:10,720 --> 00:04:15,760
+You can call Sol using the Codex CLI, with
+an example at the end of how to call the
+CLI.
+
+87
+00:04:15,760 --> 00:04:18,373
+This immediately worked decently well and
+allowed
+
+88
+00:04:18,373 --> 00:04:20,560
+for Claude to get good feedback from Sol.
+
+89
+00:04:20,560 --> 00:04:23,760
+But I noticed some problems almost
+immediately.
+
+90
+00:04:23,760 --> 00:04:28,600
+First off, after it did all of the Sol
+loops, it would come back and say, yeah,
+
+91
+00:04:28,600 --> 00:04:30,560
+Sol likes the code and I do too.
+
+92
+00:04:30,560 --> 00:04:32,080
+But that's not where I wanted to end.
+
+93
+00:04:32,080 --> 00:04:36,038
+I want it to stop with a pull request that
+is filed so that I have code
+
+94
+00:04:36,038 --> 00:04:40,720
+that both Sol and whatever Claude model I
+was using agree on so I can go merge it.
+
+95
+00:04:40,720 --> 00:04:42,640
+So I added that at the end here.
+
+96
+00:04:42,640 --> 00:04:48,320
+I added, when you both agree, file a pull
+request with your changes.
+
+97
+00:04:48,320 --> 00:04:49,680
+And then I had a different problem.
+
+98
+00:04:49,680 --> 00:04:53,217
+I would go to the pull request and I saw
+that Macroscope
+
+99
+00:04:53,217 --> 00:04:58,080
+or Code Rabbit or Greptile caught something
+else that my agents didn't catch.
+
+100
+00:04:58,080 --> 00:04:59,920
+So I added another thing to the end.
+
+101
+00:04:59,920 --> 00:05:05,760
+Babysit the PR until all automated reviewers
+and CI are green.
+
+102
+00:05:05,760 --> 00:05:08,640
+And then I kept the skill pretty static for
+a while.
+
+103
+00:05:08,640 --> 00:05:11,916
+But I did notice a few little things that
+were annoying,
+
+104
+00:05:11,916 --> 00:05:16,069
+specifically that it would loop way longer
+than it should occasionally,
+
+105
+00:05:16,069 --> 00:05:19,520
+and the result of those long loops was
+massive scope creep.
+
+106
+00:05:19,520 --> 00:05:21,840
+So I went back to the top and I adjusted
+again.
+
+107
+00:05:21,840 --> 00:05:27,607
+Stop after 3 loops if you can't agree, push
+back on nits,
+
+108
+00:05:27,607 --> 00:05:32,160
+and don't let these reviews bloat your
+scope.
+
+109
+00:05:32,160 --> 00:05:36,160
+And after all of these changes were in,
+things were feeling pretty good.
+
+110
+00:05:36,160 --> 00:05:41,005
+But as always, I was auditing the things
+that my agents were doing and asking
+questions,
+
+111
+00:05:41,005 --> 00:05:45,575
+and I noticed that my agents were screwing
+up a lot when they were calling Codex-P,
+
+112
+00:05:45,575 --> 00:05:49,869
+and a lot of the time Claude would choose to
+spin up a subagent for Claude and
+
+113
+00:05:49,869 --> 00:05:52,402
+then have that subagent call codex and then
+it
+
+114
+00:05:52,402 --> 00:05:55,155
+would read through the whole history of what
+Codex
+
+115
+00:05:55,155 --> 00:05:59,229
+did in the Codex CLI to get the context it
+felt like it was missing and it
+
+116
+00:05:59,229 --> 00:06:02,367
+ended up massively bloating the context and
+increasing my
+
+117
+00:06:02,367 --> 00:06:05,120
+bill for Claude by however many tokens Codex
+used.
+
+118
+00:06:05,120 --> 00:06:08,000
+And after I noticed this, I made more
+adjustments.
+
+119
+00:06:08,000 --> 00:06:11,709
+This is when I introduced the capability I
+showed in the last lesson,
+
+120
+00:06:11,709 --> 00:06:16,171
+which is I allowed for Sol to be used inside
+of Claude on all of my devices so that
+
+121
+00:06:16,171 --> 00:06:18,644
+I could just have Claude use Sol as a
+subagent
+
+122
+00:06:18,644 --> 00:06:21,600
+instead of having to leave the harness
+entirely for it.
+
+123
+00:06:21,600 --> 00:06:24,555
+That said, I noticed that Claude didn't
+quite understand
+
+124
+00:06:24,555 --> 00:06:27,035
+how to instantiate the subagent with a
+specific
+
+125
+00:06:27,035 --> 00:06:31,680
+model that wasn't in its immediate family of
+models that it had in some list internally.
+
+126
+00:06:31,680 --> 00:06:36,080
+So I ended up making a custom subagent that
+was hard-coded in Claude Code that allowed
+it.
+
+127
+00:06:36,080 --> 00:06:38,894
+So after I set up the custom Sol agent in
+Claude Code,
+
+128
+00:06:38,894 --> 00:06:41,135
+I changed the rule here to say you can call
+
+129
+00:06:41,135 --> 00:06:44,000
+Sol using the custom Sol agent with your
+subagent tool.
+
+130
+00:06:44,000 --> 00:06:44,800
+And that was great.
+
+131
+00:06:44,800 --> 00:06:46,880
+And again, I left it for a while.
+
+132
+00:06:46,880 --> 00:06:50,560
+But then new capabilities appeared,
+specifically in T3 code.
+
+133
+00:06:50,560 --> 00:06:54,894
+We got the ability to have Claude call Codex
+within T3 code itself,
+
+134
+00:06:54,894 --> 00:06:58,080
+which was obviously better for a bunch of
+reasons.
+
+135
+00:06:58,080 --> 00:06:59,200
+So I changed it again.
+
+136
+00:06:59,200 --> 00:07:03,920
+You can call Sol using the delegate tool in
+T3 code.
+
+137
+00:07:03,920 --> 00:07:06,869
+Initially it was actually calling this with
+the new thread tool
+
+138
+00:07:06,869 --> 00:07:09,069
+which annoyed me so I had to change it again
+to
+
+139
+00:07:09,069 --> 00:07:11,925
+specify delegate tool and I even had to make
+some adjustments
+
+140
+00:07:11,925 --> 00:07:14,640
+to the MCP descriptions in T3 code to get
+this just right.
+
+141
+00:07:14,640 --> 00:07:17,846
+Again, if you rely on open source tools you
+can fix these things when
+
+142
+00:07:17,846 --> 00:07:21,424
+they break and you can often convince the
+maintainers to take on those fixes,
+
+143
+00:07:21,424 --> 00:07:23,236
+but this helps show a workflow I liked,
+
+144
+00:07:23,236 --> 00:07:27,325
+which is have a different model family
+review my changes and how I have adjusted it
+over
+
+145
+00:07:27,325 --> 00:07:28,858
+time as I used it and noticed the
+
+146
+00:07:28,858 --> 00:07:31,600
+different things that weren't weren't
+working how I wanted.
+
+147
+00:07:31,600 --> 00:07:36,313
+If you have a skill that you use regularly
+that you have not edited in months,
+
+148
+00:07:36,313 --> 00:07:37,280
+I have concerns.
+
+149
+00:07:37,280 --> 00:07:40,839
+You should spend a lot of time reading the
+skills that you're using and
+
+150
+00:07:40,839 --> 00:07:45,200
+modifying them to better fit the behaviors
+that you do and more importantly don't want.
+
+151
+00:07:45,360 --> 00:07:47,817
+1 of the biggest things that was hard for me
+
+152
+00:07:47,817 --> 00:07:51,280
+to accept is this idea that Markdown itself
+is executable now.
+
+153
+00:07:51,280 --> 00:07:52,199
+Back in my day,
+
+154
+00:07:52,199 --> 00:07:57,286
+the idea that you could have something.js
+and pipe this into Node.js and have it do
+
+155
+00:07:57,286 --> 00:08:00,718
+something was just mind-blowing to me
+because JavaScript
+
+156
+00:08:00,718 --> 00:08:03,600
+was this weird language you ran in the
+browser.
+
+157
+00:08:03,600 --> 00:08:07,200
+It wasn't meant to be an executable thing
+you ran in your CLIs.
+
+158
+00:08:07,200 --> 00:08:10,996
+But now you can take something.markdown and
+pipe that into
+
+159
+00:08:10,996 --> 00:08:14,400
+Claude and it will execute it almost like
+it's code.
+
+160
+00:08:14,400 --> 00:08:15,760
+Is it deterministic?
+
+161
+00:08:15,760 --> 00:08:19,600
+No, but I'll be real, JavaScript barely
+feels deterministic nowadays.
+
+162
+00:08:19,600 --> 00:08:23,874
+So yeah, getting this into my head changed
+how I build entirely and
+
+163
+00:08:23,874 --> 00:08:29,169
+I realized that a lot of the processes that
+I had, a lot of the code I had written,
+
+164
+00:08:29,169 --> 00:08:34,400
+a lot of the side projects I had built could
+just actually be a markdown file now.
+
+165
+00:08:34,400 --> 00:08:39,120
+And for some things that are dynamic and
+strange, this actually is quite nice.
+
+166
+00:08:39,120 --> 00:08:41,440
+And there's a lot of different ways that you
+could do this.
+
+167
+00:08:41,440 --> 00:08:45,827
+As you can probably guess, with a big open
+source project like T3 Code,
+
+168
+00:08:45,827 --> 00:08:47,680
+we get a ton of pull requests.
+
+169
+00:08:47,680 --> 00:08:51,280
+We get as many as 800 to 1,000 a day
+sometimes.
+
+170
+00:08:51,280 --> 00:08:54,485
+And getting through all of this is nearly
+impossible and we're always going to
+
+171
+00:08:54,485 --> 00:08:57,280
+miss some easy wins that people have put up
+as pull requests for us.
+
+172
+00:08:57,280 --> 00:08:57,920
+And I hate that.
+
+173
+00:08:57,920 --> 00:08:58,800
+It makes me feel bad.
+
+174
+00:08:58,800 --> 00:09:04,640
+So 1 of the things that I built is a
+scheduled prompt that runs every day at 9
+p.m.
+
+175
+00:09:04,880 --> 00:09:08,924
+that will go through the T3 code codebase
+and ask it to triage
+
+176
+00:09:08,924 --> 00:09:13,229
+open PRs that were opened or updated in the
+last 24 hours and then
+
+177
+00:09:13,229 --> 00:09:17,926
+come back with the results and tell me
+specifically what are some simple
+
+178
+00:09:17,926 --> 00:09:21,840
+PRs that I should go take a look at that are
+ready to merge.
+
+179
+00:09:21,840 --> 00:09:23,723
+Since we get so many pull requests,
+
+180
+00:09:23,723 --> 00:09:28,080
+doing all of this with an expensive model
+like Opus would put us out of business.
+
+181
+00:09:28,080 --> 00:09:31,760
+So I have it using Haiku to do the
+individual PR audits.
+
+182
+00:09:31,760 --> 00:09:35,363
+And then when Haiku flags some that it
+thinks are really good,
+
+183
+00:09:35,363 --> 00:09:37,920
+it then passes that up to Opus to finish it.
+
+184
+00:09:37,920 --> 00:09:41,360
+The craziest thing here though is that no
+code was written.
+
+185
+00:09:41,520 --> 00:09:44,000
+I didn't program anything for this flow.
+
+186
+00:09:44,000 --> 00:09:46,160
+Here is the super complex workflow I built
+here.
+
+187
+00:09:46,160 --> 00:09:48,400
+Every day at 9 p.m., I want you to do the
+following.
+
+188
+00:09:48,400 --> 00:09:50,642
+Spin up a set of haiku 5.5 delegates to look
+at
+
+189
+00:09:50,642 --> 00:09:53,409
+pull requests that have had activity in the
+last 24 hours,
+
+190
+00:09:53,409 --> 00:09:56,414
+do a brief audit of these PRs for
+mergeability, value, novelty,
+
+191
+00:09:56,414 --> 00:09:58,560
+and other insights that I might want to
+know.
+
+192
+00:09:58,560 --> 00:10:02,294
+If there's any that look mergeable, have
+Opus 5.5 and 61 Sol delegates,
+
+193
+00:10:02,294 --> 00:10:06,186
+take a look and verify, and then come back
+to me with a short list of 8 or
+
+194
+00:10:06,186 --> 00:10:09,920
+less PRs that you think are worth merging or
+taking over to get landed.
+
+195
+00:10:09,920 --> 00:10:11,920
+Any confusion about what I'm looking for
+here?
+
+196
+00:10:11,920 --> 00:10:13,040
+Ask if so.
+
+197
+00:10:13,040 --> 00:10:16,480
+Otherwise, do a test run before we set up
+the scheduled task.
+
+198
+00:10:16,480 --> 00:10:18,880
+And you can bet your butt that's exactly
+what it did.
+
+199
+00:10:18,880 --> 00:10:21,680
+It started to test with those haiku
+delegates.
+
+200
+00:10:21,680 --> 00:10:24,080
+It came back with all of the things that
+they found.
+
+201
+00:10:24,080 --> 00:10:28,000
+They had these 2 or they had Opus 5.5 and 61
+Sol review these 12 PRs.
+
+202
+00:10:28,000 --> 00:10:29,444
+And finally at the end here,
+
+203
+00:10:29,444 --> 00:10:32,640
+I got my list of things that it thought I
+should go and merge.
+
+204
+00:10:32,640 --> 00:10:35,200
+I said, this looks good, set it with a
+schedule.
+
+205
+00:10:35,200 --> 00:10:38,480
+And it wrote this prompt that it reruns
+every night for me.
+
+206
+00:10:38,480 --> 00:10:41,017
+It even has things that kind of feel like
+code,
+
+207
+00:10:41,017 --> 00:10:44,093
+like specific commands it should run and
+things it can do
+
+208
+00:10:44,093 --> 00:10:47,655
+to avoid hitting my limits and rate limits
+specifically on GitHub,
+
+209
+00:10:47,655 --> 00:10:49,760
+which is a thing I'm fighting actively.
+
+210
+00:10:49,760 --> 00:10:52,086
+I find myself hitting the GitHub rate limits
+even more
+
+211
+00:10:52,086 --> 00:10:55,360
+than my agent limits at this point to each
+their own, but I hit those a lot.
+
+212
+00:10:55,360 --> 00:10:57,620
+The main point I'm trying to make here is
+
+213
+00:10:57,620 --> 00:11:00,320
+that markdown can be used as the workflow
+itself.
+
+214
+00:11:00,320 --> 00:11:01,680
+I wrote a prompt.
+
+215
+00:11:01,680 --> 00:11:05,920
+The model adjusted the prompt after noticing
+certain things that were and weren't
+working.
+
+216
+00:11:05,920 --> 00:11:09,360
+It created this flow that auto-executes at 9
+p.m.
+
+217
+00:11:09,360 --> 00:11:12,160
+and makes my life easier and helps me land
+more code.
+
+218
+00:11:12,160 --> 00:11:14,094
+There's another underlying piece here that I
+
+219
+00:11:14,094 --> 00:11:16,160
+really want to make sure you understand
+though.
+
+220
+00:11:16,160 --> 00:11:19,840
+The idea that we shouldn't be avoiding
+tedious stuff, we should be seeking it.
+
+221
+00:11:19,840 --> 00:11:23,288
+Historically as engineers we have always
+tried to avoid the tedious stuff,
+
+222
+00:11:23,288 --> 00:11:25,431
+but if the tedious thing was important
+enough,
+
+223
+00:11:25,431 --> 00:11:27,760
+we would write a bunch of code to make it go
+away.
+
+224
+00:11:27,760 --> 00:11:30,753
+Great engineers hate tedium, and that's what
+makes them great engineers,
+
+225
+00:11:30,753 --> 00:11:32,748
+because when they hate something that's
+tedious,
+
+226
+00:11:32,748 --> 00:11:36,240
+they'll either avoid it or they will write a
+solution to never think about it again.
+
+227
+00:11:36,240 --> 00:11:41,005
+We gotta get over that now because tedious
+stuff that we've historically avoided,
+
+228
+00:11:41,005 --> 00:11:46,240
+like reviewing every single PR by hand, that
+tedious stuff is what agents were built for.
+
+229
+00:11:46,240 --> 00:11:47,200
+They love it.
+
+230
+00:11:47,200 --> 00:11:51,440
+If the task is so boring that you feel your
+eyes glazing over as you do it.
+
+231
+00:11:51,440 --> 00:11:53,857
+That is incredible work for your agents to
+do and you
+
+232
+00:11:53,857 --> 00:11:56,320
+should be doing 10 times more of it using
+your agents.
+
+233
+00:11:56,320 --> 00:11:59,993
+I could never even come close to reviewing
+all the PRs that we are getting,
+
+234
+00:11:59,993 --> 00:12:03,274
+but it doesn't matter because I've built
+systems and workflows with
+
+235
+00:12:03,274 --> 00:12:06,017
+my agents to bring the important things up
+so that I can
+
+236
+00:12:06,017 --> 00:12:08,906
+focus my attention on the things that aren't
+tedious and in
+
+237
+00:12:08,906 --> 00:12:11,600
+my case are more fraught fun but also a bit
+more scary.
+
+238
+00:12:11,600 --> 00:12:15,360
+And you can build workflows for all sorts of
+different things that you do every day.
+
+239
+00:12:15,360 --> 00:12:19,760
+For example, I have very specific ways I
+like pull requests to be written.
+
+240
+00:12:19,760 --> 00:12:21,807
+I want them to clearly state what the
+problem
+
+241
+00:12:21,807 --> 00:12:24,400
+is and then simply describe the solution
+that was chosen.
+
+242
+00:12:24,400 --> 00:12:29,680
+And I found that agents get very verbose and
+gross when they file pull requests.
+
+243
+00:12:29,680 --> 00:12:33,040
+So I made my own file PR skill for filing
+concise PRs.
+
+244
+00:12:33,040 --> 00:12:35,760
+Use whenever the user asks to file, open, or
+create a PR.
+
+245
+00:12:35,760 --> 00:12:39,074
+Also note that my skills almost never have
+the restriction
+
+246
+00:12:39,074 --> 00:12:41,760
+and that they can only be invoked by the
+human.
+
+247
+00:12:41,840 --> 00:12:43,440
+I don't want user invoked skills.
+
+248
+00:12:43,440 --> 00:12:45,520
+There's a bunch of weird implementation
+details there.
+
+249
+00:12:45,520 --> 00:12:46,320
+I don't care.
+
+250
+00:12:46,320 --> 00:12:48,551
+I want my skills to be clear when the agent
+should
+
+251
+00:12:48,551 --> 00:12:50,960
+or shouldn't use them and I let the agent
+choose when.
+
+252
+00:12:50,960 --> 00:12:52,779
+In this case I want it to use the
+
+253
+00:12:52,779 --> 00:12:55,920
+skill whenever I am filing or dealing with
+pull requests.
+
+254
+00:12:55,920 --> 00:12:59,543
+So it starts very simply with making sure
+that there isn't already a PR for this,
+
+255
+00:12:59,543 --> 00:13:01,600
+because it has made mistakes with that
+before.
+
+256
+00:13:01,600 --> 00:13:04,800
+I then say PR titles are often commit
+messages.
+
+257
+00:13:04,800 --> 00:13:06,720
+So follow the repos title conventions.
+
+258
+00:13:06,720 --> 00:13:09,360
+Look at recently merged PRs and git history
+for examples.
+
+259
+00:13:09,360 --> 00:13:12,640
+Prefer a concise human readable title that
+explains why the change matters.
+
+260
+00:13:12,640 --> 00:13:17,520
+So a bad 1 would be perf server, negotiate
+per message deflate on the WebSocket.
+
+261
+00:13:17,520 --> 00:13:19,520
+I have no idea what the fuck this means when
+I read it.
+
+262
+00:13:19,520 --> 00:13:21,600
+But a good example would be perf server.
+
+263
+00:13:21,600 --> 00:13:25,280
+Cut WebSocket frame size by 70% plus with
+G-zipping.
+
+264
+00:13:25,280 --> 00:13:28,800
+Believe it or not, these are real examples
+that I had.
+
+265
+00:13:28,800 --> 00:13:32,590
+It actually wrote this commit message and it
+pissed me off so much that I
+
+266
+00:13:32,590 --> 00:13:36,640
+opened up VS Code and I wrote a skill to
+prevent it from ever happening again.
+
+267
+00:13:36,640 --> 00:13:40,300
+And after spending 2 minutes writing this
+markdown file,
+
+268
+00:13:40,300 --> 00:13:44,418
+I have had all of the branch names, PR
+titles, commit messages,
+
+269
+00:13:44,418 --> 00:13:46,640
+and all of that be so much better.
+
+270
+00:13:46,640 --> 00:13:49,680
+And agents are so good with examples like
+this too.
+
+271
+00:13:49,680 --> 00:13:52,270
+If you have a thing you don't like that your
+agent did,
+
+272
+00:13:52,270 --> 00:13:54,860
+you can encode that with a skill and steer
+the model to
+
+273
+00:13:54,860 --> 00:13:57,215
+go there when it's a thing that it is about
+to do,
+
+274
+00:13:57,215 --> 00:14:00,323
+and it will see the bad example, which is
+what it would have done,
+
+275
+00:14:00,323 --> 00:14:03,760
+and it'll see the good example, which is
+what you want, and it will work.
+
+276
+00:14:03,760 --> 00:14:05,600
+It works unreasonably well.
+
+277
+00:14:05,600 --> 00:14:08,560
+I also have a similar thing for the PR
+description.
+
+278
+00:14:08,560 --> 00:14:11,920
+The bad example was removed implicit
+workspace carryover.
+
+279
+00:14:11,920 --> 00:14:15,760
+I don't know what the hell it means by this,
+so I wrote a better example.
+
+280
+00:14:15,760 --> 00:14:20,080
+My new work tree default was ignored when
+starting new threads on existing work trees.
+
+281
+00:14:20,080 --> 00:14:21,360
+Super unintuitive.
+
+282
+00:14:21,360 --> 00:14:24,320
+Now my or now your preferences should always
+apply.
+
+283
+00:14:24,320 --> 00:14:25,280
+There you go.
+
+284
+00:14:25,280 --> 00:14:27,253
+As you start to build your workflows,
+
+285
+00:14:27,253 --> 00:14:30,720
+1 of the important things I push is this
+idea of prompting wider.
+
+286
+00:14:30,720 --> 00:14:32,800
+There's 2 different directions you can go
+with your prompts.
+
+287
+00:14:32,800 --> 00:14:36,240
+You can have them go deeper where the model
+will go super analyze something.
+
+288
+00:14:36,240 --> 00:14:39,440
+Maybe it's like rewriting a function in Rust
+or something like that.
+
+289
+00:14:39,440 --> 00:14:40,480
+That is depth.
+
+290
+00:14:40,480 --> 00:14:43,520
+The model is going deeper and solving harder
+and harder problems.
+
+291
+00:14:43,520 --> 00:14:45,600
+There are limits to how deep the agents can
+go.
+
+292
+00:14:45,600 --> 00:14:47,494
+They're much farther than I ever would have
+expected,
+
+293
+00:14:47,494 --> 00:14:48,960
+but that's not what I want to talk about.
+
+294
+00:14:48,960 --> 00:14:51,200
+There's plenty of other lessons that you're
+going to hear for that.
+
+295
+00:14:51,200 --> 00:14:53,971
+I want to talk about the idea of prompting
+wider,
+
+296
+00:14:53,971 --> 00:14:57,760
+expanding the start points and end points of
+where the prompt goes.
+
+297
+00:14:57,760 --> 00:15:00,051
+Back in the day we used to just autocomplete
+and
+
+298
+00:15:00,051 --> 00:15:02,533
+then we moved to Command K and making fixed
+changes,
+
+299
+00:15:02,533 --> 00:15:06,160
+then we moved to the agent and telling it
+which files to go make changes in.
+
+300
+00:15:06,160 --> 00:15:08,674
+I remember how crazy it was when cursor
+added the change
+
+301
+00:15:08,674 --> 00:15:10,873
+where the agent had a list of the files that
+were
+
+302
+00:15:10,873 --> 00:15:13,297
+open in your currently open tabs so that it
+knew which
+
+303
+00:15:13,297 --> 00:15:16,080
+files were there without having to do
+something custom for it.
+
+304
+00:15:16,080 --> 00:15:19,612
+All of these are expanding the width of how
+we use these things because
+
+305
+00:15:19,612 --> 00:15:23,144
+you have to do less before you bring in the
+agent and more importantly,
+
+306
+00:15:23,144 --> 00:15:25,680
+the agent can go further before it needs you
+again.
+
+307
+00:15:25,680 --> 00:15:28,600
+If you are still telling the agent which
+file to edit
+
+308
+00:15:28,600 --> 00:15:32,016
+and then verifying each changed line before
+getting into a PR,
+
+309
+00:15:32,016 --> 00:15:34,000
+you need this part more than anyone.
+
+310
+00:15:34,000 --> 00:15:36,036
+And you should probably send this to your
+team
+
+311
+00:15:36,036 --> 00:15:38,160
+members as well if they are stuck in that
+space.
+
+312
+00:15:38,160 --> 00:15:42,178
+Because I now can bring the agent in as soon
+as I know a problem exists,
+
+313
+00:15:42,178 --> 00:15:44,689
+I can literally send my agent a screenshot
+of
+
+314
+00:15:44,689 --> 00:15:47,424
+a DM I got from somebody complaining about a
+bug,
+
+315
+00:15:47,424 --> 00:15:51,944
+and by the time I check the thread again,
+there's a pull request up, ready to go,
+
+316
+00:15:51,944 --> 00:15:54,400
+with a video showing exactly what was wrong.
+
+317
+00:15:54,400 --> 00:15:57,440
+And a video confirming the fix actually
+works.
+
+318
+00:15:57,440 --> 00:15:59,200
+That is width of the prompts.
+
+319
+00:15:59,200 --> 00:16:04,240
+I'm bringing the agent in earlier and it's
+able to go longer before it needs me again.
+
+320
+00:16:04,240 --> 00:16:07,440
+And a lot of the workflows I'm building are
+in order to enable that.
+
+321
+00:16:07,440 --> 00:16:09,803
+I don't want the agent to bother me until
+it's
+
+322
+00:16:09,803 --> 00:16:12,577
+done everything it can to verify the changes
+are good,
+
+323
+00:16:12,577 --> 00:16:16,533
+then it can bring me in and ask me to take
+it 1 last look, give it thumbs up,
+
+324
+00:16:16,533 --> 00:16:17,920
+and then finally hit merge.
+
+325
+00:16:17,920 --> 00:16:20,480
+Sometimes I go even further though and
+that's what this skill is for.
+
+326
+00:16:20,480 --> 00:16:22,320
+This 1's called full sent.
+
+327
+00:16:22,320 --> 00:16:24,000
+I have the description, it's very simple.
+
+328
+00:16:24,000 --> 00:16:26,480
+Only trigger if the user requests full send.
+
+329
+00:16:26,480 --> 00:16:30,001
+If the user triggered this, it's because
+they are not watching the thread and they
+
+330
+00:16:30,001 --> 00:16:32,320
+want you to complete the work end to end
+autonomously.
+
+331
+00:16:32,320 --> 00:16:36,400
+Your updates and your final message will go
+unread long after you stop.
+
+332
+00:16:36,400 --> 00:16:39,040
+You own the work from its current state to a
+merged PR.
+
+333
+00:16:39,040 --> 00:16:40,320
+And I have steps it should follow.
+
+334
+00:16:40,320 --> 00:16:43,029
+First it should make the change, then it
+should prove the change,
+
+335
+00:16:43,029 --> 00:16:45,280
+prove that it actually was able to get the
+thing done.
+
+336
+00:16:45,280 --> 00:16:47,520
+Then it should get feedback using the Sol
+loop skill.
+
+337
+00:16:47,520 --> 00:16:48,960
+It's another important piece here.
+
+338
+00:16:48,960 --> 00:16:51,040
+My skills are all composed.
+
+339
+00:16:51,040 --> 00:16:53,840
+They can stack on each other where it makes
+sense to.
+
+340
+00:16:53,840 --> 00:16:56,960
+You can tell your agents in 1 skill to call
+another 1.
+
+341
+00:16:56,960 --> 00:16:58,160
+It's all a graph.
+
+342
+00:16:58,160 --> 00:17:01,680
+The agents are very good at calling things
+from other things.
+
+343
+00:17:01,680 --> 00:17:05,128
+And once you realize that Markdown is kind
+of just a program at this point,
+
+344
+00:17:05,128 --> 00:17:07,427
+you can have your program call another
+program the
+
+345
+00:17:07,427 --> 00:17:09,680
+same way we would back in the Unix terminal
+days.
+
+346
+00:17:09,680 --> 00:17:14,517
+And once you build the right chunks, which
+for me are the Sol loop skill,
+
+347
+00:17:14,517 --> 00:17:18,692
+my file PR skill, my babysit PR skill, my
+comment format skill,
+
+348
+00:17:18,692 --> 00:17:22,800
+my debug and process changes skills, my
+verify changes skills.
+
+349
+00:17:22,800 --> 00:17:25,920
+Some of these are repo specific, a lot of
+them are general for me.
+
+350
+00:17:25,920 --> 00:17:27,997
+These skills are the building blocks that
+
+351
+00:17:27,997 --> 00:17:30,480
+these higher level workflow skills can hook
+into.
+
+352
+00:17:30,480 --> 00:17:35,676
+And you'll see here this 1 hooks into Sol
+loop, file PR, babysit, watch pull request,
+
+353
+00:17:35,676 --> 00:17:36,960
+my file upload skill.
+
+354
+00:17:36,960 --> 00:17:40,082
+This 1's really important because GitHub, up
+until recently,
+
+355
+00:17:40,082 --> 00:17:43,360
+wouldn't let you upload files via the CLI,
+which was obnoxious.
+
+356
+00:17:43,360 --> 00:17:47,400
+I've seen so many times where somebody's
+changes added a giant video file
+
+357
+00:17:47,400 --> 00:17:51,440
+to the repo because the agent wanted to
+include it in the PR description.
+
+358
+00:17:51,440 --> 00:17:54,227
+So I have a custom file upload skill and
+tool I built in order
+
+359
+00:17:54,227 --> 00:17:57,418
+to make that workflow easier because I want
+to see the video in the PR,
+
+360
+00:17:57,418 --> 00:18:00,160
+but I don't want it committing the frickin'
+video to my repo.
+
+361
+00:18:00,160 --> 00:18:02,412
+And obviously not everyone can use a skill
+like
+
+362
+00:18:02,412 --> 00:18:05,287
+full send where the model's autonomously
+merging the changes
+
+363
+00:18:05,287 --> 00:18:08,977
+so that I never see it because uh 1 of the
+features in T3 code is that once a
+
+364
+00:18:08,977 --> 00:18:11,852
+change is merged the thread will
+auto-archive itself because
+
+365
+00:18:11,852 --> 00:18:13,960
+why do you need it the change merged so when
+
+366
+00:18:13,960 --> 00:18:16,164
+I use full send I'm mentally prepared to
+never
+
+367
+00:18:16,164 --> 00:18:18,560
+see the threat again unless it asks me a
+question.
+
+368
+00:18:18,560 --> 00:18:19,920
+But that doesn't always work.
+
+369
+00:18:19,920 --> 00:18:21,760
+And I was addicted to this skill.
+
+370
+00:18:21,760 --> 00:18:23,600
+It became my favorite thing to use.
+
+371
+00:18:23,600 --> 00:18:26,880
+So I ended up making an adjacent version
+called full stop.
+
+372
+00:18:26,880 --> 00:18:28,400
+Full stop is very similar.
+
+373
+00:18:28,400 --> 00:18:33,040
+The difference is it does everything up
+until the merge button can be pressed.
+
+374
+00:18:33,040 --> 00:18:36,960
+And then it tells me, hey ***, time to come
+in and take a look at this.
+
+375
+00:18:36,960 --> 00:18:41,200
+Everything else is effectively the same,
+pretty much the same flow.
+
+376
+00:18:41,200 --> 00:18:43,706
+I just wanted it to go as far as possible
+and
+
+377
+00:18:43,706 --> 00:18:46,880
+not bother me until it thinks the code is
+ready to merge.
+
+378
+00:18:46,880 --> 00:18:51,749
+So I've created this hierarchy here
+effectively where I have the skills the repo
+provides,
+
+379
+00:18:51,749 --> 00:18:54,887
+the skills that I provide, like the building
+block skills,
+
+380
+00:18:54,887 --> 00:18:57,105
+then I have a workflow set on top where I
+
+381
+00:18:57,105 --> 00:19:01,920
+have the specific way I want it to resolve
+an issue, whether it's full send or full
+stop.
+
+382
+00:19:01,920 --> 00:19:03,763
+Then above that I have the prompt I send,
+
+383
+00:19:03,763 --> 00:19:07,360
+which is what details the problem and which
+of those paths I want it to go down.
+
+384
+00:19:07,360 --> 00:19:10,273
+So when I see a bug that's a really simple
+small thing,
+
+385
+00:19:10,273 --> 00:19:14,881
+like the CSS isn't aligned properly, I take
+a screenshot of it, I hand it to the agent,
+
+386
+00:19:14,881 --> 00:19:18,800
+I say fix it, full send, and then the bug
+will be fixed by the next build.
+
+387
+00:19:18,800 --> 00:19:23,565
+If I notice something a bit hairier, like
+the logic for how data is getting to the
+harness
+
+388
+00:19:23,565 --> 00:19:27,165
+from my UI or that the database isn't
+persisting something properly,
+
+389
+00:19:27,165 --> 00:19:31,930
+there's like a memory leak, then I will send
+as much info as I know with full stop
+saying,
+
+390
+00:19:31,930 --> 00:19:34,419
+go explore this to the best of your ability
+and
+
+391
+00:19:34,419 --> 00:19:37,120
+come back to me when you think you have a
+solution.
+
+392
+00:19:37,120 --> 00:19:39,693
+And sometimes I just want to go back and
+forth with the
+
+393
+00:19:39,693 --> 00:19:42,640
+model to figure out what I want and how we
+should implement it.
+
+394
+00:19:42,640 --> 00:19:46,000
+That's when things like Matt Pocock's
+grilling skill come into play.
+
+395
+00:19:46,000 --> 00:19:49,760
+I'll be real with y'all, I think I have 2
+times more skills than I probably should
+here.
+
+396
+00:19:49,760 --> 00:19:52,720
+I was playing with a lot of the P stack and
+Matt skills.
+
+397
+00:19:52,720 --> 00:19:53,600
+They're really good.
+
+398
+00:19:53,600 --> 00:19:55,041
+You should definitely explore them,
+
+399
+00:19:55,041 --> 00:19:57,800
+but you should also not be that scared to
+delete skills when you're
+
+400
+00:19:57,800 --> 00:20:00,560
+not using them that much or if they're doing
+things you don't want.
+
+401
+00:20:00,560 --> 00:20:03,985
+And of course, you can ask your agent which
+skills are being invoked where,
+
+402
+00:20:03,985 --> 00:20:06,086
+find the history of how often these skills
+are
+
+403
+00:20:06,086 --> 00:20:10,151
+being pulled in and how often I end up
+merging the change after the skill is pulled
+in to
+
+404
+00:20:10,151 --> 00:20:12,800
+figure out which ones are and aren't
+actually helping you.
+
+405
+00:20:12,800 --> 00:20:16,748
+So how do you decide which skills should be
+global, which skills should be 1 harness,
+
+406
+00:20:16,748 --> 00:20:18,560
+and which skills should go in the repo?
+
+407
+00:20:18,560 --> 00:20:22,103
+Generally speaking, if the skill is useful
+in more than 1 repo,
+
+408
+00:20:22,103 --> 00:20:24,240
+it should probably be in your globals.
+
+409
+00:20:24,240 --> 00:20:28,517
+If the point of the skill is to keep you and
+your coworkers from making dumb mistakes,
+
+410
+00:20:28,517 --> 00:20:29,760
+then it goes in the repo.
+
+411
+00:20:29,760 --> 00:20:33,120
+1 of the skills I have found the most value
+in is a really simple building block.
+
+412
+00:20:33,120 --> 00:20:34,880
+It's my PR comment skill.
+
+413
+00:20:34,880 --> 00:20:37,225
+The point of the skill is mostly to make
+sure
+
+414
+00:20:37,225 --> 00:20:39,883
+my agents call out that they are an agent
+leaving a
+
+415
+00:20:39,883 --> 00:20:42,749
+comment on my behalf instead of it just
+leaving a bunch
+
+416
+00:20:42,749 --> 00:20:46,240
+of comments and not clarifying that it was
+Claude or Codex, not me.
+
+417
+00:20:46,240 --> 00:20:50,640
+So I made this to make it very clear when an
+agent is responding on my behalf.
+
+418
+00:20:50,640 --> 00:20:51,520
+This was great.
+
+419
+00:20:51,520 --> 00:20:56,169
+It was so great that I would get really
+annoyed when I saw other people contributing
+
+420
+00:20:56,169 --> 00:21:00,320
+comments and PRs and not indicating if it
+was a human or a bot that did it.
+
+421
+00:21:00,320 --> 00:21:02,800
+So I took the skill and I put it in the
+repo.
+
+422
+00:21:02,800 --> 00:21:06,086
+And now every time somebody's agent leaves a
+comment in the repo,
+
+423
+00:21:06,086 --> 00:21:10,080
+I know what model they used, what harness
+they used, and if it was them or not.
+
+424
+00:21:10,080 --> 00:21:15,008
+And if the comment doesn't have a call-out
+like this, either it was a human who left
+it,
+
+425
+00:21:15,008 --> 00:21:19,488
+or they are using a really bad harness that
+couldn't find the skill in the repo,
+
+426
+00:21:19,488 --> 00:21:21,840
+either way I can now treat it differently.
+
+427
+00:21:21,840 --> 00:21:25,180
+So a really simple way of thinking about
+this is that the point of
+
+428
+00:21:25,180 --> 00:21:29,380
+a repo specific skill is to prevent bad
+behavior that other contributors could hit,
+
+429
+00:21:29,380 --> 00:21:33,176
+whether it is a thing the model's confused
+by that you can't fix with code,
+
+430
+00:21:33,176 --> 00:21:35,251
+or it is a specific thing that people are
+
+431
+00:21:35,251 --> 00:21:37,984
+doing that is making your life as a
+maintainer harder,
+
+432
+00:21:37,984 --> 00:21:40,160
+or even just as a coworker or collaborator.
+
+433
+00:21:40,160 --> 00:21:44,617
+Workflow skills can be useful for complex
+enough repos, but generally speaking,
+
+434
+00:21:44,617 --> 00:21:47,325
+I try to keep my workflow skills slightly
+higher
+
+435
+00:21:47,325 --> 00:21:49,920
+level to be useful outside of 1 specific
+repo.
+
+436
+00:21:49,920 --> 00:21:52,979
+And you can take these base skills, these
+building blocks,
+
+437
+00:21:52,979 --> 00:21:55,669
+and combine them to workflow style skills
+that lets
+
+438
+00:21:55,669 --> 00:21:58,570
+you take advantage of all these pieces
+you've built and
+
+439
+00:21:58,570 --> 00:22:01,155
+encode flows that will make you more
+effective at
+
+440
+00:22:01,155 --> 00:22:04,320
+delivering software the way you and your
+team actually want.
+
+441
+00:22:04,320 --> 00:22:07,440
+Did you notice how little we talked about
+the code itself in this?
+
+442
+00:22:07,440 --> 00:22:08,240
+There's a reason.
+
+443
+00:22:08,480 --> 00:22:10,320
+The code just isn't flexible enough.
+
+444
+00:22:10,320 --> 00:22:12,380
+If you build out all these workflows to be
+
+445
+00:22:12,380 --> 00:22:15,519
+really specific ways that things are
+executed in your harnesses,
+
+446
+00:22:15,519 --> 00:22:17,873
+then you're not taking advantage of how
+powerful
+
+447
+00:22:17,873 --> 00:22:20,080
+in general these models and harnesses can
+be.
+
+448
+00:22:20,080 --> 00:22:24,160
+All of the skills I just showed work great
+in every harness I use.
+
+449
+00:22:24,160 --> 00:22:26,640
+They work great with every modern model that
+I touch.
+
+450
+00:22:26,640 --> 00:22:30,865
+They let me switch between different tools
+and solutions without changing the way that
+
+451
+00:22:30,865 --> 00:22:35,040
+I work while still taking as much advantage
+as possible of what those things provide.
+
+452
+00:22:35,040 --> 00:22:36,662
+You can use this for every side too,
+
+453
+00:22:36,662 --> 00:22:40,718
+from how it should start the work to how it
+should triage the things it's going to
+change,
+
+454
+00:22:40,718 --> 00:22:44,548
+to how it verifies the work that it does, to
+how it gets it reviewed by other agents,
+
+455
+00:22:44,548 --> 00:22:46,080
+to how it tests in a real browser.
+
+456
+00:22:46,080 --> 00:22:48,207
+You can do all of these things by writing
+
+457
+00:22:48,207 --> 00:22:50,800
+in markdown exactly what you want the model
+to do.
+
+458
+00:22:50,800 --> 00:22:54,880
+And if it doesn't do quite what you want,
+ask it why and adjust accordingly.
+
+459
+00:22:54,880 --> 00:22:56,991
+This is why this is the last lesson I'm
+doing,
+
+460
+00:22:56,991 --> 00:22:59,561
+because it pulls together everything we've
+talked about,
+
+461
+00:22:59,561 --> 00:23:02,912
+from how the LLM sees the world to how the
+context that it uses is built,
+
+462
+00:23:02,912 --> 00:23:05,620
+to how you can control that context and
+manage it alongside
+
+463
+00:23:05,620 --> 00:23:08,880
+the harness and the knowledge systems to
+make the model more effective.
+
+464
+00:23:08,880 --> 00:23:11,457
+This all comes together with the flows that
+you'll use to
+
+465
+00:23:11,457 --> 00:23:14,080
+make the models deliver the code the way
+that you want to.
+
+466
+00:23:14,080 --> 00:23:16,712
+I want to say that you've built all the
+skills you need now,
+
+467
+00:23:16,712 --> 00:23:18,379
+but we're about to go build a bunch of
+
+468
+00:23:18,379 --> 00:23:21,055
+skills with a bunch of awesome additional
+instructors who are
+
+469
+00:23:21,055 --> 00:23:23,073
+going to show you how to take these key
+pieces
+
+470
+00:23:23,073 --> 00:23:25,440
+and push them really far in real-world work
+every day.
+
+471
+00:23:25,520 --> 00:23:26,762
+With this, I'm signing off,
+
+472
+00:23:26,762 --> 00:23:30,720
+but I'm sure the next instructors will have
+even more useful skills to build with you.
+
+473
+00:23:30,720 --> 00:23:31,760
+Pun intended.
